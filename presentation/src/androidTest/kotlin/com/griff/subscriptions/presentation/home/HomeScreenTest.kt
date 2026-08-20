@@ -51,7 +51,7 @@ class HomeScreenTest {
         composeRule.onNodeWithText("JetBrains").assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.home_totals_title)).assertIsDisplayed()
         composeRule.onNodeWithText("143,24 zł / mies.").assertIsDisplayed()
-        composeRule.onNodeWithText("1 718,88 zł / rok").assertIsDisplayed()
+        composeRule.onNodeWithText("1\u00A0718,88 zł / rok").assertIsDisplayed()
     }
 
     @Test
@@ -83,6 +83,31 @@ class HomeScreenTest {
     }
 
     @Test
+    fun totalsStayVisibleWithoutScrollingOnALongList() {
+        val many = List(40) { index ->
+            SubscriptionListItem(
+                id = index.toString(),
+                name = "Usługa $index",
+                logoKey = "service-$index",
+                billingPeriod = BillingPeriod.MONTHLY,
+                price = Money.ofUnits(10),
+            )
+        }
+        setContent(
+            HomeUiState(
+                isLoading = false,
+                items = many,
+                totals = SubscriptionTotals(Money.ofUnits(400), Money.ofUnits(4_800), many.size),
+                totalSubscriptionCount = many.size,
+            ),
+        )
+
+        // The summary is a bottom bar, so it is on screen even though most rows are not.
+        composeRule.onNodeWithText("400,00 zł / mies.").assertIsDisplayed()
+        composeRule.onNodeWithText("4\u00A0800,00 zł / rok").assertIsDisplayed()
+    }
+
+    @Test
     fun showsNoResultsStateForAQueryWithoutMatches() {
         setContent(
             HomeUiState(
@@ -96,6 +121,8 @@ class HomeScreenTest {
         composeRule
             .onNodeWithText(context.getString(R.string.home_no_results_title))
             .assertIsDisplayed()
+        // Nothing to sum up, so the totals bar is gone.
+        composeRule.onNodeWithText(context.getString(R.string.home_totals_title)).assertDoesNotExist()
     }
 
     private fun setContent(

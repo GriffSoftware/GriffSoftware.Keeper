@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -30,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.griff.subscriptions.domain.model.BillingPeriod
@@ -42,7 +42,7 @@ import com.griff.subscriptions.presentation.common.component.FullScreenLoading
 import com.griff.subscriptions.presentation.common.resolve
 import com.griff.subscriptions.presentation.home.components.SubscriptionListItemRow
 import com.griff.subscriptions.presentation.home.components.SubscriptionSearchField
-import com.griff.subscriptions.presentation.home.components.SubscriptionTotalsSection
+import com.griff.subscriptions.presentation.home.components.SubscriptionTotalsBar
 import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
 import com.griff.subscriptions.presentation.theme.Spacing
 
@@ -109,6 +109,14 @@ internal fun HomeScreen(
                 },
             )
         },
+        bottomBar = {
+            if (state.items.isNotEmpty()) {
+                SubscriptionTotalsBar(
+                    totals = state.totals,
+                    isFiltered = state.isFiltered,
+                )
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddSubscription) {
                 Icon(
@@ -173,7 +181,8 @@ private fun SubscriptionList(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = Spacing.Huge * 2),
+        // Room for the floating action button, which hovers above the totals bar.
+        contentPadding = PaddingValues(bottom = FabClearance),
     ) {
         items(items = state.items, key = { it.id }) { item ->
             SubscriptionListItemRow(
@@ -181,20 +190,10 @@ private fun SubscriptionList(
                 modifier = Modifier.clickable { onSubscriptionClick(item.id) },
             )
         }
-
-        item(key = SUMMARY_KEY) {
-            Column(Modifier.fillMaxWidth()) {
-                HorizontalDivider()
-                SubscriptionTotalsSection(
-                    totals = state.totals,
-                    isFiltered = state.isFiltered,
-                )
-            }
-        }
     }
 }
 
-private const val SUMMARY_KEY = "summary"
+private val FabClearance = 88.dp
 
 @Preview(showBackground = true)
 @Composable

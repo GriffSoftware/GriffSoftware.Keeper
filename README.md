@@ -11,7 +11,8 @@ adding those later without a rewrite.
 ## Features
 
 - List of subscriptions with logo/monogram, billing period and price, plus a live search
-- Normalized totals: monthly and yearly cost that never mixes monthly and yearly prices
+- Normalized totals pinned to the bottom of the list: monthly and yearly cost that never mixes
+  monthly and yearly prices
 - Add / edit / delete with a Material 3 confirmation dialog and undo-safe messaging
 - Searchable catalog of 50+ popular Polish and global services with default management URLs,
   and an "Other" entry for anything custom
