@@ -139,10 +139,16 @@ work. A real signing config has to be added before publishing.
 - **Provider catalog is static data, not UI code.** `ProviderCatalogSource` in `:infrastructure`
   behind the `ProviderCatalog` port, ready to be swapped for a remote or database backed source.
   "Other" is always the last entry and is the only catalog name translated by the UI.
-- **Logos: no bundled trademarks.** Brand logos cannot be shipped without a license, so
-  `ProviderLogo` renders a neutral monogram on a tonal circle whose color is derived from the
-  `logoKey` (custom entries are seeded by their name, so they do not all look alike). Licensed
-  assets can be added in `ProviderLogoAssets` without touching any other layer; the domain only ever
+- **Logos: simplified glyphs where they exist, monogram everywhere else.** The official,
+  multi-color logotypes are trademarks and are not bundled. For 19 catalog entries with an
+  unambiguous match, `ProviderLogoAssets` bundles a single-color brand glyph from the
+  community-maintained, CC0-licensed [Simple Icons](https://simpleicons.org) project as an Android
+  vector drawable, tinted with the brand's own color on a tonal circle (icons whose official mark is
+  effectively black - HBO Max, Tidal, Apple TV+, GitHub Copilot, JetBrains, EA - use the theme's
+  neutral color instead, so they stay legible in dark mode). Every other provider - including every
+  catalog entry without a glyph and every custom "Other" entry - falls back to the monogram: a tonal
+  circle colored from a hash of `logoKey`, with one or two initials of the service name. Adding a
+  glyph for another provider is a one-line addition to `ProviderLogoAssets`; the domain only ever
   knows the abstract `logoKey`.
 - **No charting library.** One bar chart and one set of category bars are drawn with Compose
   `Canvas` and plain layouts; they follow the Material color scheme, carry accessibility
