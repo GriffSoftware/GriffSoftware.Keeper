@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.griff.subscriptions.application.provider.GetProviderUseCase
 import com.griff.subscriptions.application.subscription.DeleteSubscriptionUseCase
+import com.griff.subscriptions.application.subscription.GetSubscriptionCategoryUseCase
 import com.griff.subscriptions.application.subscription.ObserveSubscriptionUseCase
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
@@ -37,6 +38,7 @@ class SubscriptionDetailsViewModel @Inject constructor(
     observeSubscription: ObserveSubscriptionUseCase,
     private val deleteSubscription: DeleteSubscriptionUseCase,
     private val getProvider: GetProviderUseCase,
+    private val getCategory: GetSubscriptionCategoryUseCase,
 ) : ViewModel() {
 
     private val subscriptionId = SubscriptionId(
@@ -121,6 +123,7 @@ class SubscriptionDetailsViewModel @Inject constructor(
             id = id.value,
             name = name.value,
             logoKey = if (provider.isOther) name.value else provider.logoKey,
+            category = getCategory(this),
             price = price,
             billingPeriod = billingPeriod,
             monthlyEquivalent = monthlyEquivalent,

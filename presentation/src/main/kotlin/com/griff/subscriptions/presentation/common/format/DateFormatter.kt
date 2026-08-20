@@ -14,6 +14,9 @@ object DateFormatter {
     fun formatFullDate(date: LocalDate, locale: Locale = MoneyFormatter.PolishLocale): String =
         formatter(locale).format(date)
 
+    /** Compact form for list rows, e.g. `11.03.2027`. */
+    fun formatShortDate(date: LocalDate): String = SHORT_DATE.format(date)
+
     /** Short label for chart axes, e.g. `IX`. */
     fun formatRomanMonth(month: YearMonth): String = ROMAN_MONTHS[month.monthValue - 1]
 
@@ -25,6 +28,8 @@ object DateFormatter {
             DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale)
         }
     }
+
+    private val SHORT_DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     private val ROMAN_MONTHS = listOf(
         "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",

@@ -2,8 +2,8 @@ package com.griff.subscriptions.presentation.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,18 +32,23 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.SubscriptionTotals
 import com.griff.subscriptions.presentation.R
+import com.griff.subscriptions.presentation.common.Tags
 import com.griff.subscriptions.presentation.common.UiMessage
 import com.griff.subscriptions.presentation.common.component.EmptyState
 import com.griff.subscriptions.presentation.common.component.FullScreenLoading
 import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
+import com.griff.subscriptions.presentation.common.component.SearchField
+import com.griff.subscriptions.presentation.common.component.TagFilterOption
+import com.griff.subscriptions.presentation.common.component.TagFilterRow
 import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.resolve
 import com.griff.subscriptions.presentation.home.components.SubscriptionListItemRow
-import com.griff.subscriptions.presentation.home.components.SubscriptionSearchField
 import com.griff.subscriptions.presentation.home.components.SubscriptionTotalsBar
 import com.griff.subscriptions.presentation.theme.GriffThemePreview
+import com.griff.subscriptions.presentation.theme.Spacing
 import com.griff.subscriptions.presentation.theme.ThemePreviews
 
 /** Entry point wired to the [HomeViewModel]; keeps the screen itself free of DI concerns. */
@@ -61,6 +66,7 @@ fun HomeRoute(
     HomeScreen(
         state = state,
         onQueryChange = viewModel::onQueryChange,
+        onCategoryChange = viewModel::onCategoryChange,
         onOpenDrawer = onOpenDrawer,
         onSubscriptionClick = onSubscriptionClick,
         onAddSubscription = onAddSubscription,
@@ -74,6 +80,7 @@ fun HomeRoute(
 internal fun HomeScreen(
     state: HomeUiState,
     onQueryChange: (String) -> Unit,
+    onCategoryChange: (ProviderCategory?) -> Unit,
     onOpenDrawer: () -> Unit,
     onSubscriptionClick: (String) -> Unit,
     onAddSubscription: () -> Unit,
@@ -103,7 +110,7 @@ internal fun HomeScreen(
                     IconButton(onClick = onOpenDrawer) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = stringResource(R.string.home_open_menu),
+                            contentDescription = stringResource(R.string.open_menu),
                         )
                     }
                 },
@@ -134,6 +141,7 @@ internal fun HomeScreen(
         HomeContent(
             state = state,
             onQueryChange = onQueryChange,
+            onCategoryChange = onCategoryChange,
             onSubscriptionClick = onSubscriptionClick,
             modifier = Modifier
                 .fillMaxSize()
@@ -146,14 +154,28 @@ internal fun HomeScreen(
 internal fun HomeContent(
     state: HomeUiState,
     onQueryChange: (String) -> Unit,
+    onCategoryChange: (ProviderCategory?) -> Unit,
     onSubscriptionClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        SubscriptionSearchField(
+        SearchField(
             query = state.query,
+            placeholder = stringResource(R.string.home_search_placeholder),
             onQueryChange = onQueryChange,
         )
+
+        // Offered only once there is something to narrow down, so an empty app stays quiet.
+        if (state.availableCategories.size > 1) {
+            TagFilterRow(
+                options = state.availableCategories.map {
+                    TagFilterOption(value = it, style = Tags.of(it))
+                },
+                selected = state.selectedCategory,
+                onSelect = onCategoryChange,
+                modifier = Modifier.padding(bottom = Spacing.Small),
+            )
+        }
 
         when {
             state.isLoading -> FullScreenLoading()
@@ -166,8 +188,8 @@ internal fun HomeContent(
 
             state.hasNoResults -> EmptyState(
                 icon = Icons.Default.SearchOff,
-                title = stringResource(R.string.home_no_results_title),
-                description = stringResource(R.string.home_no_results_description, state.query),
+                title = stringResource(R.string.no_results_title),
+                description = noResultsDescription(state),
             )
 
             else -> SubscriptionList(
@@ -175,6 +197,25 @@ internal fun HomeContent(
                 onSubscriptionClick = onSubscriptionClick,
             )
         }
+    }
+}
+
+/**
+ * Why the list is empty, in the user's own terms.
+ *
+ * The message names the filters that are actually active, so a tag with no matches does not read as
+ * a failed text search - and neither is mistaken for "you have no subscriptions yet".
+ */
+@Composable
+private fun noResultsDescription(state: HomeUiState): String {
+    val category = state.selectedCategory?.let { stringResource(Tags.of(it).labelRes) }
+    return when {
+        category != null && state.query.isNotBlank() ->
+            stringResource(R.string.home_no_results_category_and_query, category, state.query)
+
+        category != null -> stringResource(R.string.home_no_results_category, category)
+
+        else -> stringResource(R.string.home_no_results_query, state.query)
     }
 }
 
@@ -206,15 +247,30 @@ private fun HomeScreenPreview() {
         HomeScreen(
             state = HomeUiState(
                 isLoading = false,
+                availableCategories = listOf(
+                    ProviderCategory.VIDEO,
+                    ProviderCategory.MUSIC,
+                    ProviderCategory.SOFTWARE,
+                ),
                 items = listOf(
-                    SubscriptionListItem("1", "Spotify", "spotify", BillingPeriod.MONTHLY, Money.ofUnits(34, 99)),
-                    SubscriptionListItem("2", "Netflix", "netflix", BillingPeriod.MONTHLY, Money.ofUnits(67)),
-                    SubscriptionListItem("3", "JetBrains", "jetbrains", BillingPeriod.YEARLY, Money.ofUnits(1_299)),
+                    SubscriptionListItem(
+                        "1", "Spotify", "spotify", ProviderCategory.MUSIC,
+                        BillingPeriod.MONTHLY, Money.ofUnits(34, 99),
+                    ),
+                    SubscriptionListItem(
+                        "2", "Netflix", "netflix", ProviderCategory.VIDEO,
+                        BillingPeriod.MONTHLY, Money.ofUnits(67),
+                    ),
+                    SubscriptionListItem(
+                        "3", "JetBrains", "jetbrains", ProviderCategory.SOFTWARE,
+                        BillingPeriod.YEARLY, Money.ofUnits(1_299),
+                    ),
                 ),
                 totals = SubscriptionTotals(Money.ofUnits(210, 24), Money.ofUnits(2_522, 88), 3),
                 totalSubscriptionCount = 3,
             ),
             onQueryChange = {},
+            onCategoryChange = {},
             onOpenDrawer = {},
             onSubscriptionClick = {},
             onAddSubscription = {},
@@ -229,10 +285,10 @@ private fun HomeScreenEmptyPreview() {
         HomeScreen(
             state = HomeUiState(isLoading = false),
             onQueryChange = {},
+            onCategoryChange = {},
             onOpenDrawer = {},
             onSubscriptionClick = {},
             onAddSubscription = {},
         )
     }
 }
-

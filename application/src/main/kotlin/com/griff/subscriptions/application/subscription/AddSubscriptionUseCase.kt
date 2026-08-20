@@ -20,6 +20,7 @@ class AddSubscriptionUseCase @Inject constructor(
             id = idGenerator.next(),
             providerId = input.providerId,
             name = input.name,
+            categoryOverride = input.categoryOverride,
             price = input.price,
             currency = input.currency,
             billingPeriod = input.billingPeriod,

@@ -1,6 +1,7 @@
 package com.griff.subscriptions.domain.validation
 
 import com.griff.subscriptions.domain.model.BillingPeriod
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.ProviderId
 import java.time.LocalDate
 import kotlin.test.Test
@@ -43,6 +44,7 @@ class SubscriptionInputValidatorTest {
             SubscriptionInput(
                 providerId = null,
                 name = "",
+                category = null,
                 price = "34,555",
                 billingPeriod = BillingPeriod.MONTHLY,
                 managementUrl = "nope",
@@ -65,12 +67,50 @@ class SubscriptionInputValidatorTest {
         assertTrue(SubscriptionInputError.NameTooLong in errors)
     }
 
+    @Test
+    fun `a catalog entry never stores a category of its own`() {
+        val valid = SubscriptionInputValidator.validate(
+            input(providerId = ProviderId("spotify"), category = ProviderCategory.GAMING),
+        ) as SubscriptionInputValidation.Valid
+
+        // The catalog is the single source of truth for a known service, so the picked category is
+        // deliberately dropped instead of being stored next to it.
+        assertNull(valid.input.categoryOverride)
+    }
+
+    @Test
+    fun `a custom entry keeps the category the user picked`() {
+        val valid = SubscriptionInputValidator.validate(
+            input(providerId = ProviderId.OTHER, category = ProviderCategory.HOSTING),
+        ) as SubscriptionInputValidation.Valid
+
+        assertEquals(ProviderCategory.HOSTING, valid.input.categoryOverride)
+    }
+
+    @Test
+    fun `a custom entry without a category falls back to other`() {
+        val valid = SubscriptionInputValidator.validate(
+            input(providerId = ProviderId.OTHER, category = null),
+        ) as SubscriptionInputValidation.Valid
+
+        assertEquals(ProviderCategory.OTHER, valid.input.categoryOverride)
+    }
+
     private fun input(
         providerId: ProviderId? = ProviderId("spotify"),
         name: String = "Spotify",
+        category: ProviderCategory? = null,
         price: String = "34,99",
         billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
         managementUrl: String = "",
         nextBillingDate: LocalDate? = null,
-    ) = SubscriptionInput(providerId, name, price, billingPeriod, managementUrl, nextBillingDate)
+    ) = SubscriptionInput(
+        providerId = providerId,
+        name = name,
+        category = category,
+        price = price,
+        billingPeriod = billingPeriod,
+        managementUrl = managementUrl,
+        nextBillingDate = nextBillingDate,
+    )
 }

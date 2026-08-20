@@ -2,7 +2,6 @@ package com.griff.subscriptions.domain.statistics
 
 import com.griff.subscriptions.domain.model.Money
 import com.griff.subscriptions.domain.model.ProviderCategory
-import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionTotals
 import java.time.LocalDate
@@ -75,9 +74,4 @@ data class SubscriptionStatistics(
             topSubscriptions = emptyList(),
         )
     }
-}
-
-/** Resolves the category of a subscription's provider. */
-fun interface ProviderCategoryResolver {
-    fun categoryOf(providerId: ProviderId): ProviderCategory
 }

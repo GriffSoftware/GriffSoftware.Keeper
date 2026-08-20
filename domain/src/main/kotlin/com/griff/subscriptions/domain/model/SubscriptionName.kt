@@ -7,16 +7,10 @@ value class SubscriptionName private constructor(val value: String) {
     override fun toString(): String = value
 
     companion object {
-        const val MAX_LENGTH: Int = 60
+        const val MAX_LENGTH: Int = DisplayNames.MAX_LENGTH
 
-        fun ofOrNull(raw: String): SubscriptionName? {
-            val trimmed = raw.trim()
-            return when {
-                trimmed.isEmpty() -> null
-                trimmed.length > MAX_LENGTH -> null
-                else -> SubscriptionName(trimmed)
-            }
-        }
+        fun ofOrNull(raw: String): SubscriptionName? =
+            DisplayNames.normalizeOrNull(raw)?.let(::SubscriptionName)
 
         fun of(raw: String): SubscriptionName =
             requireNotNull(ofOrNull(raw)) { "Invalid subscription name: '$raw'" }

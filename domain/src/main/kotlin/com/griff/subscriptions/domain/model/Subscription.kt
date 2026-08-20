@@ -7,12 +7,15 @@ import java.time.LocalDate
  * A single subscription owned by the user.
  *
  * [providerId] always points at a catalog entry; services outside of the catalog use
- * [ProviderId.OTHER] together with a user supplied [name].
+ * [ProviderId.OTHER] together with a user supplied [name]. Such a custom entry has no catalog
+ * category, so it carries its own [categoryOverride]; catalog entries leave it `null` and take the
+ * category from the catalog, which keeps a single source of truth for known services.
  */
 data class Subscription(
     val id: SubscriptionId,
     val providerId: ProviderId,
     val name: SubscriptionName,
+    val categoryOverride: ProviderCategory?,
     val price: Money,
     val currency: Currency,
     val billingPeriod: BillingPeriod,

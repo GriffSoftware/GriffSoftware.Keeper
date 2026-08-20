@@ -4,6 +4,7 @@ import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Currency
 import com.griff.subscriptions.domain.model.ManagementUrl
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.SubscriptionName
 import java.time.LocalDate
@@ -12,6 +13,8 @@ import java.time.LocalDate
 data class SubscriptionInput(
     val providerId: ProviderId?,
     val name: String,
+    /** Only meaningful for a custom service; catalog entries take their category from the catalog. */
+    val category: ProviderCategory?,
     val price: String,
     val billingPeriod: BillingPeriod,
     val managementUrl: String,
@@ -27,6 +30,7 @@ data class SubscriptionInput(
 data class ValidatedSubscriptionInput internal constructor(
     val providerId: ProviderId,
     val name: SubscriptionName,
+    val categoryOverride: ProviderCategory?,
     val price: Money,
     val currency: Currency,
     val billingPeriod: BillingPeriod,

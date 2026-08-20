@@ -7,6 +7,10 @@
     <string name="action_cancel">Anuluj</string>
     <string name="amount_per_month">%1$s / mies.</string>
     <string name="amount_per_year">%1$s / rok</string>
+    <string name="open_menu">Otwórz menu</string>
+    <string name="search_clear">Wyczyść wyszukiwanie</string>
+    <string name="no_results_title">Brak wyników</string>
+    <string name="filter_tag_all">Wszystkie</string>
 
     <!-- Message severity, spoken by screen readers so status is not carried by color alone -->
     <string name="severity_info">Informacja</string>
@@ -25,18 +29,17 @@
     <!-- Home -->
     <string name="home_title">Subskrypcje</string>
     <string name="home_search_placeholder">Szukaj subskrypcji</string>
-    <string name="home_search_clear">Wyczyść wyszukiwanie</string>
     <string name="home_empty_title">Brak subskrypcji</string>
     <string name="home_empty_description">Dodaj pierwszą subskrypcję, aby zobaczyć swoje miesięczne wydatki.</string>
-    <string name="home_no_results_title">Brak wyników</string>
-    <string name="home_no_results_description">Żadna subskrypcja nie pasuje do zapytania „%1$s”.</string>
+    <string name="home_no_results_query">Żadna subskrypcja nie pasuje do zapytania „%1$s”.</string>
+    <string name="home_no_results_category">Brak subskrypcji w kategorii „%1$s”.</string>
+    <string name="home_no_results_category_and_query">Brak subskrypcji w kategorii „%1$s” dla zapytania „%2$s”.</string>
     <string name="home_add_subscription">Dodaj subskrypcję</string>
     <string name="home_totals_title">Łącznie</string>
-    <string name="home_totals_filtered_title">Łącznie (wyniki wyszukiwania)</string>
-    <string name="home_open_menu">Otwórz menu</string>
-    <string name="home_item_description">%1$s, %2$s, %3$s</string>
+    <string name="home_totals_filtered_title">Łącznie (widoczne pozycje)</string>
+    <string name="home_item_description">%1$s, %2$s, %3$s, %4$s</string>
 
-    <!-- Details -->
+    <!-- Subscription details -->
     <string name="details_title">Szczegóły subskrypcji</string>
     <string name="details_billing_label">Rozliczenie</string>
     <string name="details_next_payment_label">Następna płatność</string>
@@ -55,7 +58,7 @@
     <string name="delete_dialog_confirm">Usuń</string>
     <string name="delete_success">Usunięto subskrypcję %1$s</string>
 
-    <!-- Form -->
+    <!-- Subscription form -->
     <string name="form_title_add">Dodaj subskrypcję</string>
     <string name="form_title_edit">Edytuj subskrypcję</string>
     <string name="form_provider_label">Usługa</string>
@@ -63,15 +66,18 @@
     <string name="form_provider_change">Zmień usługę</string>
     <string name="form_provider_no_results">Brak usług dla „%1$s”. Wybierz „Inne”, aby dodać własną.</string>
     <string name="form_name_label">Nazwa subskrypcji</string>
+    <string name="form_category_label">Kategoria</string>
     <string name="form_price_label">Cena</string>
     <string name="form_billing_period_label">Okres rozliczeniowy</string>
     <string name="form_next_billing_label">Data następnego odnowienia</string>
     <string name="form_next_billing_hint">Opcjonalnie — potrzebne do prognozy wydatków</string>
-    <string name="form_next_billing_pick">Wybierz datę</string>
-    <string name="form_next_billing_clear">Usuń datę</string>
     <string name="form_management_url_label">Adres zarządzania subskrypcją</string>
     <string name="form_management_url_hint">Opcjonalnie</string>
     <string name="form_save">Zapisz subskrypcję</string>
+
+    <!-- Shared form controls -->
+    <string name="form_date_pick">Wybierz datę</string>
+    <string name="form_date_clear">Usuń datę</string>
     <string name="form_date_picker_confirm">Wybierz</string>
 
     <!-- Validation -->
@@ -87,19 +93,100 @@
     <string name="form_error_url_invalid">Podaj poprawny adres, np. https://netflix.com</string>
 
     <!-- Errors -->
-    <string name="error_save_failed">Nie udało się zapisać subskrypcji. Spróbuj ponownie.</string>
+    <string name="error_save_failed">Nie udało się zapisać danych. Spróbuj ponownie.</string>
     <string name="error_load_failed">Nie udało się wczytać danych. Spróbuj ponownie.</string>
-    <string name="error_delete_failed">Nie udało się usunąć subskrypcji. Spróbuj ponownie.</string>
+    <string name="error_delete_failed">Nie udało się usunąć pozycji. Spróbuj ponownie.</string>
     <string name="error_open_url_failed">Nie udało się otworzyć strony zarządzania.</string>
 
     <!-- Drawer -->
     <string name="drawer_home">Subskrypcje</string>
+    <string name="drawer_obligations">Ubezpieczenia i opłaty</string>
     <string name="drawer_statistics">Statystyki</string>
     <string name="drawer_version">Wersja %1$s</string>
     <string name="drawer_build">Build %1$d</string>
 
+    <!-- Obligations list -->
+    <string name="obligations_title">Ubezpieczenia i opłaty</string>
+    <string name="obligations_search_placeholder">Szukaj opłaty</string>
+    <string name="obligations_add">Dodaj ubezpieczenie lub opłatę</string>
+    <string name="obligations_empty_title">Brak ubezpieczeń i opłat</string>
+    <string name="obligations_empty_description">Dodaj pierwszą pozycję, aby śledzić ważne terminy i roczne wydatki.</string>
+    <string name="obligations_no_results_period">Brak pozycji w wybranym okresie (%1$s).</string>
+    <string name="obligations_no_results_query">Żadna pozycja nie pasuje do zapytania „%1$s” w okresie %2$s.</string>
+    <string name="obligations_no_results_tag">Brak pozycji z tagiem „%1$s” w okresie %2$s.</string>
+    <string name="obligations_no_results_tag_and_query">Brak pozycji z tagiem „%1$s” dla zapytania „%2$s” w okresie %3$s.</string>
+    <string name="obligations_item_description">%1$s, %2$s, %3$s, %4$s</string>
+    <string name="obligations_paid_on">zapłacono %1$s</string>
+    <string name="obligations_valid_until">ważne do %1$s</string>
+    <string name="obligations_due_on">termin %1$s</string>
+    <string name="obligations_no_dates">bez terminu</string>
+    <string name="obligations_paid_in_year">Zapłacono w %1$d roku</string>
+    <!-- %1$s is a month in the locative case, see months_locative -->
+    <string name="obligations_paid_in_month">Zapłacono w %1$s %2$d</string>
+    <string name="obligations_paid_in_range">Zapłacono w okresie %1$s</string>
+    <string name="obligations_paid_filtered_suffix">%1$s (widoczne pozycje)</string>
+    <string name="obligations_outstanding_label">Do zapłaty</string>
+
+    <!-- Period selector -->
+    <string name="period_mode_month">Miesiąc</string>
+    <string name="period_mode_year">Rok</string>
+    <string name="period_previous">Poprzedni okres</string>
+    <string name="period_next">Następny okres</string>
+
+    <!-- Deadlines -->
+    <string name="deadline_expires_today">Wygasa dziś</string>
+    <string name="deadline_expired">Wygasło</string>
+    <string name="deadline_due_today">Termin dziś</string>
+    <string name="deadline_overdue">Termin minął</string>
+
+    <!-- Obligation details -->
+    <string name="obligation_details_title">Szczegóły</string>
+    <string name="obligation_details_edit">Edytuj pozycję</string>
+    <string name="obligation_details_delete">Usuń pozycję</string>
+    <string name="obligation_details_not_found">Nie znaleziono pozycji.</string>
+    <string name="obligation_details_status_label">Status</string>
+    <string name="obligation_details_category_label">Kategoria</string>
+    <string name="obligation_details_paid_label">Zapłacono</string>
+    <string name="obligation_details_due_label">Termin płatności</string>
+    <string name="obligation_details_valid_until_label">Ważne do</string>
+    <string name="obligation_details_notes_label">Notatka</string>
+    <string name="obligation_details_not_provided">Nie podano</string>
+    <string name="obligation_delete_dialog_title">Usunąć pozycję?</string>
+    <string name="obligation_delete_dialog_message">Czy na pewno chcesz usunąć „%1$s”? Tej operacji nie można cofnąć.</string>
+    <string name="obligation_delete_success">Usunięto pozycję „%1$s”</string>
+
+    <!-- Obligation form -->
+    <string name="obligation_form_title_add">Dodaj ubezpieczenie lub opłatę</string>
+    <string name="obligation_form_title_edit">Edytuj pozycję</string>
+    <string name="obligation_form_name_label">Nazwa</string>
+    <string name="obligation_form_name_hint">Np. OC Ford, Podatek od gruntu</string>
+    <string name="obligation_form_category_label">Kategoria</string>
+    <string name="obligation_form_amount_label">Kwota</string>
+    <string name="obligation_form_status_label">Status płatności</string>
+    <string name="obligation_form_payment_date_label">Data zapłaty</string>
+    <string name="obligation_form_payment_date_hint">Decyduje o roku, w którym liczymy wydatek</string>
+    <string name="obligation_form_due_date_label">Termin płatności</string>
+    <string name="obligation_form_due_date_hint">Opcjonalnie</string>
+    <string name="obligation_form_valid_until_label">Ważne do</string>
+    <string name="obligation_form_valid_until_hint">Opcjonalnie — koniec ochrony ubezpieczeniowej</string>
+    <string name="obligation_form_notes_label">Notatka</string>
+    <string name="obligation_form_notes_hint">Opcjonalnie, np. numer polisy</string>
+    <string name="obligation_form_save">Zapisz pozycję</string>
+    <string name="obligation_form_error_name_missing">Podaj nazwę pozycji</string>
+    <string name="obligation_form_error_name_too_long">Nazwa jest za długa</string>
+    <string name="obligation_form_error_category_missing">Wybierz kategorię</string>
+    <string name="obligation_form_error_payment_date_missing">Podaj datę zapłaty dla pozycji oznaczonej jako zapłacona</string>
+    <string name="obligation_form_error_notes_too_long">Notatka jest za długa</string>
+
+    <!-- Payment status -->
+    <string name="payment_status_paid">Zapłacono</string>
+    <string name="payment_status_unpaid">Do zapłaty</string>
+
     <!-- Statistics -->
     <string name="statistics_title">Statystyki</string>
+    <string name="statistics_scope_all">Wszystkie</string>
+    <string name="statistics_scope_subscriptions">Subskrypcje</string>
+    <string name="statistics_scope_obligations">Opłaty</string>
     <string name="statistics_monthly_label">Miesięcznie</string>
     <string name="statistics_yearly_label">Rocznie</string>
     <string name="statistics_count_label">Subskrypcje</string>
@@ -112,29 +199,104 @@
     <string name="statistics_forecast_month_total">%1$s: %2$s</string>
     <string name="statistics_average_title">Średni koszt miesięczny</string>
     <string name="statistics_average_description">Koszt znormalizowany: subskrypcje roczne podzielone na 12 miesięcy.</string>
-    <string name="statistics_categories_title">Koszty według kategorii</string>
+    <string name="statistics_categories_title">Subskrypcje według kategorii</string>
     <string name="statistics_top_title">Największe koszty</string>
     <string name="statistics_top_description">Porównanie w przeliczeniu na miesiąc.</string>
     <string name="statistics_upcoming_title">Najbliższe obciążenia</string>
     <string name="statistics_empty_title">Brak danych</string>
-    <string name="statistics_empty_description">Dodaj subskrypcje, aby zobaczyć statystyki wydatków.</string>
+    <string name="statistics_empty_description">Dodaj subskrypcje albo opłaty, aby zobaczyć statystyki wydatków.</string>
     <string name="statistics_share_percent">%1$d%%</string>
     <string name="statistics_upcoming_soon">Wkrótce</string>
 
-    <!-- Categories -->
+    <!-- Statistics: obligations -->
+    <string name="statistics_obligations_paid_label">Zapłacono</string>
+    <string name="statistics_obligations_count_label">Pozycji</string>
+    <string name="statistics_obligations_outstanding_label">Do zapłaty</string>
+    <string name="statistics_obligations_largest_label">Największa opłata</string>
+    <string name="statistics_obligations_payments_title">Faktycznie zapłacone opłaty</string>
+    <string name="statistics_obligations_payments_description">Każda opłata liczona raz, w miesiącu w którym została zapłacona.</string>
+    <string name="statistics_obligations_payments_empty">Brak zapłaconych opłat w wybranym okresie.</string>
+    <string name="statistics_obligations_categories_title">Opłaty według kategorii</string>
+    <string name="statistics_obligations_top_title">Największe opłaty</string>
+    <string name="statistics_obligations_top_description">Kwoty faktycznie zapłacone w wybranym okresie.</string>
+
+    <!-- Statistics: combined -->
+    <string name="statistics_combined_title">Koszty łącznie</string>
+    <string name="statistics_combined_subscriptions_label">Subskrypcje</string>
+    <string name="statistics_combined_subscriptions_note">szacowany koszt</string>
+    <string name="statistics_combined_obligations_label">Ubezpieczenia i opłaty</string>
+    <string name="statistics_combined_obligations_note">faktycznie zapłacono</string>
+    <string name="statistics_combined_total_label">Łącznie</string>
+    <string name="statistics_combined_total_note">Suma szacowanego kosztu subskrypcji i faktycznie zapłaconych opłat — to nie jest historia transakcji.</string>
+    <string name="statistics_combined_chart_title">Koszty w czasie</string>
+    <string name="statistics_combined_chart_description">Subskrypcje to koszt znormalizowany (szacowany), opłaty to rzeczywiste płatności.</string>
+    <string name="statistics_source_subscription">Subskrypcja</string>
+    <string name="statistics_source_obligation">Opłata</string>
+
+    <!-- Categories: subscriptions -->
     <string name="category_video">Video</string>
     <string name="category_music">Muzyka</string>
     <string name="category_ai">AI</string>
     <string name="category_cloud">Chmura</string>
     <string name="category_software">Oprogramowanie</string>
-    <string name="category_hosting">Hosting i domeny</string>
+    <string name="category_hosting">Hosting</string>
     <string name="category_shopping">Zakupy</string>
     <string name="category_gaming">Gry</string>
-    <string name="category_books">Książki i audio</string>
+    <string name="category_books">Książki</string>
     <string name="category_other">Inne</string>
+
+    <!-- Categories: obligations -->
+    <string name="obligation_category_vehicle_insurance">Ubezpieczenie pojazdu</string>
+    <string name="obligation_category_home_insurance">Ubezpieczenie domu</string>
+    <string name="obligation_category_land_insurance">Ubezpieczenie gruntu</string>
+    <string name="obligation_category_drone_insurance">Ubezpieczenie drona</string>
+    <string name="obligation_category_property_tax">Podatek od nieruchomości</string>
+    <string name="obligation_category_land_tax">Podatek od gruntu</string>
+    <string name="obligation_category_other">Inne</string>
+
+    <!-- Tags: obligations. Short by design - a badge has to stay readable inside a list row. -->
+    <string name="tag_vehicle_insurance">OC</string>
+    <string name="tag_home_insurance">Dom</string>
+    <string name="tag_land_insurance">Grunt</string>
+    <string name="tag_drone_insurance">Dron</string>
+    <string name="tag_tax">Podatek</string>
+    <string name="tag_other">Inne</string>
 
     <!-- Providers -->
     <string name="provider_other">Inne</string>
+
+    <!--
+        Month names in the locative case ("w sierpniu"), which CLDR does not provide: its two forms
+        are the nominative "sierpień" and the genitive "sierpnia". Used only after the preposition.
+    -->
+    <string-array name="months_locative">
+        <item>styczniu</item>
+        <item>lutym</item>
+        <item>marcu</item>
+        <item>kwietniu</item>
+        <item>maju</item>
+        <item>czerwcu</item>
+        <item>lipcu</item>
+        <item>sierpniu</item>
+        <item>wrześniu</item>
+        <item>październiku</item>
+        <item>listopadzie</item>
+        <item>grudniu</item>
+    </string-array>
+
+    <plurals name="deadline_expires_in">
+        <item quantity="one">Wygasa za %1$d dzień</item>
+        <item quantity="few">Wygasa za %1$d dni</item>
+        <item quantity="many">Wygasa za %1$d dni</item>
+        <item quantity="other">Wygasa za %1$d dni</item>
+    </plurals>
+
+    <plurals name="deadline_due_in">
+        <item quantity="one">Termin za %1$d dzień</item>
+        <item quantity="few">Termin za %1$d dni</item>
+        <item quantity="many">Termin za %1$d dni</item>
+        <item quantity="other">Termin za %1$d dni</item>
+    </plurals>
 
     <plurals name="statistics_without_date">
         <item quantity="one">%1$d subskrypcja bez daty odnowienia (%2$s / mies.)</item>

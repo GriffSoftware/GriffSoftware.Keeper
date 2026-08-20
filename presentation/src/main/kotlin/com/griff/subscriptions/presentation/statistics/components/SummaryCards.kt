@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ObligationTotals
 import com.griff.subscriptions.domain.model.SubscriptionTotals
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
@@ -24,12 +25,12 @@ import com.griff.subscriptions.presentation.theme.ThemePreviews
 /**
  * Monthly cost, yearly cost and the number of subscriptions.
  *
- * The tiles stay neutral - a white (light) or graphite (dark) card with a hairline outline; only
- * the monthly cost, the number the screen is about, is printed in the accent color, so the row has
- * a single focal point instead of three.
+ * The tiles stay neutral - a white (light) or graphite (dark) card with a hairline outline; only the
+ * monthly cost, the number this scope is about, is printed in the accent color, so the row has a
+ * single focal point instead of three.
  */
 @Composable
-internal fun SummaryCards(
+internal fun SubscriptionSummaryCards(
     totals: SubscriptionTotals,
     modifier: Modifier = Modifier,
 ) {
@@ -56,11 +57,46 @@ internal fun SummaryCards(
     }
 }
 
+/**
+ * What was paid in the window, how many records it covers and what is still open.
+ *
+ * "Zapłacono" leads and takes the accent: it is the only figure here that describes money that has
+ * actually moved.
+ */
 @Composable
-private fun SummaryCard(
+internal fun ObligationSummaryCards(
+    totals: ObligationTotals,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.Medium),
+    ) {
+        SummaryCard(
+            label = stringResource(R.string.statistics_obligations_paid_label),
+            value = MoneyFormatter.format(totals.paid),
+            valueColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.weight(1.3f),
+        )
+        SummaryCard(
+            label = stringResource(R.string.statistics_obligations_count_label),
+            value = totals.paidCount.toString(),
+            modifier = Modifier.weight(0.7f),
+        )
+        SummaryCard(
+            label = stringResource(R.string.statistics_obligations_outstanding_label),
+            value = MoneyFormatter.format(totals.outstanding),
+            modifier = Modifier.weight(1.3f),
+        )
+    }
+}
+
+@Composable
+internal fun SummaryCard(
     label: String,
     value: String,
     modifier: Modifier = Modifier,
+    note: String? = null,
     valueColor: Color = Color.Unspecified,
 ) {
     OutlinedCard(modifier = modifier) {
@@ -82,6 +118,15 @@ private fun SummaryCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+            // The note is what keeps an estimate from being read as a transaction.
+            if (note != null) {
+                Text(
+                    text = note,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                )
+            }
         }
     }
 }
@@ -90,13 +135,26 @@ private fun SummaryCard(
 @Composable
 private fun SummaryCardsPreview() {
     GriffThemePreview {
-        SummaryCards(
-            totals = SubscriptionTotals(
-                monthly = Money.ofUnits(286, 40),
-                yearly = Money.ofUnits(3_436, 80),
-                subscriptionCount = 12,
-            ),
+        Column(
             modifier = Modifier.padding(Spacing.Large),
-        )
+            verticalArrangement = Arrangement.spacedBy(Spacing.Medium),
+        ) {
+            SubscriptionSummaryCards(
+                totals = SubscriptionTotals(
+                    monthly = Money.ofUnits(286, 40),
+                    yearly = Money.ofUnits(3_436, 80),
+                    subscriptionCount = 12,
+                ),
+            )
+            ObligationSummaryCards(
+                totals = ObligationTotals(
+                    paid = Money.ofUnits(4_820),
+                    outstanding = Money.ofUnits(920),
+                    paidCount = 6,
+                    outstandingCount = 1,
+                    largestPaid = Money.ofUnits(1_420),
+                ),
+            )
+        }
     }
 }

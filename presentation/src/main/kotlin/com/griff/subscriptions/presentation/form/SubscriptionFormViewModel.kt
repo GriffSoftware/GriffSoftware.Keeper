@@ -12,6 +12,7 @@ import com.griff.subscriptions.application.subscription.UpdateSubscriptionUseCas
 import com.griff.subscriptions.application.subscription.ValidateSubscriptionInputUseCase
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Provider
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
@@ -105,6 +106,9 @@ class SubscriptionFormViewModel @Inject constructor(
                 providerQuery = "",
                 providerOptions = getProviders().map(Provider::toOption),
                 name = if (provider.isOther) current.name else provider.displayName,
+                // A catalog entry brings its own category; a custom one keeps whatever the user
+                // has already picked, defaulting to "other".
+                category = if (provider.isOther) current.category else provider.category,
                 managementUrl = provider.defaultManagementUrl?.value ?: "",
             )
         }
@@ -124,6 +128,11 @@ class SubscriptionFormViewModel @Inject constructor(
 
     fun onNameChange(value: String) {
         _uiState.update { it.copy(name = value) }
+        revalidate()
+    }
+
+    fun onCategoryChange(value: ProviderCategory) {
+        _uiState.update { it.copy(category = value) }
         revalidate()
     }
 
@@ -226,6 +235,7 @@ class SubscriptionFormViewModel @Inject constructor(
             isLoading = false,
             selectedProvider = provider.toOption(),
             name = subscription.name.value,
+            category = subscription.categoryOverride ?: provider.category,
             price = PriceInput.format(subscription.price),
             billingPeriod = subscription.billingPeriod,
             nextBillingDate = subscription.nextBillingDate,
@@ -237,6 +247,8 @@ class SubscriptionFormViewModel @Inject constructor(
         SubscriptionInput(
             providerId = selectedProvider?.id?.let(::ProviderId),
             name = name,
+            // Ignored by the validator for catalog entries, which follow the catalog instead.
+            category = category,
             price = price,
             billingPeriod = billingPeriod,
             managementUrl = managementUrl,

@@ -1,16 +1,23 @@
 package com.griff.subscriptions.domain.testing
 
+import com.griff.subscriptions.domain.id.ObligationIdGenerator
 import com.griff.subscriptions.domain.id.SubscriptionIdGenerator
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Currency
 import com.griff.subscriptions.domain.model.ManagementUrl
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.Obligation
+import com.griff.subscriptions.domain.model.ObligationCategory
+import com.griff.subscriptions.domain.model.ObligationId
+import com.griff.subscriptions.domain.model.ObligationName
+import com.griff.subscriptions.domain.model.PaymentState
 import com.griff.subscriptions.domain.model.Provider
 import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
 import com.griff.subscriptions.domain.model.SubscriptionName
+import com.griff.subscriptions.domain.repository.ObligationRepository
 import com.griff.subscriptions.domain.repository.ProviderCatalog
 import com.griff.subscriptions.domain.repository.SubscriptionRepository
 import com.griff.subscriptions.domain.time.ClockProvider
@@ -66,6 +73,45 @@ class FakeSubscriptionRepository(
     }
 }
 
+/** In-memory [ObligationRepository], ordered the way the Room implementation orders rows. */
+class FakeObligationRepository(
+    initial: List<Obligation> = emptyList(),
+) : ObligationRepository {
+
+    private val state = MutableStateFlow(initial.sortedBy { it.name.value.lowercase() })
+
+    var failOnWrite: Boolean = false
+
+    val stored: List<Obligation> get() = state.value
+
+    override fun observeAll(): Flow<List<Obligation>> = state
+
+    override fun observeById(id: ObligationId): Flow<Obligation?> =
+        state.map { obligations -> obligations.firstOrNull { it.id == id } }
+
+    override suspend fun findById(id: ObligationId): Obligation? =
+        state.value.firstOrNull { it.id == id }
+
+    override suspend fun add(obligation: Obligation) {
+        failIfRequested()
+        state.value = (state.value + obligation).sortedBy { it.name.value.lowercase() }
+    }
+
+    override suspend fun update(obligation: Obligation) {
+        failIfRequested()
+        state.value = state.value.map { if (it.id == obligation.id) obligation else it }
+    }
+
+    override suspend fun delete(id: ObligationId) {
+        failIfRequested()
+        state.value = state.value.filterNot { it.id == id }
+    }
+
+    private fun failIfRequested() {
+        if (failOnWrite) error("Simulated storage failure")
+    }
+}
+
 /** Clock frozen at a known instant so date dependent assertions are stable. */
 class FixedClockProvider(
     private var instant: Instant = Instant.parse("2026-08-20T09:00:00Z"),
@@ -88,6 +134,16 @@ class SequentialIdGenerator : SubscriptionIdGenerator {
     override fun next(): SubscriptionId {
         counter++
         return SubscriptionId("id-$counter")
+    }
+}
+
+/** Generates predictable obligation ids: `obligation-1`, `obligation-2`, ... */
+class SequentialObligationIdGenerator : ObligationIdGenerator {
+    private var counter = 0
+
+    override fun next(): ObligationId {
+        counter++
+        return ObligationId("obligation-$counter")
     }
 }
 
@@ -134,6 +190,7 @@ fun testSubscription(
     id: String = "id-1",
     providerId: String = "spotify",
     name: String = "Spotify",
+    categoryOverride: ProviderCategory? = null,
     priceMinorUnits: Long = 3499,
     billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
     nextBillingDate: LocalDate? = null,
@@ -143,11 +200,36 @@ fun testSubscription(
     id = SubscriptionId(id),
     providerId = ProviderId(providerId),
     name = SubscriptionName.of(name),
+    categoryOverride = categoryOverride,
     price = Money.ofMinorUnits(priceMinorUnits),
     currency = Currency.PLN,
     billingPeriod = billingPeriod,
     managementUrl = managementUrl?.let(ManagementUrl::ofOrNull),
     nextBillingDate = nextBillingDate,
+    createdAt = createdAt,
+    updatedAt = createdAt,
+)
+
+fun testObligation(
+    id: String = "obligation-1",
+    name: String = "OC Ford",
+    category: ObligationCategory = ObligationCategory.VEHICLE_INSURANCE,
+    amountMinorUnits: Long = 124_000,
+    payment: PaymentState = PaymentState.Paid(LocalDate.of(2026, 3, 12)),
+    dueDate: LocalDate? = null,
+    validUntil: LocalDate? = LocalDate.of(2027, 3, 11),
+    notes: String? = null,
+    createdAt: Instant = Instant.parse("2026-01-01T00:00:00Z"),
+): Obligation = Obligation(
+    id = ObligationId(id),
+    name = ObligationName.of(name),
+    category = category,
+    amount = Money.ofMinorUnits(amountMinorUnits),
+    currency = Currency.PLN,
+    payment = payment,
+    dueDate = dueDate,
+    validUntil = validUntil,
+    notes = notes,
     createdAt = createdAt,
     updatedAt = createdAt,
 )

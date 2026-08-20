@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.InsertChartOutlined
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +35,8 @@ import com.griff.subscriptions.presentation.theme.ThemePreviews
 
 /** Destinations reachable from the navigation drawer. */
 enum class DrawerDestination {
-    HOME,
+    SUBSCRIPTIONS,
+    OBLIGATIONS,
     STATISTICS,
 }
 
@@ -94,8 +96,17 @@ internal fun AppDrawerContent(
             NavigationDrawerItem(
                 label = { Text(stringResource(R.string.drawer_home)) },
                 icon = { Icon(Icons.AutoMirrored.Filled.ReceiptLong, contentDescription = null) },
-                selected = selected == DrawerDestination.HOME,
-                onClick = { onSelect(DrawerDestination.HOME) },
+                selected = selected == DrawerDestination.SUBSCRIPTIONS,
+                onClick = { onSelect(DrawerDestination.SUBSCRIPTIONS) },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                shape = itemShape,
+                colors = itemColors,
+            )
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.drawer_obligations)) },
+                icon = { Icon(Icons.Default.VerifiedUser, contentDescription = null) },
+                selected = selected == DrawerDestination.OBLIGATIONS,
+                onClick = { onSelect(DrawerDestination.OBLIGATIONS) },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 shape = itemShape,
                 colors = itemColors,
@@ -150,7 +161,7 @@ private val SelectionCornerRadius = 4.dp
 private fun AppDrawerContentPreview() {
     GriffThemePreview {
         AppDrawerContent(
-            selected = DrawerDestination.HOME,
+            selected = DrawerDestination.SUBSCRIPTIONS,
             appVersion = AppVersion(name = "1.0.0", code = 1L),
             onSelect = {},
         )

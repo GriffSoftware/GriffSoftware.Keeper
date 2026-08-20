@@ -2,8 +2,12 @@ package com.griff.subscriptions.presentation.common
 
 import androidx.annotation.StringRes
 import com.griff.subscriptions.domain.model.BillingPeriod
+import com.griff.subscriptions.domain.model.ObligationCategory
+import com.griff.subscriptions.domain.model.PaymentStatus
 import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.statistics.StatisticsPeriod
+import com.griff.subscriptions.domain.statistics.StatisticsScope
+import com.griff.subscriptions.domain.validation.ObligationInputError
 import com.griff.subscriptions.domain.validation.PriceError
 import com.griff.subscriptions.domain.validation.SubscriptionInputError
 import com.griff.subscriptions.presentation.R
@@ -44,6 +48,30 @@ internal object Labels {
     }
 
     @StringRes
+    fun obligationCategory(category: ObligationCategory): Int = when (category) {
+        ObligationCategory.VEHICLE_INSURANCE -> R.string.obligation_category_vehicle_insurance
+        ObligationCategory.HOME_INSURANCE -> R.string.obligation_category_home_insurance
+        ObligationCategory.LAND_INSURANCE -> R.string.obligation_category_land_insurance
+        ObligationCategory.DRONE_INSURANCE -> R.string.obligation_category_drone_insurance
+        ObligationCategory.PROPERTY_TAX -> R.string.obligation_category_property_tax
+        ObligationCategory.LAND_TAX -> R.string.obligation_category_land_tax
+        ObligationCategory.OTHER -> R.string.obligation_category_other
+    }
+
+    @StringRes
+    fun paymentStatus(status: PaymentStatus): Int = when (status) {
+        PaymentStatus.PAID -> R.string.payment_status_paid
+        PaymentStatus.UNPAID -> R.string.payment_status_unpaid
+    }
+
+    @StringRes
+    fun statisticsScope(scope: StatisticsScope): Int = when (scope) {
+        StatisticsScope.ALL -> R.string.statistics_scope_all
+        StatisticsScope.SUBSCRIPTIONS -> R.string.statistics_scope_subscriptions
+        StatisticsScope.OBLIGATIONS -> R.string.statistics_scope_obligations
+    }
+
+    @StringRes
     fun statisticsPeriod(period: StatisticsPeriod): Int = when (period) {
         StatisticsPeriod.MONTH -> R.string.statistics_period_month
         StatisticsPeriod.YEAR -> R.string.statistics_period_year
@@ -57,6 +85,18 @@ internal object Labels {
         SubscriptionInputError.NameTooLong -> R.string.form_error_name_too_long
         SubscriptionInputError.ManagementUrlInvalid -> R.string.form_error_url_invalid
         is SubscriptionInputError.Price -> priceError(error.error)
+    }
+
+    @StringRes
+    fun obligationInputError(error: ObligationInputError): Int = when (error) {
+        ObligationInputError.NameMissing -> R.string.obligation_form_error_name_missing
+        ObligationInputError.NameTooLong -> R.string.obligation_form_error_name_too_long
+        ObligationInputError.CategoryMissing -> R.string.obligation_form_error_category_missing
+        ObligationInputError.PaymentDateMissing ->
+            R.string.obligation_form_error_payment_date_missing
+
+        ObligationInputError.NotesTooLong -> R.string.obligation_form_error_notes_too_long
+        is ObligationInputError.Amount -> priceError(error.error)
     }
 
     @StringRes

@@ -1,7 +1,9 @@
 package com.griff.subscriptions.domain.statistics
 
 import com.griff.subscriptions.domain.calculation.SubscriptionCostCalculator
+import com.griff.subscriptions.domain.model.ProviderCategoryResolver
 import com.griff.subscriptions.domain.model.Subscription
+import com.griff.subscriptions.domain.model.categoryWith
 import com.griff.subscriptions.domain.model.sum
 import java.time.LocalDate
 import java.time.YearMonth
@@ -72,7 +74,7 @@ class SubscriptionStatisticsCalculator(
     private fun categories(subscriptions: List<Subscription>): List<CategorySpending> {
         val monthlyTotal = SubscriptionCostCalculator.monthlyTotal(subscriptions)
         return subscriptions
-            .groupBy { categoryResolver.categoryOf(it.providerId) }
+            .groupBy { it.categoryWith(categoryResolver) }
             .map { (category, items) ->
                 val monthly = items.map { it.monthlyEquivalent }.sum()
                 CategorySpending(

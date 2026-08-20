@@ -2,6 +2,7 @@ package com.griff.subscriptions.domain.validation
 
 import com.griff.subscriptions.domain.model.Currency
 import com.griff.subscriptions.domain.model.ManagementUrl
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.SubscriptionName
 
 /** Turns raw form values into a [ValidatedSubscriptionInput] or a list of field errors. */
@@ -52,6 +53,12 @@ object SubscriptionInputValidator {
             ValidatedSubscriptionInput(
                 providerId = providerId,
                 name = name,
+                // Only a custom service carries its own category; a catalog entry would otherwise
+                // end up with a stored copy that can drift away from the catalog.
+                categoryOverride = when {
+                    !providerId.isOther -> null
+                    else -> input.category ?: ProviderCategory.OTHER
+                },
                 price = price,
                 currency = Currency.Default,
                 billingPeriod = input.billingPeriod,

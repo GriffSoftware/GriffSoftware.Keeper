@@ -13,6 +13,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Room's MigrationTestHelper reads the exported schemas from the test APK's assets.
+    sourceSets.getByName("androidTest") {
+        assets.srcDir("$projectDir/schemas")
+    }
+
 
     lint {
         // Builds must not regress: any lint error fails the build.

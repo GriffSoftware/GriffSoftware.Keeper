@@ -39,7 +39,7 @@ class MainActivityTest {
     @Test
     fun drawerOpensAndShowsBothDestinations() {
         composeRule
-            .onNodeWithContentDescription(context.getString(R.string.home_open_menu))
+            .onNodeWithContentDescription(context.getString(R.string.open_menu))
             .performClick()
 
         composeRule.onNodeWithText(context.getString(R.string.drawer_statistics)).assertIsDisplayed()

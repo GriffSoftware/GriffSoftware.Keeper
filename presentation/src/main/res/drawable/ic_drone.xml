@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Quadcopter glyph: Material Icons has no drone, and every near miss (a helicopter, a fan) would
+    read as something else. Drawn on the same 24dp grid and with comparable stroke weight as the
+    Material icons it sits next to, and tinted by the caller, so it matches them in both themes.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Arms -->
+    <path
+        android:pathData="M9.9,9.9L7.7,7.7M14.1,9.9L16.3,7.7M9.9,14.1L7.7,16.3M14.1,14.1L16.3,16.3"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+
+    <!-- Body -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,9.4a2.6,2.6 0 1,0 0,5.2a2.6,2.6 0 1,0 0,-5.2z" />
+
+    <!-- Rotors -->
+    <path
+        android:pathData="M6,3.7a2.3,2.3 0 1,0 0,4.6a2.3,2.3 0 1,0 0,-4.6z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.5" />
+    <path
+        android:pathData="M18,3.7a2.3,2.3 0 1,0 0,4.6a2.3,2.3 0 1,0 0,-4.6z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.5" />
+    <path
+        android:pathData="M6,15.7a2.3,2.3 0 1,0 0,4.6a2.3,2.3 0 1,0 0,-4.6z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.5" />
+    <path
+        android:pathData="M18,15.7a2.3,2.3 0 1,0 0,4.6a2.3,2.3 0 1,0 0,-4.6z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.5" />
+</vector>

@@ -2,6 +2,7 @@ package com.griff.subscriptions.domain.statistics
 
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.ProviderCategory
+import com.griff.subscriptions.domain.model.ProviderCategoryResolver
 import com.griff.subscriptions.domain.testing.testSubscription
 import java.time.LocalDate
 import java.time.YearMonth

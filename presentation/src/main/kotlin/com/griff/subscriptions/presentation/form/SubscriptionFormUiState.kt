@@ -1,6 +1,7 @@
 package com.griff.subscriptions.presentation.form
 
 import com.griff.subscriptions.domain.model.BillingPeriod
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.validation.SubscriptionField
 import com.griff.subscriptions.presentation.common.UiMessage
 import java.time.LocalDate
@@ -24,6 +25,7 @@ data class SubscriptionFormUiState(
     val providerOptions: List<ProviderOption> = emptyList(),
     val selectedProvider: ProviderOption? = null,
     val name: String = "",
+    val category: ProviderCategory = ProviderCategory.OTHER,
     val price: String = "",
     val billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
     val nextBillingDate: LocalDate? = null,
@@ -35,6 +37,14 @@ data class SubscriptionFormUiState(
 ) {
     /** Custom services need a user supplied name; catalog entries take the brand name. */
     val isNameFieldVisible: Boolean get() = selectedProvider?.isOther == true
+
+    /**
+     * Only a custom service asks for a category.
+     *
+     * A catalog entry already has one, and letting the user override it would create a second answer
+     * to the same question.
+     */
+    val isCategoryFieldVisible: Boolean get() = selectedProvider?.isOther == true
 
     val isEditable: Boolean get() = !isSaving && !isLoading
 }

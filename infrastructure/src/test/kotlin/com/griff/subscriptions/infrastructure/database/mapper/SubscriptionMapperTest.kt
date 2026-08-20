@@ -4,6 +4,7 @@ import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Currency
 import com.griff.subscriptions.domain.model.ManagementUrl
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
@@ -20,6 +21,7 @@ class SubscriptionMapperTest {
         id = SubscriptionId("id-1"),
         providerId = ProviderId("spotify"),
         name = SubscriptionName.of("Spotify"),
+        categoryOverride = null,
         price = Money.ofUnits(34, 99),
         currency = Currency.PLN,
         billingPeriod = BillingPeriod.MONTHLY,
@@ -49,6 +51,27 @@ class SubscriptionMapperTest {
         val restored = SubscriptionMapper.toDomain(SubscriptionMapper.toEntity(subscription))
 
         assertEquals(subscription, restored)
+    }
+
+    @Test
+    fun `a catalog entry stores no category of its own`() {
+        val entity = SubscriptionMapper.toEntity(subscription)
+
+        assertNull(entity.category)
+        assertNull(SubscriptionMapper.toDomain(entity).categoryOverride)
+    }
+
+    @Test
+    fun `a custom entry keeps the category the user picked`() {
+        val custom = subscription.copy(
+            providerId = ProviderId.OTHER,
+            categoryOverride = ProviderCategory.HOSTING,
+        )
+
+        val entity = SubscriptionMapper.toEntity(custom)
+
+        assertEquals("HOSTING", entity.category)
+        assertEquals(custom, SubscriptionMapper.toDomain(entity))
     }
 
     @Test

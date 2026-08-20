@@ -41,8 +41,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
+import com.griff.subscriptions.presentation.common.Tags
 import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.UiMessage
 import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
@@ -53,8 +55,9 @@ import com.griff.subscriptions.presentation.common.format.DateFormatter
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
 import com.griff.subscriptions.presentation.common.rememberUrlOpener
 import com.griff.subscriptions.presentation.common.resolve
-import com.griff.subscriptions.presentation.details.components.DeleteSubscriptionDialog
-import com.griff.subscriptions.presentation.details.components.DetailsInfoRow
+import com.griff.subscriptions.presentation.common.component.DeleteConfirmationDialog
+import com.griff.subscriptions.presentation.common.component.DetailsInfoRow
+import com.griff.subscriptions.presentation.common.component.TagChip
 import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
 import com.griff.subscriptions.presentation.theme.ThemePreviews
@@ -176,8 +179,9 @@ internal fun SubscriptionDetailsScreen(
 
     val details = state.details
     if (state.isDeleteDialogVisible && details != null) {
-        DeleteSubscriptionDialog(
-            subscriptionName = details.name,
+        DeleteConfirmationDialog(
+            title = stringResource(R.string.delete_dialog_title),
+            message = stringResource(R.string.delete_dialog_message, details.name),
             onConfirm = onDeleteConfirm,
             onDismiss = onDeleteDismiss,
         )
@@ -212,6 +216,10 @@ private fun SubscriptionDetailsContent(
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
         )
+
+        // The tag is a visual accent for the category, not a second headline: it sits between the
+        // name and the amount, where it reads as a label on the record rather than as data.
+        TagChip(style = Tags.of(details.category))
 
         Text(
             text = MoneyFormatter.format(details.price),
@@ -327,6 +335,7 @@ private fun SubscriptionDetailsScreenPreview() {
                     id = "1",
                     name = "Spotify",
                     logoKey = "spotify",
+                    category = ProviderCategory.MUSIC,
                     price = Money.ofUnits(34, 99),
                     billingPeriod = BillingPeriod.MONTHLY,
                     monthlyEquivalent = Money.ofUnits(34, 99),

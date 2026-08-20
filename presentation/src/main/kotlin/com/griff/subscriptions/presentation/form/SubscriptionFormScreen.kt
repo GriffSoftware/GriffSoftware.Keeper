@@ -38,14 +38,18 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Currency
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.validation.SubscriptionField
 import com.griff.subscriptions.presentation.R
+import com.griff.subscriptions.presentation.common.Labels
+import com.griff.subscriptions.presentation.common.component.CategoryOption
+import com.griff.subscriptions.presentation.common.component.CategorySelector
+import com.griff.subscriptions.presentation.common.component.DateField
 import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
 import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.symbol
 import com.griff.subscriptions.presentation.common.resolve
 import com.griff.subscriptions.presentation.form.components.BillingPeriodSelector
-import com.griff.subscriptions.presentation.form.components.NextBillingDateField
 import com.griff.subscriptions.presentation.form.components.ProviderPicker
 import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
@@ -74,6 +78,7 @@ fun SubscriptionFormRoute(
         onProviderSelected = viewModel::onProviderSelected,
         onProviderCleared = viewModel::onProviderCleared,
         onNameChange = viewModel::onNameChange,
+        onCategoryChange = viewModel::onCategoryChange,
         onPriceChange = viewModel::onPriceChange,
         onBillingPeriodChange = viewModel::onBillingPeriodChange,
         onNextBillingDateChange = viewModel::onNextBillingDateChange,
@@ -92,6 +97,7 @@ internal fun SubscriptionFormScreen(
     onProviderSelected: (ProviderOption) -> Unit,
     onProviderCleared: () -> Unit,
     onNameChange: (String) -> Unit,
+    onCategoryChange: (ProviderCategory) -> Unit,
     onPriceChange: (String) -> Unit,
     onBillingPeriodChange: (BillingPeriod) -> Unit,
     onNextBillingDateChange: (LocalDate?) -> Unit,
@@ -148,6 +154,7 @@ internal fun SubscriptionFormScreen(
                     onProviderSelected = onProviderSelected,
                     onProviderCleared = onProviderCleared,
                     onNameChange = onNameChange,
+                    onCategoryChange = onCategoryChange,
                     onPriceChange = onPriceChange,
                     onBillingPeriodChange = onBillingPeriodChange,
                     onNextBillingDateChange = onNextBillingDateChange,
@@ -166,6 +173,7 @@ private fun SubscriptionFormContent(
     onProviderSelected: (ProviderOption) -> Unit,
     onProviderCleared: () -> Unit,
     onNameChange: (String) -> Unit,
+    onCategoryChange: (ProviderCategory) -> Unit,
     onPriceChange: (String) -> Unit,
     onBillingPeriodChange: (BillingPeriod) -> Unit,
     onNextBillingDateChange: (LocalDate?) -> Unit,
@@ -207,6 +215,16 @@ private fun SubscriptionFormContent(
             )
         }
 
+        if (state.isCategoryFieldVisible) {
+            CategorySelector(
+                label = stringResource(R.string.form_category_label),
+                options = ProviderCategory.entries.map { CategoryOption(it, Labels.category(it)) },
+                selected = state.category,
+                enabled = state.isEditable,
+                onSelect = onCategoryChange,
+            )
+        }
+
         val priceError = state.errorFor(SubscriptionField.PRICE)
         OutlinedTextField(
             value = state.price,
@@ -230,8 +248,10 @@ private fun SubscriptionFormContent(
             onSelect = onBillingPeriodChange,
         )
 
-        NextBillingDateField(
+        DateField(
             date = state.nextBillingDate,
+            label = stringResource(R.string.form_next_billing_label),
+            supportingText = stringResource(R.string.form_next_billing_hint),
             enabled = state.isEditable,
             onDateChange = onNextBillingDateChange,
         )
@@ -295,6 +315,7 @@ private fun SubscriptionFormScreenPreview() {
             onProviderSelected = {},
             onProviderCleared = {},
             onNameChange = {},
+            onCategoryChange = {},
             onPriceChange = {},
             onBillingPeriodChange = {},
             onNextBillingDateChange = {},

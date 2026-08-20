@@ -22,6 +22,7 @@ class UpdateSubscriptionUseCase @Inject constructor(
             existing.copy(
                 providerId = input.providerId,
                 name = input.name,
+                categoryOverride = input.categoryOverride,
                 price = input.price,
                 currency = input.currency,
                 billingPeriod = input.billingPeriod,

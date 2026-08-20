@@ -130,6 +130,10 @@ internal data class GriffColors(
     val warning: Color,
     val info: Color,
     val monogramPalette: List<Color>,
+    val tagColors: Map<TagAccent, TagColors>,
+    /** Series colors of the combined statistics chart, one per expense source. */
+    val subscriptionSeries: Color,
+    val obligationSeries: Color,
 )
 
 private val LightGriffColors = GriffColors(
@@ -137,6 +141,9 @@ private val LightGriffColors = GriffColors(
     warning = SemanticColors.WarningLight,
     info = SemanticColors.InfoLight,
     monogramPalette = MonogramPalette.Light,
+    tagColors = TagPalette.Light,
+    subscriptionSeries = BrandColors.PrimaryLight,
+    obligationSeries = SeriesColors.ObligationLight,
 )
 
 private val DarkGriffColors = GriffColors(
@@ -144,6 +151,9 @@ private val DarkGriffColors = GriffColors(
     warning = SemanticColors.WarningDark,
     info = SemanticColors.InfoDark,
     monogramPalette = MonogramPalette.Dark,
+    tagColors = TagPalette.Dark,
+    subscriptionSeries = BrandColors.PrimaryDark,
+    obligationSeries = SeriesColors.ObligationDark,
 )
 
 private val LocalGriffColors = staticCompositionLocalOf { LightGriffColors }

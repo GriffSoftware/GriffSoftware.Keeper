@@ -1,5 +1,6 @@
 package com.griff.subscriptions.presentation.theme
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -182,4 +183,89 @@ internal object MonogramPalette {
         Color(0xFFA5B4FC), // Indigo
         Color(0xFFCBD5E1), // Slate
     )
+}
+
+/**
+ * Accents available to category tags.
+ *
+ * A tag is an identifier, not a status, so its color carries no severity - which is exactly why the
+ * status colors in [SemanticColors] are not reused here. Every accent exists in a light and a dark
+ * variant (see [TagPalette]); reusing one container color across both themes would either wash out
+ * on white or glare on graphite.
+ */
+enum class TagAccent {
+    BLUE,
+    CYAN,
+    EMERALD,
+    OLIVE,
+    AMBER,
+    ORANGE,
+    RED,
+    PINK,
+    VIOLET,
+    INDIGO,
+    TEAL,
+    SLATE,
+}
+
+/** Container and content color of a tag, always used as a pair so contrast is never accidental. */
+@Immutable
+internal data class TagColors(
+    val container: Color,
+    val content: Color,
+)
+
+/**
+ * Tag colors per theme.
+ *
+ * Light uses a very light tint of the hue with dark text on it; dark uses a desaturated, deep tint
+ * with light text. Both directions are tuned to stay legible at `labelSmall` size on the app's own
+ * surfaces rather than on pure white or pure black.
+ */
+internal object TagPalette {
+
+    val Light: Map<TagAccent, TagColors> = mapOf(
+        TagAccent.BLUE to colors(0xFFDBEAFE, 0xFF1E40AF),
+        TagAccent.CYAN to colors(0xFFCFFAFE, 0xFF155E75),
+        TagAccent.EMERALD to colors(0xFFD1FAE5, 0xFF065F46),
+        TagAccent.OLIVE to colors(0xFFE7F0CB, 0xFF4D6B10),
+        TagAccent.AMBER to colors(0xFFFEF3C7, 0xFF92400E),
+        TagAccent.ORANGE to colors(0xFFFFEDD5, 0xFF9A3412),
+        TagAccent.RED to colors(0xFFFEE2E2, 0xFF991B1B),
+        TagAccent.PINK to colors(0xFFFCE7F3, 0xFF9D174D),
+        TagAccent.VIOLET to colors(0xFFEDE9FE, 0xFF5B21B6),
+        TagAccent.INDIGO to colors(0xFFE0E7FF, 0xFF3730A3),
+        TagAccent.TEAL to colors(0xFFCCFBF1, 0xFF115E59),
+        TagAccent.SLATE to colors(0xFFE2E8F0, 0xFF334155),
+    )
+
+    val Dark: Map<TagAccent, TagColors> = mapOf(
+        TagAccent.BLUE to colors(0xFF1E3A5F, 0xFFBFDBFE),
+        TagAccent.CYAN to colors(0xFF164E63, 0xFFA5F3FC),
+        TagAccent.EMERALD to colors(0xFF10402F, 0xFF6EE7B7),
+        TagAccent.OLIVE to colors(0xFF33401A, 0xFFC8DE8A),
+        TagAccent.AMBER to colors(0xFF453014, 0xFFFCD34D),
+        TagAccent.ORANGE to colors(0xFF4A2711, 0xFFFDBA74),
+        TagAccent.RED to colors(0xFF4C1D1D, 0xFFFCA5A5),
+        TagAccent.PINK to colors(0xFF4A1733, 0xFFF9A8D4),
+        TagAccent.VIOLET to colors(0xFF32215E, 0xFFC4B5FD),
+        TagAccent.INDIGO to colors(0xFF272B5E, 0xFFA5B4FC),
+        TagAccent.TEAL to colors(0xFF11433D, 0xFF5EEAD4),
+        TagAccent.SLATE to colors(0xFF2C333F, 0xFFCBD5E1),
+    )
+
+    private fun colors(container: Long, content: Long) =
+        TagColors(container = Color(container), content = Color(content))
+}
+
+/**
+ * Colors of the two series on the combined statistics chart.
+ *
+ * Subscriptions take the brand accent (blue in light, cyan in dark) because they are the app's
+ * primary subject; obligations get emerald, which stays clearly distinguishable from the accent in
+ * both themes without competing with it.
+ */
+internal object SeriesColors {
+    val ObligationLight = Color(0xFF059669)
+    val ObligationDark = Color(0xFF34D399)
 }

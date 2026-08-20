@@ -7,7 +7,7 @@ import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Money
 import com.griff.subscriptions.domain.model.SubscriptionId
 import com.griff.subscriptions.domain.testing.testSubscription
-import com.griff.subscriptions.infrastructure.database.SubscriptionDatabase
+import com.griff.subscriptions.infrastructure.database.GriffDatabase
 import java.time.LocalDate
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -23,14 +23,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class RoomSubscriptionRepositoryTest {
 
-    private lateinit var database: SubscriptionDatabase
+    private lateinit var database: GriffDatabase
     private lateinit var repository: RoomSubscriptionRepository
 
     @BeforeTest
     fun setUp() {
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
-            SubscriptionDatabase::class.java,
+            GriffDatabase::class.java,
         ).build()
         repository = RoomSubscriptionRepository(database.subscriptionDao(), Dispatchers.IO)
     }

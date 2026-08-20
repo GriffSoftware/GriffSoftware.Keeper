@@ -3,12 +3,15 @@ package com.griff.subscriptions.presentation.home
 import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.SubscriptionTotals
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
@@ -24,8 +27,14 @@ class HomeScreenTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     private val items = listOf(
-        SubscriptionListItem("1", "Spotify", "spotify", BillingPeriod.MONTHLY, Money.ofUnits(34, 99)),
-        SubscriptionListItem("2", "JetBrains", "jetbrains", BillingPeriod.YEARLY, Money.ofUnits(1_299)),
+        SubscriptionListItem(
+            "1", "Spotify", "spotify", ProviderCategory.MUSIC,
+            BillingPeriod.MONTHLY, Money.ofUnits(34, 99),
+        ),
+        SubscriptionListItem(
+            "2", "JetBrains", "jetbrains", ProviderCategory.SOFTWARE,
+            BillingPeriod.YEARLY, Money.ofUnits(1_299),
+        ),
     )
 
     @Test
@@ -89,6 +98,7 @@ class HomeScreenTest {
                 id = index.toString(),
                 name = "Usługa $index",
                 logoKey = "service-$index",
+                category = ProviderCategory.OTHER,
                 billingPeriod = BillingPeriod.MONTHLY,
                 price = Money.ofUnits(10),
             )
@@ -119,15 +129,46 @@ class HomeScreenTest {
         )
 
         composeRule
-            .onNodeWithText(context.getString(R.string.home_no_results_title))
+            .onNodeWithText(context.getString(R.string.no_results_title))
             .assertIsDisplayed()
         // Nothing to sum up, so the totals bar is gone.
         composeRule.onNodeWithText(context.getString(R.string.home_totals_title)).assertDoesNotExist()
     }
 
+    @Test
+    fun showsTheCategoryTagOnEveryRow() {
+        setContent(HomeUiState(isLoading = false, items = items, totalSubscriptionCount = 2))
+
+        composeRule.onNodeWithText(context.getString(R.string.category_music)).assertIsDisplayed()
+        composeRule.onNodeWithText(context.getString(R.string.category_software)).assertIsDisplayed()
+    }
+
+    @Test
+    fun selectingATagFilterEmitsItsCategory() {
+        val selected = mutableListOf<ProviderCategory?>()
+        setContent(
+            state = HomeUiState(
+                isLoading = false,
+                items = items,
+                totalSubscriptionCount = 2,
+                availableCategories = listOf(ProviderCategory.MUSIC, ProviderCategory.SOFTWARE),
+            ),
+            onCategoryChange = { selected += it },
+        )
+
+        // The list rows carry the same labels on their tags, and the filter row comes first.
+        composeRule
+            .onAllNodesWithText(context.getString(R.string.category_software))
+            .onFirst()
+            .performClick()
+
+        assertEquals(listOf<ProviderCategory?>(ProviderCategory.SOFTWARE), selected)
+    }
+
     private fun setContent(
         state: HomeUiState,
         onQueryChange: (String) -> Unit = {},
+        onCategoryChange: (ProviderCategory?) -> Unit = {},
         onSubscriptionClick: (String) -> Unit = {},
     ) {
         composeRule.setContent {
@@ -135,6 +176,7 @@ class HomeScreenTest {
                 HomeScreen(
                     state = state,
                     onQueryChange = onQueryChange,
+                    onCategoryChange = onCategoryChange,
                     onOpenDrawer = {},
                     onSubscriptionClick = onSubscriptionClick,
                     onAddSubscription = {},

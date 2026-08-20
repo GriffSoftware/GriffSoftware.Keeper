@@ -21,6 +21,14 @@ data class SubscriptionEntity(
     val providerId: String,
     @ColumnInfo(name = "name")
     val name: String,
+    /**
+     * Category chosen by the user, `null` for catalog entries.
+     *
+     * Nullable on purpose: a known service takes its category from the provider catalog, so storing
+     * a copy would create a second source of truth that a catalog update could not fix.
+     */
+    @ColumnInfo(name = "category")
+    val category: String?,
     @ColumnInfo(name = "price_minor_units")
     val priceMinorUnits: Long,
     @ColumnInfo(name = "currency_code", defaultValue = "PLN")

@@ -25,12 +25,15 @@ import com.griff.subscriptions.presentation.drawer.AppDrawerViewModel
 import com.griff.subscriptions.presentation.drawer.DrawerDestination
 import com.griff.subscriptions.presentation.form.SubscriptionFormRoute
 import com.griff.subscriptions.presentation.home.HomeRoute
+import com.griff.subscriptions.presentation.obligations.ObligationsRoute
+import com.griff.subscriptions.presentation.obligations.details.ObligationDetailsRoute
+import com.griff.subscriptions.presentation.obligations.form.ObligationFormRoute
 import com.griff.subscriptions.presentation.statistics.StatisticsRoute
 import kotlinx.coroutines.launch
 
 /**
  * Root composable of the app: navigation drawer, navigation graph and the little bit of
- * cross-screen state (a message shown on home after a subscription was deleted).
+ * cross-screen state (a message shown on a list after a record was deleted).
  */
 @Composable
 fun GriffSubscriptionsApp(
@@ -43,6 +46,7 @@ fun GriffSubscriptionsApp(
     val currentDestination = backStackEntry?.destination
 
     var pendingHomeMessage by remember { mutableStateOf<UiMessage?>(null) }
+    var pendingObligationsMessage by remember { mutableStateOf<UiMessage?>(null) }
 
     val openDrawer: () -> Unit = { scope.launch { drawerState.open() } }
     val closeDrawer: () -> Unit = { scope.launch { drawerState.close() } }
@@ -77,6 +81,18 @@ fun GriffSubscriptionsApp(
                 )
             }
 
+            composable<ObligationsRoute> {
+                ObligationsRoute(
+                    onOpenDrawer = openDrawer,
+                    onObligationClick = { id ->
+                        navController.navigate(ObligationDetailsRoute(id))
+                    },
+                    onAddObligation = { navController.navigate(AddObligationRoute) },
+                    pendingMessage = pendingObligationsMessage,
+                    onPendingMessageShown = { pendingObligationsMessage = null },
+                )
+            }
+
             composable<StatisticsRoute> {
                 StatisticsRoute(onOpenDrawer = openDrawer)
             }
@@ -103,25 +119,52 @@ fun GriffSubscriptionsApp(
                     onSaved = { navController.popBackStack() },
                 )
             }
+
+            composable<ObligationDetailsRoute> { entry ->
+                val route = entry.toRoute<ObligationDetailsRoute>()
+                ObligationDetailsRoute(
+                    onNavigateUp = { navController.popBackStack() },
+                    onEdit = { navController.navigate(EditObligationRoute(route.obligationId)) },
+                    onDeleted = { message -> pendingObligationsMessage = message },
+                )
+            }
+
+            composable<AddObligationRoute> {
+                ObligationFormRoute(
+                    onNavigateUp = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() },
+                )
+            }
+
+            composable<EditObligationRoute> {
+                ObligationFormRoute(
+                    onNavigateUp = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() },
+                )
+            }
         }
     }
 }
 
 private fun NavHostController.navigateToDrawerDestination(destination: DrawerDestination) {
     val route: Any = when (destination) {
-        DrawerDestination.HOME -> HomeRoute
+        DrawerDestination.SUBSCRIPTIONS -> HomeRoute
+        DrawerDestination.OBLIGATIONS -> ObligationsRoute
         DrawerDestination.STATISTICS -> StatisticsRoute
     }
     navigate(route) {
-        popUpTo(HomeRoute) { inclusive = destination == DrawerDestination.HOME }
+        popUpTo(HomeRoute) { inclusive = destination == DrawerDestination.SUBSCRIPTIONS }
         launchSingleTop = true
     }
 }
 
 private fun NavDestination?.toDrawerDestination(): DrawerDestination = when {
+    this?.hasRoute<ObligationsRoute>() == true -> DrawerDestination.OBLIGATIONS
     this?.hasRoute<StatisticsRoute>() == true -> DrawerDestination.STATISTICS
-    else -> DrawerDestination.HOME
+    else -> DrawerDestination.SUBSCRIPTIONS
 }
 
 private fun NavDestination?.isDrawerDestination(): Boolean =
-    this?.hasRoute<HomeRoute>() == true || this?.hasRoute<StatisticsRoute>() == true
+    this?.hasRoute<HomeRoute>() == true ||
+        this?.hasRoute<ObligationsRoute>() == true ||
+        this?.hasRoute<StatisticsRoute>() == true

@@ -2,8 +2,11 @@ package com.griff.subscriptions.presentation.home
 
 import com.griff.subscriptions.application.provider.GetProviderUseCase
 import com.griff.subscriptions.application.subscription.CalculateSubscriptionTotalsUseCase
+import com.griff.subscriptions.application.subscription.GetSubscriptionCategoryUseCase
 import com.griff.subscriptions.application.subscription.SearchSubscriptionsUseCase
 import com.griff.subscriptions.domain.model.BillingPeriod
+import com.griff.subscriptions.domain.model.ProviderCategory
+import com.griff.subscriptions.domain.repository.SubscriptionRepository
 import com.griff.subscriptions.domain.testing.FakeProviderCatalog
 import com.griff.subscriptions.domain.testing.FakeSubscriptionRepository
 import com.griff.subscriptions.domain.testing.testSubscription
@@ -12,17 +15,19 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 
 class HomeViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    private val catalog = FakeProviderCatalog()
 
     private val repository = FakeSubscriptionRepository(
         listOf(
@@ -35,13 +40,24 @@ class HomeViewModelTest {
                 priceMinorUnits = 59_900,
                 billingPeriod = BillingPeriod.YEARLY,
             ),
+            testSubscription(
+                id = "4",
+                providerId = "other",
+                name = "Apple Music",
+                categoryOverride = ProviderCategory.MUSIC,
+                priceMinorUnits = 2499,
+            ),
         ),
     )
 
-    private fun viewModel() = HomeViewModel(
-        searchSubscriptions = SearchSubscriptionsUseCase(repository),
+    private fun viewModel(source: SubscriptionRepository = repository) = HomeViewModel(
+        searchSubscriptions = SearchSubscriptionsUseCase(
+            repository = source,
+            getCategory = GetSubscriptionCategoryUseCase(catalog),
+        ),
         calculateTotals = CalculateSubscriptionTotalsUseCase(),
-        getProvider = GetProviderUseCase(FakeProviderCatalog()),
+        getProvider = GetProviderUseCase(catalog),
+        getCategory = GetSubscriptionCategoryUseCase(catalog),
     )
 
     @Test
@@ -53,10 +69,13 @@ class HomeViewModelTest {
 
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
-        assertEquals(listOf("Netflix", "SeoHost.pl", "Spotify"), state.items.map { it.name })
-        // 34,99 + 67,00 + (599,00 / 12 = 49,92)
-        assertEquals(15_191, state.totals.monthly.minorUnits)
-        assertEquals(3, state.totalSubscriptionCount)
+        assertEquals(
+            listOf("Apple Music", "Netflix", "SeoHost.pl", "Spotify"),
+            state.items.map { it.name },
+        )
+        // 24,99 + 34,99 + 67,00 + (599,00 / 12 = 49,92)
+        assertEquals(17_690, state.totals.monthly.minorUnits)
+        assertEquals(4, state.totalSubscriptionCount)
         assertFalse(state.isEmpty)
     }
 
@@ -91,11 +110,7 @@ class HomeViewModelTest {
 
     @Test
     fun `an empty database yields the empty state`() = runTest {
-        val viewModel = HomeViewModel(
-            searchSubscriptions = SearchSubscriptionsUseCase(FakeSubscriptionRepository()),
-            calculateTotals = CalculateSubscriptionTotalsUseCase(),
-            getProvider = GetProviderUseCase(FakeProviderCatalog()),
-        )
+        val viewModel = viewModel(FakeSubscriptionRepository())
         keepActive(viewModel.uiState)
         advanceUntilIdle()
 
@@ -105,18 +120,74 @@ class HomeViewModelTest {
 
     @Test
     fun `custom entries are seeded by their name so monograms differ`() = runTest {
-        val repository = FakeSubscriptionRepository(
-            listOf(testSubscription(id = "1", providerId = "other", name = "Domena griff.pl")),
-        )
-        val viewModel = HomeViewModel(
-            searchSubscriptions = SearchSubscriptionsUseCase(repository),
-            calculateTotals = CalculateSubscriptionTotalsUseCase(),
-            getProvider = GetProviderUseCase(FakeProviderCatalog()),
+        val viewModel = viewModel(
+            FakeSubscriptionRepository(
+                listOf(testSubscription(id = "1", providerId = "other", name = "Domena griff.pl")),
+            ),
         )
         keepActive(viewModel.uiState)
         advanceUntilIdle()
 
         assertEquals("Domena griff.pl", viewModel.uiState.value.items.single().logoKey)
+    }
+
+    @Test
+    fun `every row carries the category its tag is drawn from`() = runTest {
+        val viewModel = viewModel()
+        keepActive(viewModel.uiState)
+        advanceUntilIdle()
+
+        val categories = viewModel.uiState.value.items.associate { it.name to it.category }
+        assertEquals(ProviderCategory.MUSIC, categories["Spotify"])
+        assertEquals(ProviderCategory.VIDEO, categories["Netflix"])
+        // A custom entry keeps the category the user picked for it.
+        assertEquals(ProviderCategory.MUSIC, categories["Apple Music"])
+    }
+
+    @Test
+    fun `filtering by tag keeps only that category`() = runTest {
+        val viewModel = viewModel()
+        keepActive(viewModel.uiState)
+        advanceUntilIdle()
+
+        viewModel.onCategoryChange(ProviderCategory.MUSIC)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(listOf("Apple Music", "Spotify"), state.items.map { it.name })
+        assertFalse(state.items.any { it.name == "Netflix" })
+        assertTrue(state.isFiltered)
+    }
+
+    @Test
+    fun `search and tag filter apply at the same time`() = runTest {
+        val viewModel = viewModel()
+        keepActive(viewModel.uiState)
+        advanceUntilIdle()
+
+        viewModel.onCategoryChange(ProviderCategory.MUSIC)
+        viewModel.onQueryChange("apple")
+        advanceUntilIdle()
+
+        assertEquals(listOf("Apple Music"), viewModel.uiState.value.items.map { it.name })
+
+        viewModel.onQueryChange("netflix")
+        advanceUntilIdle()
+
+        // Netflix matches the text but not the tag, so nothing is shown.
+        assertTrue(viewModel.uiState.value.hasNoResults)
+    }
+
+    @Test
+    fun `only categories present in the data are offered as filters`() = runTest {
+        val viewModel = viewModel()
+        keepActive(viewModel.uiState)
+        advanceUntilIdle()
+
+        assertEquals(
+            listOf(ProviderCategory.VIDEO, ProviderCategory.MUSIC, ProviderCategory.HOSTING),
+            viewModel.uiState.value.availableCategories,
+        )
     }
 }
 

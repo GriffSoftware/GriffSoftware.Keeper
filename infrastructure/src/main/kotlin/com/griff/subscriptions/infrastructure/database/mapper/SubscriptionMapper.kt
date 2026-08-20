@@ -4,6 +4,7 @@ import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Currency
 import com.griff.subscriptions.domain.model.ManagementUrl
 import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
@@ -19,6 +20,7 @@ internal object SubscriptionMapper {
         id = SubscriptionId(entity.id),
         providerId = ProviderId(entity.providerId),
         name = SubscriptionName.of(entity.name),
+        categoryOverride = entity.category?.let { ProviderCategory.valueOf(it) },
         price = Money.ofMinorUnits(entity.priceMinorUnits),
         currency = Currency.fromCode(entity.currencyCode),
         billingPeriod = BillingPeriod.valueOf(entity.billingPeriod),
@@ -32,6 +34,7 @@ internal object SubscriptionMapper {
         id = subscription.id.value,
         providerId = subscription.providerId.value,
         name = subscription.name.value,
+        category = subscription.categoryOverride?.name,
         priceMinorUnits = subscription.price.minorUnits,
         currencyCode = subscription.currency.code,
         billingPeriod = subscription.billingPeriod.name,
