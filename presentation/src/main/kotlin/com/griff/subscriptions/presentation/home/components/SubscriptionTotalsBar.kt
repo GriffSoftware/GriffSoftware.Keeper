@@ -16,20 +16,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.griff.subscriptions.domain.model.Money
 import com.griff.subscriptions.domain.model.SubscriptionTotals
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
-import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
 
 /**
  * Normalized monthly and yearly cost of the currently displayed subscriptions.
  *
- * Used as the scaffold's bottom bar so the summary stays visible no matter how long the list is;
- * the tonal surface and the divider keep it readable while rows scroll underneath.
+ * Used as the scaffold's bottom bar so the summary stays visible no matter how long the list is; a
+ * neutral container plus the divider keep it readable while rows scroll underneath. The monthly
+ * figure is the one number the screen exists for, so it is the only place here that gets the accent.
  */
 @Composable
 internal fun SubscriptionTotalsBar(
@@ -39,8 +39,7 @@ internal fun SubscriptionTotalsBar(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = BarTonalElevation,
+        color = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
             HorizontalDivider()
@@ -72,6 +71,7 @@ internal fun SubscriptionTotalsBar(
                             MoneyFormatter.format(totals.monthly),
                         ),
                         style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
 
@@ -89,12 +89,10 @@ internal fun SubscriptionTotalsBar(
     }
 }
 
-private val BarTonalElevation = 3.dp
-
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun SubscriptionTotalsBarPreview() {
-    GriffSubscriptionsTheme(dynamicColor = false) {
+    GriffThemePreview {
         SubscriptionTotalsBar(
             totals = SubscriptionTotals(
                 monthly = Money.ofUnits(284, 87),

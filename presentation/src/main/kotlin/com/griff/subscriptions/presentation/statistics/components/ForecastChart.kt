@@ -20,11 +20,15 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.griff.subscriptions.domain.model.Money
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.format.DateFormatter
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
 import com.griff.subscriptions.presentation.statistics.ForecastBar
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
+import java.time.YearMonth
 
 /**
  * Bar chart of projected charges per month.
@@ -121,3 +125,19 @@ private val ChartHeight = 148.dp
 private val BarSpacing = 6.dp
 private val BarCornerRadius = 4.dp
 private const val MinimumBarHeightPx = 3f
+
+@ThemePreviews
+@Composable
+private fun ForecastChartPreview() {
+    GriffThemePreview {
+        ForecastChart(
+            bars = List(12) { index ->
+                ForecastBar(
+                    month = YearMonth.of(2026, 8).plusMonths(index.toLong()),
+                    amount = Money.ofUnits(120L + index * 25),
+                )
+            },
+            modifier = Modifier.padding(Spacing.Large),
+        )
+    }
+}

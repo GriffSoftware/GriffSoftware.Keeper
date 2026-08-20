@@ -7,7 +7,9 @@ import com.griff.subscriptions.application.statistics.GetSubscriptionStatisticsU
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.statistics.StatisticsPeriod
 import com.griff.subscriptions.domain.statistics.SubscriptionStatistics
+import com.griff.subscriptions.domain.time.ClockProvider
 import com.griff.subscriptions.presentation.R
+import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.UiMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 class StatisticsViewModel @Inject constructor(
     getStatistics: GetSubscriptionStatisticsUseCase,
     private val getProvider: GetProviderUseCase,
+    private val clock: ClockProvider,
 ) : ViewModel() {
 
     private val period = MutableStateFlow(StatisticsPeriod.TWELVE_MONTHS)
@@ -36,7 +39,7 @@ class StatisticsViewModel @Inject constructor(
                 StatisticsUiState(
                     isLoading = false,
                     period = period.value,
-                    message = UiMessage(R.string.error_load_failed),
+                    message = UiMessage(R.string.error_load_failed, severity = MessageSeverity.ERROR),
                 ),
             )
         }
@@ -50,40 +53,45 @@ class StatisticsViewModel @Inject constructor(
         period.value = value
     }
 
-    private fun SubscriptionStatistics.toUiState() = StatisticsUiState(
-        isLoading = false,
-        period = period,
-        totals = totals,
-        forecast = forecast.map { ForecastBar(month = it.month, amount = it.amount) },
-        upcomingCharges = upcomingCharges.take(UPCOMING_CHARGES_LIMIT).map { charge ->
-            UpcomingCharge(
-                subscriptionId = charge.subscription.id.value,
-                name = charge.subscription.name.value,
-                logoKey = charge.subscription.logoKey(),
-                date = charge.date,
-                amount = charge.amount,
-            )
-        },
-        unscheduledMonthlyCost = unscheduledMonthlyCost,
-        subscriptionsWithoutBillingDate = subscriptionsWithoutBillingDate,
-        categories = categories.mapIndexed { index, spending ->
-            CategoryShare(
-                category = spending.category,
-                monthly = spending.monthly,
-                share = spending.share,
-                colorIndex = index,
-            )
-        },
-        topSubscriptions = topSubscriptions.take(TOP_SUBSCRIPTIONS_LIMIT).map { subscription ->
-            RankedSubscription(
-                id = subscription.id.value,
-                name = subscription.name.value,
-                logoKey = subscription.logoKey(),
-                billingPeriod = subscription.billingPeriod,
-                monthlyEquivalent = subscription.monthlyEquivalent,
-            )
-        },
-    )
+    private fun SubscriptionStatistics.toUiState(): StatisticsUiState {
+        val dueSoonUntil = clock.today().plusDays(DUE_SOON_DAYS)
+
+        return StatisticsUiState(
+            isLoading = false,
+            period = period,
+            totals = totals,
+            forecast = forecast.map { ForecastBar(month = it.month, amount = it.amount) },
+            upcomingCharges = upcomingCharges.take(UPCOMING_CHARGES_LIMIT).map { charge ->
+                UpcomingCharge(
+                    subscriptionId = charge.subscription.id.value,
+                    name = charge.subscription.name.value,
+                    logoKey = charge.subscription.logoKey(),
+                    date = charge.date,
+                    amount = charge.amount,
+                    isDueSoon = !charge.date.isAfter(dueSoonUntil),
+                )
+            },
+            unscheduledMonthlyCost = unscheduledMonthlyCost,
+            subscriptionsWithoutBillingDate = subscriptionsWithoutBillingDate,
+            categories = categories.mapIndexed { index, spending ->
+                CategoryShare(
+                    category = spending.category,
+                    monthly = spending.monthly,
+                    share = spending.share,
+                    colorIndex = index,
+                )
+            },
+            topSubscriptions = topSubscriptions.take(TOP_SUBSCRIPTIONS_LIMIT).map { subscription ->
+                RankedSubscription(
+                    id = subscription.id.value,
+                    name = subscription.name.value,
+                    logoKey = subscription.logoKey(),
+                    billingPeriod = subscription.billingPeriod,
+                    monthlyEquivalent = subscription.monthlyEquivalent,
+                )
+            },
+        )
+    }
 
     private fun Subscription.logoKey(): String {
         val provider = getProvider(providerId)
@@ -94,5 +102,8 @@ class StatisticsViewModel @Inject constructor(
         const val STOP_TIMEOUT_MILLIS = 5_000L
         const val TOP_SUBSCRIPTIONS_LIMIT = 5
         const val UPCOMING_CHARGES_LIMIT = 5
+
+        /** A charge within a week is close enough that the user may still want to react to it. */
+        const val DUE_SOON_DAYS = 7L
     }
 }

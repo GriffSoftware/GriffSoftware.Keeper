@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -42,13 +40,16 @@ import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Currency
 import com.griff.subscriptions.domain.validation.SubscriptionField
 import com.griff.subscriptions.presentation.R
-import com.griff.subscriptions.presentation.common.resolve
+import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
+import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.symbol
+import com.griff.subscriptions.presentation.common.resolve
 import com.griff.subscriptions.presentation.form.components.BillingPeriodSelector
 import com.griff.subscriptions.presentation.form.components.NextBillingDateField
 import com.griff.subscriptions.presentation.form.components.ProviderPicker
-import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
 
 @Composable
 fun SubscriptionFormRoute(
@@ -103,7 +104,7 @@ internal fun SubscriptionFormScreen(
 
     LaunchedEffect(message) {
         if (message != null) {
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showMessage(message)
             onMessageShown()
         }
     }
@@ -131,7 +132,7 @@ internal fun SubscriptionFormScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { GriffSnackbarHost(snackbarHostState) },
     ) { contentPadding ->
         Box(
             modifier = Modifier
@@ -276,10 +277,10 @@ private fun SubscriptionFormUiState.errorFor(field: SubscriptionField): String? 
 
 private val SaveIndicatorSize = 18.dp
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun SubscriptionFormScreenPreview() {
-    GriffSubscriptionsTheme(dynamicColor = false) {
+    GriffThemePreview {
         SubscriptionFormScreen(
             state = SubscriptionFormUiState(
                 providerOptions = listOf(

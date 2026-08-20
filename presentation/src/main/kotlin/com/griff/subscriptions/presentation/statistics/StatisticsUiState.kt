@@ -32,13 +32,14 @@ data class RankedSubscription(
     val monthlyEquivalent: Money,
 )
 
-/** A single expected charge. */
+/** A single expected charge. [isDueSoon] drives the warning marker on the row. */
 data class UpcomingCharge(
     val subscriptionId: String,
     val name: String,
     val logoKey: String,
     val date: LocalDate,
     val amount: Money,
+    val isDueSoon: Boolean = false,
 )
 
 data class StatisticsUiState(

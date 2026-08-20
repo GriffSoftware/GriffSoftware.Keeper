@@ -8,6 +8,7 @@ import com.griff.subscriptions.application.subscription.SearchSubscriptionsUseCa
 import com.griff.subscriptions.application.subscription.SubscriptionSearchResult
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.presentation.R
+import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.UiMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -35,7 +36,7 @@ class HomeViewModel @Inject constructor(
             emit(
                 HomeUiState(
                     isLoading = false,
-                    message = UiMessage(R.string.error_load_failed),
+                    message = UiMessage(R.string.error_load_failed, severity = MessageSeverity.ERROR),
                 ),
             )
         }

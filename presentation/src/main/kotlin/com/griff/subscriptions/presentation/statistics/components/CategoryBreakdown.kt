@@ -17,12 +17,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.griff.subscriptions.domain.model.Money
+import com.griff.subscriptions.domain.model.ProviderCategory
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
 import com.griff.subscriptions.presentation.statistics.CategoryShare
 import com.griff.subscriptions.presentation.theme.ChartPalette
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
 import kotlin.math.roundToInt
 
 /**
@@ -101,3 +105,19 @@ private fun CategoryRow(category: CategoryShare) {
 
 private val BarHeight = 10.dp
 private const val MinBarFraction = 0.02f
+
+@ThemePreviews
+@Composable
+private fun CategoryBreakdownPreview() {
+    GriffThemePreview {
+        CategoryBreakdown(
+            categories = listOf(
+                CategoryShare(ProviderCategory.VIDEO, Money.ofUnits(120), 0.42f, 0),
+                CategoryShare(ProviderCategory.MUSIC, Money.ofUnits(70), 0.24f, 1),
+                CategoryShare(ProviderCategory.AI, Money.ofUnits(58), 0.20f, 2),
+                CategoryShare(ProviderCategory.HOSTING, Money.ofUnits(38, 40), 0.14f, 3),
+            ),
+            modifier = Modifier.padding(Spacing.Large),
+        )
+    }
+}

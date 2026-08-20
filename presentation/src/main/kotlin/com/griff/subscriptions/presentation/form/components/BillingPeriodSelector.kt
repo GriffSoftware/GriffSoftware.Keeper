@@ -15,7 +15,10 @@ import androidx.compose.ui.res.stringResource
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
+import com.griff.subscriptions.presentation.common.component.accentSegmentedButtonColors
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
 
 /** Two option selector; a segmented button reads better than radio buttons for a binary choice. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,10 +45,24 @@ internal fun BillingPeriodSelector(
                     onClick = { onSelect(period) },
                     enabled = enabled,
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = periods.size),
+                    colors = accentSegmentedButtonColors(),
                 ) {
                     Text(stringResource(Labels.billingPeriodOption(period)))
                 }
             }
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun BillingPeriodSelectorPreview() {
+    GriffThemePreview {
+        BillingPeriodSelector(
+            selected = BillingPeriod.MONTHLY,
+            enabled = true,
+            onSelect = {},
+            modifier = Modifier.padding(Spacing.Large),
+        )
     }
 }

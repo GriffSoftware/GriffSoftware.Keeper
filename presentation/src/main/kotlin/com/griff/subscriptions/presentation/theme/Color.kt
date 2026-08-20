@@ -3,80 +3,183 @@ package com.griff.subscriptions.presentation.theme
 import androidx.compose.ui.graphics.Color
 
 /**
- * Fallback brand palette used whenever dynamic color is unavailable (Android 11 and older) or
- * disabled. Generated from a single indigo seed and kept in sync between light and dark schemes.
+ * Griff brand palette.
+ *
+ * Light is an almost white, "financial dashboard" surface set with a saturated blue accent; dark is
+ * a neutral graphite set with a cyan accent. The two themes share the same neutrals (slate) and the
+ * same structure, but deliberately *not* the same accent - dark is not a negative of light.
+ *
+ * Every Material 3 color role is spelled out, including the ones the app does not use directly
+ * (`*Fixed*`, `inverse*`): whatever is left out falls back to the baseline Material purple, which
+ * would leak into components such as the navigation drawer or a tonally elevated surface.
  */
 internal object BrandColors {
-    val PrimaryLight = Color(0xFF4C5BA8)
-    val OnPrimaryLight = Color(0xFFFFFFFF)
-    val PrimaryContainerLight = Color(0xFFDEE0FF)
-    val OnPrimaryContainerLight = Color(0xFF00135C)
-    val SecondaryLight = Color(0xFF5B5D72)
-    val OnSecondaryLight = Color(0xFFFFFFFF)
-    val SecondaryContainerLight = Color(0xFFE0E1F9)
-    val OnSecondaryContainerLight = Color(0xFF181A2C)
-    val TertiaryLight = Color(0xFF1F6B5B)
-    val OnTertiaryLight = Color(0xFFFFFFFF)
-    val TertiaryContainerLight = Color(0xFFA6F2DD)
-    val OnTertiaryContainerLight = Color(0xFF00201A)
-    val ErrorLight = Color(0xFFBA1A1A)
-    val OnErrorLight = Color(0xFFFFFFFF)
-    val ErrorContainerLight = Color(0xFFFFDAD6)
-    val OnErrorContainerLight = Color(0xFF410002)
-    val BackgroundLight = Color(0xFFFBF8FF)
-    val OnBackgroundLight = Color(0xFF1B1B21)
-    val SurfaceLight = Color(0xFFFBF8FF)
-    val OnSurfaceLight = Color(0xFF1B1B21)
-    val SurfaceVariantLight = Color(0xFFE3E1EC)
-    val OnSurfaceVariantLight = Color(0xFF46464F)
-    val OutlineLight = Color(0xFF777680)
-    val OutlineVariantLight = Color(0xFFC7C5D0)
-    val SurfaceContainerLight = Color(0xFFF0EDF6)
-    val SurfaceContainerHighLight = Color(0xFFEAE7F0)
 
-    val PrimaryDark = Color(0xFFB9C3FF)
-    val OnPrimaryDark = Color(0xFF1B2C76)
-    val PrimaryContainerDark = Color(0xFF33438E)
-    val OnPrimaryContainerDark = Color(0xFFDEE0FF)
-    val SecondaryDark = Color(0xFFC4C5DD)
-    val OnSecondaryDark = Color(0xFF2D2F42)
-    val SecondaryContainerDark = Color(0xFF434559)
-    val OnSecondaryContainerDark = Color(0xFFE0E1F9)
-    val TertiaryDark = Color(0xFF8AD6C2)
-    val OnTertiaryDark = Color(0xFF00382E)
-    val TertiaryContainerDark = Color(0xFF005143)
-    val OnTertiaryContainerDark = Color(0xFFA6F2DD)
-    val ErrorDark = Color(0xFFFFB4AB)
-    val OnErrorDark = Color(0xFF690005)
-    val ErrorContainerDark = Color(0xFF93000A)
-    val OnErrorContainerDark = Color(0xFFFFDAD6)
-    val BackgroundDark = Color(0xFF121318)
-    val OnBackgroundDark = Color(0xFFE4E1E9)
-    val SurfaceDark = Color(0xFF121318)
-    val OnSurfaceDark = Color(0xFFE4E1E9)
-    val SurfaceVariantDark = Color(0xFF46464F)
-    val OnSurfaceVariantDark = Color(0xFFC7C5D0)
-    val OutlineDark = Color(0xFF918F9A)
-    val OutlineVariantDark = Color(0xFF46464F)
-    val SurfaceContainerDark = Color(0xFF1F1F25)
-    val SurfaceContainerHighDark = Color(0xFF292930)
+    // --- Light: white + Griff Blue ---
+    val PrimaryLight = Color(0xFF2563EB)
+    val OnPrimaryLight = Color(0xFFFFFFFF)
+    val PrimaryContainerLight = Color(0xFFDBEAFE)
+    val OnPrimaryContainerLight = Color(0xFF172554)
+    val InversePrimaryLight = Color(0xFF93C5FD)
+    val SecondaryLight = Color(0xFF475569)
+    val OnSecondaryLight = Color(0xFFFFFFFF)
+    val SecondaryContainerLight = Color(0xFFE2E8F0)
+    val OnSecondaryContainerLight = Color(0xFF1E293B)
+    val TertiaryLight = Color(0xFF0891B2)
+    val OnTertiaryLight = Color(0xFFFFFFFF)
+    val TertiaryContainerLight = Color(0xFFCFFAFE)
+    val OnTertiaryContainerLight = Color(0xFF164E63)
+    val ErrorLight = Color(0xFFDC2626)
+    val OnErrorLight = Color(0xFFFFFFFF)
+    val ErrorContainerLight = Color(0xFFFEE2E2)
+    val OnErrorContainerLight = Color(0xFF7F1D1D)
+    val BackgroundLight = Color(0xFFFAFBFD)
+    val OnBackgroundLight = Color(0xFF111827)
+    val SurfaceLight = Color(0xFFFFFFFF)
+    val OnSurfaceLight = Color(0xFF111827)
+    val SurfaceVariantLight = Color(0xFFF1F5F9)
+    val OnSurfaceVariantLight = Color(0xFF475569)
+    val InverseSurfaceLight = Color(0xFF1F2937)
+    val InverseOnSurfaceLight = Color(0xFFF9FAFB)
+    val OutlineLight = Color(0xFF94A3B8)
+    val OutlineVariantLight = Color(0xFFE2E8F0)
+    val ScrimLight = Color(0xFF000000)
+
+    // Neutral surface ramp, from the brightest card to the dimmest backdrop.
+    val SurfaceContainerLowestLight = Color(0xFFFFFFFF)
+    val SurfaceContainerLowLight = Color(0xFFF8FAFC)
+    val SurfaceContainerLight = Color(0xFFF3F6FA)
+    val SurfaceContainerHighLight = Color(0xFFE9EEF5)
+    val SurfaceContainerHighestLight = Color(0xFFDFE6EF)
+    val SurfaceBrightLight = Color(0xFFFFFFFF)
+    val SurfaceDimLight = Color(0xFFDEE5EE)
+
+    // --- Dark: graphite + Griff Cyan ---
+    val PrimaryDark = Color(0xFF22D3EE)
+    val OnPrimaryDark = Color(0xFF083344)
+    val PrimaryContainerDark = Color(0xFF164E63)
+    val OnPrimaryContainerDark = Color(0xFFCFFAFE)
+    val InversePrimaryDark = Color(0xFF0E7490)
+    val SecondaryDark = Color(0xFFCBD5E1)
+    val OnSecondaryDark = Color(0xFF1E293B)
+    val SecondaryContainerDark = Color(0xFF334155)
+    val OnSecondaryContainerDark = Color(0xFFE2E8F0)
+    val TertiaryDark = Color(0xFF67E8F9)
+    val OnTertiaryDark = Color(0xFF083344)
+    val TertiaryContainerDark = Color(0xFF155E75)
+    val OnTertiaryContainerDark = Color(0xFFCFFAFE)
+    val ErrorDark = Color(0xFFFCA5A5)
+    val OnErrorDark = Color(0xFF7F1D1D)
+    val ErrorContainerDark = Color(0xFF7F1D1D)
+    val OnErrorContainerDark = Color(0xFFFEE2E2)
+    val BackgroundDark = Color(0xFF0F1115)
+    val OnBackgroundDark = Color(0xFFE5E7EB)
+    val SurfaceDark = Color(0xFF14171C)
+    val OnSurfaceDark = Color(0xFFF1F5F9)
+    val SurfaceVariantDark = Color(0xFF252A32)
+    val OnSurfaceVariantDark = Color(0xFFCBD5E1)
+    val InverseSurfaceDark = Color(0xFFE5E7EB)
+    val InverseOnSurfaceDark = Color(0xFF1F2937)
+    val OutlineDark = Color(0xFF64748B)
+    val OutlineVariantDark = Color(0xFF334155)
+    val ScrimDark = Color(0xFF000000)
+
+    val SurfaceContainerLowestDark = Color(0xFF0B0D11)
+    val SurfaceContainerLowDark = Color(0xFF171B21)
+    val SurfaceContainerDark = Color(0xFF1B1F26)
+    val SurfaceContainerHighDark = Color(0xFF232831)
+    val SurfaceContainerHighestDark = Color(0xFF2C323C)
+    val SurfaceBrightDark = Color(0xFF343B45)
+    val SurfaceDimDark = Color(0xFF0B0D10)
+
+    // --- Fixed roles: identical in both themes by definition ---
+    val PrimaryFixed = Color(0xFFDBEAFE)
+    val PrimaryFixedDim = Color(0xFFBFDBFE)
+    val OnPrimaryFixed = Color(0xFF172554)
+    val OnPrimaryFixedVariant = Color(0xFF1D4ED8)
+    val SecondaryFixed = Color(0xFFE2E8F0)
+    val SecondaryFixedDim = Color(0xFFCBD5E1)
+    val OnSecondaryFixed = Color(0xFF1E293B)
+    val OnSecondaryFixedVariant = Color(0xFF334155)
+    val TertiaryFixed = Color(0xFFCFFAFE)
+    val TertiaryFixedDim = Color(0xFFA5F3FC)
+    val OnTertiaryFixed = Color(0xFF083344)
+    val OnTertiaryFixedVariant = Color(0xFF0E7490)
 }
 
 /**
- * Qualitative palette used for category charts and provider monograms.
+ * Status colors that carry meaning on their own and therefore cannot be derived from the brand
+ * palette: Material only defines `error`, and success/warning/info are not interchangeable with it.
  *
- * Colors are picked to stay readable on both light and dark surfaces; the chart maps them by index
- * so a category always keeps the same color within one screen.
+ * Use them *only* for the state they name (see [com.griff.subscriptions.presentation.common
+ * .MessageSeverity]), never as decoration, and never as the only carrier of the information - every
+ * call site pairs them with an icon or with text.
+ */
+internal object SemanticColors {
+
+    val SuccessLight = Color(0xFF15803D)
+    val SuccessDark = Color(0xFF4ADE80)
+
+    val WarningLight = Color(0xFFD97706)
+    val WarningDark = Color(0xFFFBBF24)
+
+    val InfoLight = Color(0xFF0284C7)
+    val InfoDark = Color(0xFF38BDF8)
+}
+
+/**
+ * Qualitative palette for category charts.
+ *
+ * These are *data* colors, so they are intentionally hard-coded instead of taken from the color
+ * scheme; the chart maps them by index, which keeps a category on the same color within one screen.
+ * Blue leads the palette so the busiest category matches the light brand accent.
  */
 internal val ChartPalette: List<Color> = listOf(
-    Color(0xFF4C5BA8),
-    Color(0xFF1F6B5B),
-    Color(0xFFB3541E),
-    Color(0xFF7A4EAB),
-    Color(0xFF0F6C8C),
-    Color(0xFF8C6D1F),
-    Color(0xFFA23B58),
-    Color(0xFF3F6B21),
-    Color(0xFF5C5F72),
-    Color(0xFF8A4B77),
+    Color(0xFF2563EB), // Blue
+    Color(0xFF06B6D4), // Cyan
+    Color(0xFF10B981), // Emerald
+    Color(0xFFF59E0B), // Amber
+    Color(0xFF8B5CF6), // Violet
+    Color(0xFFEC4899), // Pink
+    Color(0xFFF97316), // Orange
+    Color(0xFF14B8A6), // Teal
+    Color(0xFF6366F1), // Indigo
+    Color(0xFF64748B), // Slate
 )
+
+/**
+ * The [ChartPalette] hues, shifted to stay readable as *text*.
+ *
+ * Provider monograms render initials in the color derived from the logo key. Chart bars are large
+ * blocks and get away with vivid mid-tones, but the same mid-tones fail the 4.5:1 text contrast
+ * requirement - amber on white and blue on graphite both do - so each hue has a darker light-theme
+ * and a lighter dark-theme variant. Index `n` is the same hue as `ChartPalette[n]`.
+ */
+internal object MonogramPalette {
+
+    val Light: List<Color> = listOf(
+        Color(0xFF1D4ED8), // Blue
+        Color(0xFF0E7490), // Cyan
+        Color(0xFF047857), // Emerald
+        Color(0xFFB45309), // Amber
+        Color(0xFF6D28D9), // Violet
+        Color(0xFFBE185D), // Pink
+        Color(0xFFC2410C), // Orange
+        Color(0xFF0F766E), // Teal
+        Color(0xFF4338CA), // Indigo
+        Color(0xFF475569), // Slate
+    )
+
+    val Dark: List<Color> = listOf(
+        Color(0xFF93C5FD), // Blue
+        Color(0xFF67E8F9), // Cyan
+        Color(0xFF6EE7B7), // Emerald
+        Color(0xFFFCD34D), // Amber
+        Color(0xFFC4B5FD), // Violet
+        Color(0xFFF9A8D4), // Pink
+        Color(0xFFFDBA74), // Orange
+        Color(0xFF5EEAD4), // Teal
+        Color(0xFFA5B4FC), // Indigo
+        Color(0xFFCBD5E1), // Slate
+    )
+}

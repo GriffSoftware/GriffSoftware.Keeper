@@ -20,6 +20,7 @@ import com.griff.subscriptions.domain.validation.SubscriptionInput
 import com.griff.subscriptions.domain.validation.SubscriptionInputValidation
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
+import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.UiMessage
 import com.griff.subscriptions.presentation.common.format.PriceInput
 import com.griff.subscriptions.presentation.navigation.SUBSCRIPTION_ID_ARG
@@ -171,7 +172,13 @@ class SubscriptionFormViewModel @Inject constructor(
                 .onFailure { throwable ->
                     if (throwable is CancellationException) throw throwable
                     _uiState.update {
-                        it.copy(isSaving = false, message = UiMessage(R.string.error_save_failed))
+                        it.copy(
+                            isSaving = false,
+                            message = UiMessage(
+                                R.string.error_save_failed,
+                                severity = MessageSeverity.ERROR,
+                            ),
+                        )
                     }
                 }
         }
@@ -183,7 +190,13 @@ class SubscriptionFormViewModel @Inject constructor(
                 .onSuccess { subscription ->
                     if (subscription == null) {
                         _uiState.update {
-                            it.copy(isLoading = false, message = UiMessage(R.string.error_load_failed))
+                            it.copy(
+                                isLoading = false,
+                                message = UiMessage(
+                                    R.string.error_load_failed,
+                                    severity = MessageSeverity.ERROR,
+                                ),
+                            )
                         }
                     } else {
                         _uiState.update { it.prefilledWith(subscription) }
@@ -193,7 +206,13 @@ class SubscriptionFormViewModel @Inject constructor(
                 .onFailure { throwable ->
                     if (throwable is CancellationException) throw throwable
                     _uiState.update {
-                        it.copy(isLoading = false, message = UiMessage(R.string.error_load_failed))
+                        it.copy(
+                            isLoading = false,
+                            message = UiMessage(
+                                R.string.error_load_failed,
+                                severity = MessageSeverity.ERROR,
+                            ),
+                        )
                     }
                 }
         }

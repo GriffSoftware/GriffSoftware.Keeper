@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.griff.subscriptions.presentation.R
-import com.griff.subscriptions.presentation.theme.ChartPalette
+import com.griff.subscriptions.presentation.theme.GriffTheme
 
 /**
  * Renders the logo of a provider.
@@ -88,7 +88,8 @@ private fun MonogramLogo(
     name: String,
     size: Dp,
 ) {
-    val color = remember(logoKey) { monogramColor(logoKey) }
+    val palette = GriffTheme.colors.monogramPalette
+    val color = remember(logoKey, palette) { palette[monogramColorIndex(logoKey, palette.size)] }
     val initials = remember(name) { initialsOf(name) }
 
     Surface(
@@ -175,10 +176,12 @@ private const val MonogramBackgroundAlpha = 0.18f
 private const val BrandBackgroundAlpha = 0.16f
 private const val BrandGlyphPaddingFraction = 0.28f
 
-private fun monogramColor(logoKey: String): Color {
-    val index = (logoKey.hashCode().toLong() and 0xFFFFFFFFL) % ChartPalette.size
-    return ChartPalette[index.toInt()]
-}
+/**
+ * Stable index into the monogram palette, so a service keeps its color between launches and between
+ * themes; the palette itself is theme dependent because the color is used as text.
+ */
+private fun monogramColorIndex(logoKey: String, paletteSize: Int): Int =
+    ((logoKey.hashCode().toLong() and 0xFFFFFFFFL) % paletteSize).toInt()
 
 private fun monogramFontSize(size: Dp): TextUnit = (size.value * 0.36f).sp
 

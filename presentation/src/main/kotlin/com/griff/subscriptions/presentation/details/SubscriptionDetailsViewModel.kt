@@ -9,6 +9,7 @@ import com.griff.subscriptions.application.subscription.ObserveSubscriptionUseCa
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
 import com.griff.subscriptions.presentation.R
+import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.UiMessage
 import com.griff.subscriptions.presentation.navigation.SUBSCRIPTION_ID_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,7 +60,13 @@ class SubscriptionDetailsViewModel @Inject constructor(
                 .catch { throwable ->
                     if (throwable is CancellationException) throw throwable
                     _uiState.update {
-                        it.copy(isLoading = false, message = UiMessage(R.string.error_load_failed))
+                        it.copy(
+                            isLoading = false,
+                            message = UiMessage(
+                                R.string.error_load_failed,
+                                severity = MessageSeverity.ERROR,
+                            ),
+                        )
                     }
                 }
                 .collect { subscription -> onSubscriptionLoaded(subscription) }
@@ -81,7 +88,10 @@ class SubscriptionDetailsViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isDeleting = false,
-                            message = UiMessage(R.string.error_delete_failed),
+                            message = UiMessage(
+                                R.string.error_delete_failed,
+                                severity = MessageSeverity.ERROR,
+                            ),
                         )
                     }
                 }
@@ -89,7 +99,9 @@ class SubscriptionDetailsViewModel @Inject constructor(
     }
 
     fun onManagementUrlOpenFailed() = _uiState.update {
-        it.copy(message = UiMessage(R.string.error_open_url_failed))
+        it.copy(
+            message = UiMessage(R.string.error_open_url_failed, severity = MessageSeverity.ERROR),
+        )
     }
 
     fun onMessageShown() = _uiState.update { it.copy(message = null) }

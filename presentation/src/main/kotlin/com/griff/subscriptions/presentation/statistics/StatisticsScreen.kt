@@ -3,24 +3,26 @@ package com.griff.subscriptions.presentation.statistics
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.InsertChartOutlined
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.griff.subscriptions.domain.model.BillingPeriod
@@ -44,6 +46,9 @@ import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
 import com.griff.subscriptions.presentation.common.component.EmptyState
 import com.griff.subscriptions.presentation.common.component.FullScreenLoading
+import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
+import com.griff.subscriptions.presentation.common.component.accentSegmentedButtonColors
+import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.DateFormatter
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
 import com.griff.subscriptions.presentation.common.resolve
@@ -52,8 +57,10 @@ import com.griff.subscriptions.presentation.statistics.components.ForecastChart
 import com.griff.subscriptions.presentation.statistics.components.RankedSubscriptionRow
 import com.griff.subscriptions.presentation.statistics.components.SummaryCards
 import com.griff.subscriptions.presentation.statistics.components.UpcomingChargeRow
-import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
+import com.griff.subscriptions.presentation.theme.GriffTheme
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.TallThemePreviews
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -82,7 +89,7 @@ internal fun StatisticsScreen(
     val message = state.message?.resolve()
 
     LaunchedEffect(message) {
-        if (message != null) snackbarHostState.showSnackbar(message)
+        if (message != null) snackbarHostState.showMessage(message)
     }
 
     Scaffold(
@@ -99,7 +106,7 @@ internal fun StatisticsScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { GriffSnackbarHost(snackbarHostState) },
     ) { contentPadding ->
         Box(
             modifier = Modifier
@@ -147,6 +154,7 @@ private fun StatisticsContent(
                     selected = period == state.period,
                     onClick = { onPeriodChange(period) },
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = periods.size),
+                    colors = accentSegmentedButtonColors(),
                 ) {
                     Text(stringResource(Labels.statisticsPeriod(period)))
                 }
@@ -180,17 +188,28 @@ private fun StatisticsContent(
             }
 
             if (state.subscriptionsWithoutBillingDate > 0) {
-                Text(
-                    text = pluralStringResource(
-                        R.plurals.statistics_without_date,
-                        state.subscriptionsWithoutBillingDate,
-                        state.subscriptionsWithoutBillingDate,
-                        MoneyFormatter.format(state.unscheduledMonthlyCost),
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                // Not a failure and not a warning: the forecast simply cannot cover these.
+                Row(
                     modifier = Modifier.padding(top = Spacing.Small),
-                )
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = GriffTheme.colors.info,
+                        modifier = Modifier.size(NoteIconSize),
+                    )
+                    Text(
+                        text = pluralStringResource(
+                            R.plurals.statistics_without_date,
+                            state.subscriptionsWithoutBillingDate,
+                            state.subscriptionsWithoutBillingDate,
+                            MoneyFormatter.format(state.unscheduledMonthlyCost),
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         }
 
@@ -240,7 +259,7 @@ private fun StatisticsSection(
     description: String? = null,
     content: @Composable () -> Unit,
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(Spacing.Large),
             verticalArrangement = Arrangement.spacedBy(Spacing.Small),
@@ -261,10 +280,12 @@ private fun StatisticsSection(
     }
 }
 
-@Preview(showBackground = true, heightDp = 1400)
+private val NoteIconSize = 16.dp
+
+@TallThemePreviews
 @Composable
 private fun StatisticsScreenPreview() {
-    GriffSubscriptionsTheme(dynamicColor = false) {
+    GriffThemePreview {
         StatisticsScreen(
             state = StatisticsUiState(
                 isLoading = false,

@@ -8,6 +8,12 @@
     <string name="amount_per_month">%1$s / mies.</string>
     <string name="amount_per_year">%1$s / rok</string>
 
+    <!-- Message severity, spoken by screen readers so status is not carried by color alone -->
+    <string name="severity_info">Informacja</string>
+    <string name="severity_success">Sukces</string>
+    <string name="severity_warning">Ostrzeżenie</string>
+    <string name="severity_error">Błąd</string>
+
     <!-- Billing period -->
     <string name="billing_period_monthly">Miesięczna</string>
     <string name="billing_period_yearly">Roczna</string>
@@ -113,6 +119,7 @@
     <string name="statistics_empty_title">Brak danych</string>
     <string name="statistics_empty_description">Dodaj subskrypcje, aby zobaczyć statystyki wydatków.</string>
     <string name="statistics_share_percent">%1$d%%</string>
+    <string name="statistics_upcoming_soon">Wkrótce</string>
 
     <!-- Categories -->
     <string name="category_video">Video</string>

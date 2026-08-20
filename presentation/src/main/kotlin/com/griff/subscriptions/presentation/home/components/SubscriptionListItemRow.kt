@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Money
 import com.griff.subscriptions.presentation.R
@@ -25,9 +24,10 @@ import com.griff.subscriptions.presentation.common.Labels
 import com.griff.subscriptions.presentation.common.component.ProviderLogo
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
 import com.griff.subscriptions.presentation.home.SubscriptionListItem
-import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.MinTouchTarget
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
 
 /**
  * A single subscription row: logo, name, billing period and price.
@@ -87,10 +87,10 @@ internal fun SubscriptionListItemRow(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun SubscriptionListItemRowPreview() {
-    GriffSubscriptionsTheme(dynamicColor = false) {
+    GriffThemePreview {
         SubscriptionListItemRow(
             item = SubscriptionListItem(
                 id = "1",

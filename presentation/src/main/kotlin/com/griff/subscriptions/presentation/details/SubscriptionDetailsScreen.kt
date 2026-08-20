@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -24,8 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,17 +43,21 @@ import com.griff.subscriptions.domain.model.BillingPeriod
 import com.griff.subscriptions.domain.model.Money
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
+import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.UiMessage
+import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
 import com.griff.subscriptions.presentation.common.component.ProviderLogo
 import com.griff.subscriptions.presentation.common.component.ProviderLogoDefaults
+import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.DateFormatter
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
 import com.griff.subscriptions.presentation.common.rememberUrlOpener
 import com.griff.subscriptions.presentation.common.resolve
 import com.griff.subscriptions.presentation.details.components.DeleteSubscriptionDialog
 import com.griff.subscriptions.presentation.details.components.DetailsInfoRow
-import com.griff.subscriptions.presentation.theme.GriffSubscriptionsTheme
+import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
+import com.griff.subscriptions.presentation.theme.ThemePreviews
 import java.time.LocalDate
 
 @Composable
@@ -71,7 +73,13 @@ fun SubscriptionDetailsRoute(
         viewModel.events.collect { event ->
             when (event) {
                 is SubscriptionDetailsEvent.Deleted -> {
-                    onDeleted(UiMessage(R.string.delete_success, listOf(event.name)))
+                    onDeleted(
+                        UiMessage(
+                            textRes = R.string.delete_success,
+                            formatArgs = listOf(event.name),
+                            severity = MessageSeverity.SUCCESS,
+                        ),
+                    )
                     onNavigateUp()
                 }
             }
@@ -107,7 +115,7 @@ internal fun SubscriptionDetailsScreen(
 
     LaunchedEffect(message) {
         if (message != null) {
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showMessage(message)
             onMessageShown()
         }
     }
@@ -137,7 +145,7 @@ internal fun SubscriptionDetailsScreen(
                 },
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { GriffSnackbarHost(snackbarHostState) },
     ) { contentPadding ->
         Box(
             modifier = Modifier
@@ -208,9 +216,10 @@ private fun SubscriptionDetailsContent(
         Text(
             text = MoneyFormatter.format(details.price),
             style = MaterialTheme.typography.displaySmall,
+            color = MaterialTheme.colorScheme.primary,
         )
 
-        Card(
+        OutlinedCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Spacing.Small),
@@ -307,10 +316,10 @@ private fun SubscriptionDetailsContent(
 
 private val ButtonIconSize = 18.dp
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 private fun SubscriptionDetailsScreenPreview() {
-    GriffSubscriptionsTheme(dynamicColor = false) {
+    GriffThemePreview {
         SubscriptionDetailsScreen(
             state = SubscriptionDetailsUiState(
                 isLoading = false,
