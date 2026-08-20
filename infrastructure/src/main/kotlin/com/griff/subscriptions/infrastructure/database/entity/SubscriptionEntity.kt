@@ -1,0 +1,42 @@
+package com.griff.subscriptions.infrastructure.database.entity
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+/**
+ * Room representation of a subscription.
+ *
+ * The table intentionally stores primitives only: amounts as minor units, dates as epoch values and
+ * enums as their stable names. Mapping to the domain model happens in
+ * [com.griff.subscriptions.infrastructure.database.mapper.SubscriptionMapper], which keeps the
+ * schema free to evolve independently from the domain.
+ */
+@Entity(tableName = SubscriptionEntity.TABLE_NAME)
+data class SubscriptionEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val id: String,
+    @ColumnInfo(name = "provider_id")
+    val providerId: String,
+    @ColumnInfo(name = "name")
+    val name: String,
+    @ColumnInfo(name = "price_minor_units")
+    val priceMinorUnits: Long,
+    @ColumnInfo(name = "currency_code", defaultValue = "PLN")
+    val currencyCode: String,
+    @ColumnInfo(name = "billing_period")
+    val billingPeriod: String,
+    @ColumnInfo(name = "management_url")
+    val managementUrl: String?,
+    @ColumnInfo(name = "next_billing_date_epoch_day")
+    val nextBillingDateEpochDay: Long?,
+    @ColumnInfo(name = "created_at_epoch_millis")
+    val createdAtEpochMillis: Long,
+    @ColumnInfo(name = "updated_at_epoch_millis")
+    val updatedAtEpochMillis: Long,
+) {
+    companion object {
+        const val TABLE_NAME = "subscriptions"
+    }
+}

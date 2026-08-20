@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
+    <!-- Global -->
+    <string name="app_display_name">Griff Subscriptions</string>
+    <string name="app_tagline">Menedżer subskrypcji</string>
+    <string name="action_back">Wróć</string>
+    <string name="action_cancel">Anuluj</string>
+    <string name="amount_per_month">%1$s / mies.</string>
+    <string name="amount_per_year">%1$s / rok</string>
+
+    <!-- Billing period -->
+    <string name="billing_period_monthly">Miesięczna</string>
+    <string name="billing_period_yearly">Roczna</string>
+    <string name="billing_period_monthly_option">Miesięcznie</string>
+    <string name="billing_period_yearly_option">Rocznie</string>
+    <string name="billing_period_monthly_recurrence">Co miesiąc</string>
+    <string name="billing_period_yearly_recurrence">Co rok</string>
+
+    <!-- Home -->
+    <string name="home_title">Subskrypcje</string>
+    <string name="home_search_placeholder">Szukaj subskrypcji</string>
+    <string name="home_search_clear">Wyczyść wyszukiwanie</string>
+    <string name="home_empty_title">Brak subskrypcji</string>
+    <string name="home_empty_description">Dodaj pierwszą subskrypcję, aby zobaczyć swoje miesięczne wydatki.</string>
+    <string name="home_no_results_title">Brak wyników</string>
+    <string name="home_no_results_description">Żadna subskrypcja nie pasuje do zapytania „%1$s”.</string>
+    <string name="home_add_subscription">Dodaj subskrypcję</string>
+    <string name="home_totals_title">Łącznie</string>
+    <string name="home_totals_filtered_title">Łącznie (wyniki wyszukiwania)</string>
+    <string name="home_open_menu">Otwórz menu</string>
+    <string name="home_item_description">%1$s, %2$s, %3$s</string>
+
+    <!-- Details -->
+    <string name="details_title">Szczegóły subskrypcji</string>
+    <string name="details_billing_label">Rozliczenie</string>
+    <string name="details_next_payment_label">Następna płatność</string>
+    <string name="details_next_payment_unknown">Nie podano</string>
+    <string name="details_monthly_equivalent_label">Koszt miesięczny</string>
+    <string name="details_yearly_equivalent_label">Koszt roczny</string>
+    <string name="details_manage">Zarządzaj subskrypcją</string>
+    <string name="details_manage_missing_url">Ta subskrypcja nie ma adresu zarządzania.</string>
+    <string name="details_edit">Edytuj subskrypcję</string>
+    <string name="details_delete">Usuń subskrypcję</string>
+    <string name="details_not_found">Nie znaleziono subskrypcji.</string>
+
+    <!-- Delete confirmation -->
+    <string name="delete_dialog_title">Usunąć subskrypcję?</string>
+    <string name="delete_dialog_message">Czy na pewno chcesz usunąć %1$s? Tej operacji nie można cofnąć.</string>
+    <string name="delete_dialog_confirm">Usuń</string>
+    <string name="delete_success">Usunięto subskrypcję %1$s</string>
+
+    <!-- Form -->
+    <string name="form_title_add">Dodaj subskrypcję</string>
+    <string name="form_title_edit">Edytuj subskrypcję</string>
+    <string name="form_provider_label">Usługa</string>
+    <string name="form_provider_placeholder">Szukaj usługi, np. Spotify</string>
+    <string name="form_provider_change">Zmień usługę</string>
+    <string name="form_provider_no_results">Brak usług dla „%1$s”. Wybierz „Inne”, aby dodać własną.</string>
+    <string name="form_name_label">Nazwa subskrypcji</string>
+    <string name="form_price_label">Cena</string>
+    <string name="form_billing_period_label">Okres rozliczeniowy</string>
+    <string name="form_next_billing_label">Data następnego odnowienia</string>
+    <string name="form_next_billing_hint">Opcjonalnie — potrzebne do prognozy wydatków</string>
+    <string name="form_next_billing_pick">Wybierz datę</string>
+    <string name="form_next_billing_clear">Usuń datę</string>
+    <string name="form_management_url_label">Adres zarządzania subskrypcją</string>
+    <string name="form_management_url_hint">Opcjonalnie</string>
+    <string name="form_save">Zapisz subskrypcję</string>
+    <string name="form_date_picker_confirm">Wybierz</string>
+
+    <!-- Validation -->
+    <string name="form_error_provider_missing">Wybierz usługę</string>
+    <string name="form_error_name_missing">Podaj nazwę subskrypcji</string>
+    <string name="form_error_name_too_long">Nazwa jest za długa</string>
+    <string name="form_error_price_empty">Podaj cenę</string>
+    <string name="form_error_price_malformed">Podaj poprawną kwotę, np. 34,99</string>
+    <string name="form_error_price_negative">Cena nie może być ujemna</string>
+    <string name="form_error_price_zero">Cena musi być większa od zera</string>
+    <string name="form_error_price_decimals">Podaj maksymalnie dwie cyfry po przecinku</string>
+    <string name="form_error_price_too_large">Kwota jest zbyt duża</string>
+    <string name="form_error_url_invalid">Podaj poprawny adres, np. https://netflix.com</string>
+
+    <!-- Errors -->
+    <string name="error_save_failed">Nie udało się zapisać subskrypcji. Spróbuj ponownie.</string>
+    <string name="error_load_failed">Nie udało się wczytać danych. Spróbuj ponownie.</string>
+    <string name="error_delete_failed">Nie udało się usunąć subskrypcji. Spróbuj ponownie.</string>
+    <string name="error_open_url_failed">Nie udało się otworzyć strony zarządzania.</string>
+
+    <!-- Drawer -->
+    <string name="drawer_home">Subskrypcje</string>
+    <string name="drawer_statistics">Statystyki</string>
+    <string name="drawer_version">Wersja %1$s</string>
+    <string name="drawer_build">Build %1$d</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">Statystyki</string>
+    <string name="statistics_monthly_label">Miesięcznie</string>
+    <string name="statistics_yearly_label">Rocznie</string>
+    <string name="statistics_count_label">Subskrypcje</string>
+    <string name="statistics_period_month">Miesiąc</string>
+    <string name="statistics_period_year">Rok</string>
+    <string name="statistics_period_twelve_months">12 miesięcy</string>
+    <string name="statistics_forecast_title">Prognozowane obciążenia</string>
+    <string name="statistics_forecast_description">Wyliczone z podanych dat odnowienia — to spodziewane rzeczywiste płatności, nie średnia.</string>
+    <string name="statistics_forecast_empty">Uzupełnij daty odnowienia, aby zobaczyć prognozę rzeczywistych obciążeń.</string>
+    <string name="statistics_forecast_month_total">%1$s: %2$s</string>
+    <string name="statistics_average_title">Średni koszt miesięczny</string>
+    <string name="statistics_average_description">Koszt znormalizowany: subskrypcje roczne podzielone na 12 miesięcy.</string>
+    <string name="statistics_categories_title">Koszty według kategorii</string>
+    <string name="statistics_top_title">Największe koszty</string>
+    <string name="statistics_top_description">Porównanie w przeliczeniu na miesiąc.</string>
+    <string name="statistics_upcoming_title">Najbliższe obciążenia</string>
+    <string name="statistics_empty_title">Brak danych</string>
+    <string name="statistics_empty_description">Dodaj subskrypcje, aby zobaczyć statystyki wydatków.</string>
+    <string name="statistics_share_percent">%1$d%%</string>
+
+    <!-- Categories -->
+    <string name="category_video">Video</string>
+    <string name="category_music">Muzyka</string>
+    <string name="category_ai">AI</string>
+    <string name="category_cloud">Chmura</string>
+    <string name="category_software">Oprogramowanie</string>
+    <string name="category_hosting">Hosting i domeny</string>
+    <string name="category_shopping">Zakupy</string>
+    <string name="category_gaming">Gry</string>
+    <string name="category_books">Książki i audio</string>
+    <string name="category_other">Inne</string>
+
+    <!-- Providers -->
+    <string name="provider_other">Inne</string>
+
+    <plurals name="statistics_without_date">
+        <item quantity="one">%1$d subskrypcja bez daty odnowienia (%2$s / mies.)</item>
+        <item quantity="few">%1$d subskrypcje bez daty odnowienia (%2$s / mies.)</item>
+        <item quantity="many">%1$d subskrypcji bez daty odnowienia (%2$s / mies.)</item>
+        <item quantity="other">%1$d subskrypcji bez daty odnowienia (%2$s / mies.)</item>
+    </plurals>
+</resources>
