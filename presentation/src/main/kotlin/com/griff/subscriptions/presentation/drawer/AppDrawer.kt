@@ -1,9 +1,13 @@
 package com.griff.subscriptions.presentation.drawer
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
@@ -16,8 +20,11 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.griff.subscriptions.application.appinfo.AppVersion
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.theme.Spacing
@@ -37,21 +44,33 @@ internal fun AppDrawerContent(
 ) {
     ModalDrawerSheet {
         Column(modifier = Modifier.fillMaxHeight()) {
-            Column(
-                modifier = Modifier.padding(
-                    horizontal = Spacing.ExtraLarge,
-                    vertical = Spacing.ExtraLarge,
-                ),
-                verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.ExtraLarge, vertical = Spacing.ExtraLarge),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = stringResource(R.string.app_display_name),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Text(
-                    text = stringResource(R.string.app_tagline),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
+                ) {
+                    Text(
+                        text = stringResource(R.string.app_display_name),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    Text(
+                        text = stringResource(R.string.app_tagline),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Image(
+                    painter = painterResource(R.drawable.ic_griff_emblem),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(start = Spacing.Medium)
+                        .height(HeaderEmblemHeight),
                 )
             }
 
@@ -95,3 +114,9 @@ internal fun AppDrawerContent(
         }
     }
 }
+
+/**
+ * Shrunk to sit comfortably next to the two-line title block without dominating the header; the
+ * emblem's own aspect ratio (from [R.drawable.ic_griff_emblem]) determines its width.
+ */
+private val HeaderEmblemHeight = 80.dp
