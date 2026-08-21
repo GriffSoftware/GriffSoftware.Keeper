@@ -14,6 +14,7 @@ minSdk = "26"
 targetSdk = "36"
 javaVersion = "17"
 
+appcompat = "1.7.0"
 coreKtx = "1.18.0"
 lifecycle = "2.10.0"
 activityCompose = "1.13.0"
@@ -40,6 +41,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
 # --- AndroidX core ---
+# Per-app locales below API 33: AppCompatDelegate.setApplicationLocales and its own storage.
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }

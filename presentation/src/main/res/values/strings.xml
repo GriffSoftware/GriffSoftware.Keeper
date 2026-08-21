@@ -1,608 +1,612 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
+<!--
+    English is the base locale: it is what an install falls back to when the system language is one
+    Griff Keeper does not ship (German, French, Spanish, ...). Polish lives in values-pl.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
     <!-- Global -->
     <string name="app_display_name">Griff Keeper</string>
-    <string name="app_tagline">Subskrypcje, opłaty i przypomnienia</string>
-    <string name="action_back">Wróć</string>
-    <string name="action_cancel">Anuluj</string>
-    <string name="amount_per_month">%1$s / mies.</string>
-    <string name="amount_per_year">%1$s / rok</string>
-    <string name="open_menu">Otwórz menu</string>
-    <string name="search_clear">Wyczyść wyszukiwanie</string>
-    <string name="no_results_title">Brak wyników</string>
-    <string name="filter_tag_all">Wszystkie</string>
+    <string name="app_tagline">Subscriptions, obligations and reminders</string>
+    <string name="action_back">Back</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="amount_per_month">%1$s / mo</string>
+    <string name="amount_per_year">%1$s / yr</string>
+    <string name="open_menu">Open menu</string>
+    <string name="search_clear">Clear search</string>
+    <string name="no_results_title">No results</string>
+    <string name="filter_tag_all">All</string>
 
     <!-- Message severity, spoken by screen readers so status is not carried by color alone -->
-    <string name="severity_info">Informacja</string>
-    <string name="severity_success">Sukces</string>
-    <string name="severity_warning">Ostrzeżenie</string>
-    <string name="severity_error">Błąd</string>
+    <string name="severity_info">Information</string>
+    <string name="severity_success">Success</string>
+    <string name="severity_warning">Warning</string>
+    <string name="severity_error">Error</string>
 
     <!-- Billing period -->
-    <string name="billing_period_monthly">Miesięczna</string>
-    <string name="billing_period_yearly">Roczna</string>
-    <string name="billing_period_monthly_option">Miesięcznie</string>
-    <string name="billing_period_yearly_option">Rocznie</string>
-    <string name="billing_period_monthly_recurrence">Co miesiąc</string>
-    <string name="billing_period_yearly_recurrence">Co rok</string>
+    <string name="billing_period_monthly">Monthly</string>
+    <string name="billing_period_yearly">Yearly</string>
+    <string name="billing_period_monthly_option">Monthly</string>
+    <string name="billing_period_yearly_option">Yearly</string>
+    <string name="billing_period_monthly_recurrence">Every month</string>
+    <string name="billing_period_yearly_recurrence">Every year</string>
 
     <!-- Subscriptions list -->
-    <string name="subscriptions_title">Subskrypcje</string>
-    <string name="subscriptions_search_placeholder">Szukaj subskrypcji</string>
-    <string name="subscriptions_empty_title">Brak subskrypcji</string>
-    <string name="subscriptions_empty_description">Dodaj pierwszą subskrypcję, aby zobaczyć swoje miesięczne wydatki.</string>
-    <string name="subscriptions_no_results_query">Żadna subskrypcja nie pasuje do zapytania „%1$s”.</string>
-    <string name="subscriptions_no_results_category">Brak subskrypcji w kategorii „%1$s”.</string>
-    <string name="subscriptions_no_results_category_and_query">Brak subskrypcji w kategorii „%1$s” dla zapytania „%2$s”.</string>
-    <string name="subscriptions_add">Dodaj subskrypcję</string>
-    <string name="subscriptions_totals_title">Łącznie</string>
-    <string name="subscriptions_totals_filtered_title">Łącznie (widoczne pozycje)</string>
+    <string name="subscriptions_title">Subscriptions</string>
+    <string name="subscriptions_search_placeholder">Search subscriptions</string>
+    <string name="subscriptions_empty_title">No subscriptions</string>
+    <string name="subscriptions_empty_description">Add your first subscription to see what you spend each month.</string>
+    <string name="subscriptions_no_results_query">No subscription matches “%1$s”.</string>
+    <string name="subscriptions_no_results_category">No subscriptions in the “%1$s” category.</string>
+    <string name="subscriptions_no_results_category_and_query">No subscriptions in the “%1$s” category match “%2$s”.</string>
+    <string name="subscriptions_add">Add subscription</string>
+    <string name="subscriptions_totals_title">Total</string>
+    <string name="subscriptions_totals_filtered_title">Total (visible items)</string>
     <string name="subscriptions_item_description">%1$s, %2$s, %3$s, %4$s</string>
 
     <!-- Subscription details -->
-    <string name="details_title">Szczegóły subskrypcji</string>
-    <string name="details_billing_label">Rozliczenie</string>
-    <string name="details_next_payment_label">Następna płatność</string>
-    <string name="details_next_payment_unknown">Nie podano</string>
-    <string name="details_monthly_equivalent_label">Koszt miesięczny</string>
-    <string name="details_yearly_equivalent_label">Koszt roczny</string>
-    <string name="details_manage">Zarządzaj subskrypcją</string>
-    <string name="details_manage_missing_url">Ta subskrypcja nie ma adresu zarządzania.</string>
-    <string name="details_edit">Edytuj subskrypcję</string>
-    <string name="details_delete">Usuń subskrypcję</string>
-    <string name="details_not_found">Nie znaleziono subskrypcji.</string>
+    <string name="details_title">Subscription details</string>
+    <string name="details_billing_label">Billing</string>
+    <string name="details_next_payment_label">Next payment</string>
+    <string name="details_next_payment_unknown">Not set</string>
+    <string name="details_monthly_equivalent_label">Monthly cost</string>
+    <string name="details_yearly_equivalent_label">Yearly cost</string>
+    <string name="details_manage">Manage subscription</string>
+    <string name="details_manage_missing_url">This subscription has no management address.</string>
+    <string name="details_edit">Edit subscription</string>
+    <string name="details_delete">Delete subscription</string>
+    <string name="details_not_found">Subscription not found.</string>
 
     <!-- Delete confirmation -->
-    <string name="delete_dialog_title">Usunąć subskrypcję?</string>
-    <string name="delete_dialog_message">Czy na pewno chcesz usunąć %1$s? Tej operacji nie można cofnąć.</string>
-    <string name="delete_dialog_confirm">Usuń</string>
-    <string name="delete_success">Subskrypcja „%1$s” została usunięta.</string>
+    <string name="delete_dialog_title">Delete subscription?</string>
+    <string name="delete_dialog_message">Are you sure you want to delete %1$s? This cannot be undone.</string>
+    <string name="delete_dialog_confirm">Delete</string>
+    <string name="delete_success">Subscription “%1$s” deleted.</string>
 
     <!-- Subscription form -->
-    <string name="form_title_add">Dodaj subskrypcję</string>
-    <string name="form_title_edit">Edytuj subskrypcję</string>
-    <string name="form_provider_label">Usługa</string>
-    <string name="form_provider_placeholder">Szukaj usługi, np. Spotify</string>
-    <string name="form_provider_change">Zmień usługę</string>
-    <string name="form_provider_no_results">Brak usług dla „%1$s”. Wybierz „Inne”, aby dodać własną.</string>
-    <string name="form_name_label">Nazwa subskrypcji</string>
-    <string name="form_category_label">Kategoria</string>
-    <string name="form_price_label">Cena</string>
-    <string name="form_billing_period_label">Okres rozliczeniowy</string>
-    <string name="form_next_billing_label">Data następnego odnowienia</string>
-    <string name="form_next_billing_hint">Opcjonalnie — potrzebne do prognozy wydatków</string>
-    <string name="form_management_url_label">Adres zarządzania subskrypcją</string>
-    <string name="form_management_url_hint">Opcjonalnie</string>
-    <string name="form_save">Zapisz subskrypcję</string>
+    <string name="form_title_add">Add subscription</string>
+    <string name="form_title_edit">Edit subscription</string>
+    <string name="form_provider_label">Service</string>
+    <string name="form_provider_placeholder">Search services, e.g. Spotify</string>
+    <string name="form_provider_change">Change service</string>
+    <string name="form_provider_no_results">No services match “%1$s”. Pick “Other” to add your own.</string>
+    <string name="form_name_label">Subscription name</string>
+    <string name="form_category_label">Category</string>
+    <string name="form_price_label">Price</string>
+    <string name="form_billing_period_label">Billing period</string>
+    <string name="form_next_billing_label">Next renewal date</string>
+    <string name="form_next_billing_hint">Optional — needed for the spending forecast</string>
+    <string name="form_management_url_label">Subscription management address</string>
+    <string name="form_management_url_hint">Optional</string>
+    <string name="form_save">Save subscription</string>
 
     <!-- Shared form controls -->
-    <string name="form_date_pick">Wybierz datę</string>
-    <string name="form_date_clear">Usuń datę</string>
-    <string name="form_date_picker_confirm">Wybierz</string>
+    <string name="form_date_pick">Pick a date</string>
+    <string name="form_date_clear">Clear date</string>
+    <string name="form_date_picker_confirm">Select</string>
 
     <!-- Validation -->
-    <string name="form_error_provider_missing">Wybierz usługę</string>
-    <string name="form_error_name_missing">Podaj nazwę subskrypcji</string>
-    <string name="form_error_name_too_long">Nazwa jest za długa</string>
-    <string name="form_error_price_empty">Podaj cenę</string>
-    <string name="form_error_price_malformed">Podaj poprawną kwotę, np. 34,99</string>
-    <string name="form_error_price_negative">Cena nie może być ujemna</string>
-    <string name="form_error_price_zero">Cena musi być większa od zera</string>
-    <string name="form_error_price_decimals">Podaj maksymalnie dwie cyfry po przecinku</string>
-    <string name="form_error_price_too_large">Kwota jest zbyt duża</string>
-    <string name="form_error_url_invalid">Podaj poprawny adres, np. https://netflix.com</string>
+    <string name="form_error_provider_missing">Pick a service</string>
+    <string name="form_error_name_missing">Enter a subscription name</string>
+    <string name="form_error_name_too_long">Name is too long</string>
+    <string name="form_error_price_empty">Enter a price</string>
+    <string name="form_error_price_malformed">Enter a valid amount, e.g. 34.99</string>
+    <string name="form_error_price_negative">Price cannot be negative</string>
+    <string name="form_error_price_zero">Price has to be greater than zero</string>
+    <string name="form_error_price_decimals">Use at most two decimal places</string>
+    <string name="form_error_price_too_large">Amount is too large</string>
+    <string name="form_error_url_invalid">Enter a valid address, e.g. https://netflix.com</string>
 
     <!-- Errors -->
-    <string name="error_save_failed">Nie udało się zapisać danych. Spróbuj ponownie.</string>
-    <string name="error_load_failed">Nie udało się wczytać danych. Spróbuj ponownie.</string>
-    <string name="error_delete_failed">Nie udało się usunąć pozycji. Spróbuj ponownie.</string>
-    <string name="error_open_url_failed">Nie udało się otworzyć strony zarządzania.</string>
+    <string name="error_save_failed">Could not save your data. Please try again.</string>
+    <string name="error_load_failed">Could not load your data. Please try again.</string>
+    <string name="error_delete_failed">Could not delete the item. Please try again.</string>
+    <string name="error_open_url_failed">Could not open the management page.</string>
 
     <!-- Drawer -->
-    <string name="drawer_subscriptions">Subskrypcje</string>
-    <string name="drawer_obligations">Ubezpieczenia i opłaty</string>
-    <string name="drawer_statistics">Statystyki</string>
+    <string name="drawer_subscriptions">Subscriptions</string>
+    <string name="drawer_obligations">Insurance &amp; obligations</string>
+    <string name="drawer_statistics">Statistics</string>
     <string name="drawer_about">About</string>
-    <string name="drawer_version">Wersja %1$s</string>
+    <string name="drawer_version">Version %1$s</string>
     <string name="drawer_build">Build %1$d</string>
 
+    <!-- Language -->
+    <string name="drawer_language">Language</string>
+    <!-- Self-names on purpose, in both languages: a user who switched by accident has to be able
+         to find their own language again. -->
+    <string name="language_polish" translatable="false">Polski</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_dialog_title">Choose language</string>
+    <!-- Spoken as one row: "Language, English" -->
+    <string name="language_item_description">%1$s, %2$s</string>
+
     <!-- Obligations list -->
-    <string name="obligations_title">Ubezpieczenia i opłaty</string>
-    <string name="obligations_search_placeholder">Szukaj opłaty</string>
-    <string name="obligations_add">Dodaj ubezpieczenie lub opłatę</string>
-    <string name="obligations_empty_title">Brak ubezpieczeń i opłat</string>
-    <string name="obligations_empty_description">Dodaj pierwszą pozycję, aby śledzić ważne terminy i roczne wydatki.</string>
-    <string name="obligations_no_results_period">Brak pozycji w wybranym okresie (%1$s).</string>
-    <string name="obligations_no_results_query">Żadna pozycja nie pasuje do zapytania „%1$s” w okresie %2$s.</string>
-    <string name="obligations_no_results_tag">Brak pozycji z tagiem „%1$s” w okresie %2$s.</string>
-    <string name="obligations_no_results_tag_and_query">Brak pozycji z tagiem „%1$s” dla zapytania „%2$s” w okresie %3$s.</string>
+    <string name="obligations_title">Insurance &amp; obligations</string>
+    <string name="obligations_search_placeholder">Search obligations</string>
+    <string name="obligations_add">Add insurance or obligation</string>
+    <string name="obligations_empty_title">No insurance or obligations</string>
+    <string name="obligations_empty_description">Add your first item to track important deadlines and yearly spending.</string>
+    <string name="obligations_no_results_period">No items in the selected period (%1$s).</string>
+    <string name="obligations_no_results_query">No item matches “%1$s” in %2$s.</string>
+    <string name="obligations_no_results_tag">No items tagged “%1$s” in %2$s.</string>
+    <string name="obligations_no_results_tag_and_query">No items tagged “%1$s” match “%2$s” in %3$s.</string>
     <string name="obligations_item_description">%1$s, %2$s, %3$s, %4$s</string>
-    <string name="obligations_paid_on">zapłacono %1$s</string>
-    <string name="obligations_valid_until">ważne do %1$s</string>
-    <string name="obligations_due_on">termin %1$s</string>
-    <string name="obligations_no_dates">bez terminu</string>
-    <string name="obligations_paid_in_year">Zapłacono w %1$d roku</string>
-    <!-- %1$s is a month in the locative case, see months_locative -->
-    <string name="obligations_paid_in_month">Zapłacono w %1$s %2$d</string>
-    <string name="obligations_paid_in_range">Zapłacono w okresie %1$s</string>
-    <string name="obligations_paid_filtered_suffix">%1$s (widoczne pozycje)</string>
-    <string name="obligations_outstanding_label">Do zapłaty</string>
+    <string name="obligations_paid_on">paid %1$s</string>
+    <string name="obligations_valid_until">valid until %1$s</string>
+    <string name="obligations_due_on">due %1$s</string>
+    <string name="obligations_no_dates">no deadline</string>
+    <string name="obligations_paid_in_year">Paid in %1$d</string>
+    <!-- %1$s is a month name, see months_locative -->
+    <string name="obligations_paid_in_month">Paid in %1$s %2$d</string>
+    <string name="obligations_paid_in_range">Paid in %1$s</string>
+    <string name="obligations_paid_filtered_suffix">%1$s (visible items)</string>
+    <string name="obligations_outstanding_label">To pay</string>
 
     <!-- Period selector -->
-    <string name="period_mode_month">Miesiąc</string>
-    <string name="period_mode_year">Rok</string>
-    <string name="period_previous">Poprzedni okres</string>
-    <string name="period_next">Następny okres</string>
+    <string name="period_mode_month">Month</string>
+    <string name="period_mode_year">Year</string>
+    <string name="period_previous">Previous period</string>
+    <string name="period_next">Next period</string>
 
     <!-- Deadlines -->
-    <string name="deadline_expires_today">Wygasa dziś</string>
-    <string name="deadline_expired">Wygasło</string>
-    <string name="deadline_due_today">Termin dziś</string>
-    <string name="deadline_overdue">Termin minął</string>
+    <string name="deadline_expires_today">Expires today</string>
+    <string name="deadline_expired">Expired</string>
+    <string name="deadline_due_today">Due today</string>
+    <string name="deadline_overdue">Overdue</string>
 
     <!-- Obligation details -->
-    <string name="obligation_details_title">Szczegóły</string>
-    <string name="obligation_details_edit">Edytuj pozycję</string>
-    <string name="obligation_details_delete">Usuń pozycję</string>
-    <string name="obligation_details_not_found">Nie znaleziono pozycji.</string>
+    <string name="obligation_details_title">Details</string>
+    <string name="obligation_details_edit">Edit item</string>
+    <string name="obligation_details_delete">Delete item</string>
+    <string name="obligation_details_not_found">Item not found.</string>
     <string name="obligation_details_status_label">Status</string>
-    <string name="obligation_details_category_label">Kategoria</string>
-    <string name="obligation_details_paid_label">Zapłacono</string>
-    <string name="obligation_details_due_label">Termin płatności</string>
-    <string name="obligation_details_valid_until_label">Ważne do</string>
-    <string name="obligation_details_notes_label">Notatka</string>
-    <string name="obligation_details_not_provided">Nie podano</string>
-    <string name="obligation_delete_dialog_title">Usunąć pozycję?</string>
-    <string name="obligation_delete_dialog_message">Czy na pewno chcesz usunąć „%1$s”? Tej operacji nie można cofnąć.</string>
-    <string name="obligation_delete_success">Pozycja „%1$s” została usunięta.</string>
+    <string name="obligation_details_category_label">Category</string>
+    <string name="obligation_details_paid_label">Paid</string>
+    <string name="obligation_details_due_label">Payment due</string>
+    <string name="obligation_details_valid_until_label">Valid until</string>
+    <string name="obligation_details_notes_label">Note</string>
+    <string name="obligation_details_not_provided">Not set</string>
+    <string name="obligation_delete_dialog_title">Delete item?</string>
+    <string name="obligation_delete_dialog_message">Are you sure you want to delete “%1$s”? This cannot be undone.</string>
+    <string name="obligation_delete_success">Item “%1$s” deleted.</string>
 
     <!-- Obligation form -->
-    <string name="obligation_form_title_add">Dodaj ubezpieczenie lub opłatę</string>
-    <string name="obligation_form_title_edit">Edytuj pozycję</string>
-    <string name="obligation_form_name_label">Nazwa</string>
-    <string name="obligation_form_name_hint">Np. OC Ford, Podatek od gruntu</string>
-    <string name="obligation_form_category_label">Kategoria</string>
-    <string name="obligation_form_amount_label">Kwota</string>
-    <string name="obligation_form_status_label">Status płatności</string>
-    <string name="obligation_form_payment_date_label">Data zapłaty</string>
-    <string name="obligation_form_payment_date_hint">Decyduje o roku, w którym liczymy wydatek</string>
-    <string name="obligation_form_due_date_label">Termin płatności</string>
-    <string name="obligation_form_due_date_hint">Opcjonalnie</string>
-    <string name="obligation_form_valid_until_label">Ważne do</string>
-    <string name="obligation_form_valid_until_hint">Opcjonalnie — koniec ochrony ubezpieczeniowej</string>
-    <string name="obligation_form_notes_label">Notatka</string>
-    <string name="obligation_form_notes_hint">Opcjonalnie, np. numer polisy</string>
-    <string name="obligation_form_save">Zapisz pozycję</string>
-    <string name="obligation_form_error_name_missing">Podaj nazwę pozycji</string>
-    <string name="obligation_form_error_name_too_long">Nazwa jest za długa</string>
-    <string name="obligation_form_error_category_missing">Wybierz kategorię</string>
-    <string name="obligation_form_error_payment_date_missing">Podaj datę zapłaty dla pozycji oznaczonej jako zapłacona</string>
-    <string name="obligation_form_error_notes_too_long">Notatka jest za długa</string>
+    <string name="obligation_form_title_add">Add insurance or obligation</string>
+    <string name="obligation_form_title_edit">Edit item</string>
+    <string name="obligation_form_name_label">Name</string>
+    <string name="obligation_form_name_hint">E.g. Ford insurance, Land tax</string>
+    <string name="obligation_form_category_label">Category</string>
+    <string name="obligation_form_amount_label">Amount</string>
+    <string name="obligation_form_status_label">Payment status</string>
+    <string name="obligation_form_payment_date_label">Payment date</string>
+    <string name="obligation_form_payment_date_hint">Decides the year this expense counts towards</string>
+    <string name="obligation_form_due_date_label">Payment due</string>
+    <string name="obligation_form_due_date_hint">Optional</string>
+    <string name="obligation_form_valid_until_label">Valid until</string>
+    <string name="obligation_form_valid_until_hint">Optional — end of insurance coverage</string>
+    <string name="obligation_form_notes_label">Note</string>
+    <string name="obligation_form_notes_hint">Optional, e.g. the policy number</string>
+    <string name="obligation_form_save">Save item</string>
+    <string name="obligation_form_error_name_missing">Enter a name</string>
+    <string name="obligation_form_error_name_too_long">Name is too long</string>
+    <string name="obligation_form_error_category_missing">Pick a category</string>
+    <string name="obligation_form_error_payment_date_missing">Enter the payment date for an item marked as paid</string>
+    <string name="obligation_form_error_notes_too_long">Note is too long</string>
 
     <!-- Payment status -->
-    <string name="payment_status_paid">Zapłacono</string>
-    <string name="payment_status_unpaid">Do zapłaty</string>
+    <string name="payment_status_paid">Paid</string>
+    <string name="payment_status_unpaid">To pay</string>
 
     <!-- Statistics -->
-    <string name="statistics_title">Statystyki</string>
-    <string name="statistics_scope_all">Wszystkie</string>
-    <string name="statistics_scope_subscriptions">Subskrypcje</string>
-    <string name="statistics_scope_obligations">Opłaty</string>
-    <string name="statistics_monthly_label">Miesięcznie</string>
-    <string name="statistics_yearly_label">Rocznie</string>
-    <string name="statistics_count_label">Subskrypcje</string>
-    <string name="statistics_period_month">Miesiąc</string>
-    <string name="statistics_period_year">Rok</string>
-    <string name="statistics_period_twelve_months">12 miesięcy</string>
-    <string name="statistics_forecast_title">Prognozowane obciążenia</string>
-    <string name="statistics_forecast_description">Wyliczone z podanych dat odnowienia — to spodziewane rzeczywiste płatności, nie średnia.</string>
-    <string name="statistics_forecast_empty">Uzupełnij daty odnowienia, aby zobaczyć prognozę rzeczywistych obciążeń.</string>
+    <string name="statistics_title">Statistics</string>
+    <string name="statistics_scope_all">All</string>
+    <string name="statistics_scope_subscriptions">Subscriptions</string>
+    <string name="statistics_scope_obligations">Obligations</string>
+    <string name="statistics_monthly_label">Monthly</string>
+    <string name="statistics_yearly_label">Yearly</string>
+    <string name="statistics_count_label">Subscriptions</string>
+    <string name="statistics_period_month">Month</string>
+    <string name="statistics_period_year">Year</string>
+    <string name="statistics_period_twelve_months">12 months</string>
+    <string name="statistics_forecast_title">Forecast charges</string>
+    <string name="statistics_forecast_description">Derived from the renewal dates you entered — these are the payments to expect, not an average.</string>
+    <string name="statistics_forecast_empty">Add renewal dates to see a forecast of the actual charges.</string>
     <string name="statistics_forecast_month_total">%1$s: %2$s</string>
-    <string name="statistics_average_title">Średni koszt miesięczny</string>
-    <string name="statistics_average_description">Koszt znormalizowany: subskrypcje roczne podzielone na 12 miesięcy.</string>
-    <string name="statistics_categories_title">Subskrypcje według kategorii</string>
-    <string name="statistics_top_title">Największe koszty</string>
-    <string name="statistics_top_description">Porównanie w przeliczeniu na miesiąc.</string>
-    <string name="statistics_upcoming_title">Najbliższe obciążenia</string>
-    <string name="statistics_empty_title">Brak danych</string>
-    <string name="statistics_empty_description">Dodaj subskrypcje albo opłaty, aby zobaczyć statystyki wydatków.</string>
+    <string name="statistics_average_title">Average monthly cost</string>
+    <string name="statistics_average_description">Normalized cost: yearly subscriptions spread across 12 months.</string>
+    <string name="statistics_categories_title">Subscriptions by category</string>
+    <string name="statistics_top_title">Highest costs</string>
+    <string name="statistics_top_description">Compared per month.</string>
+    <string name="statistics_upcoming_title">Upcoming charges</string>
+    <string name="statistics_empty_title">No data</string>
+    <string name="statistics_empty_description">Add subscriptions or obligations to see your spending statistics.</string>
     <string name="statistics_share_percent">%1$d%%</string>
-    <string name="statistics_upcoming_soon">Wkrótce</string>
+    <string name="statistics_upcoming_soon">Soon</string>
+    <!-- Spoken as one row of the breakdown: "Music, 34.99 PLN / mo, 21%" -->
+    <string name="statistics_share_description">%1$s, %2$s, %3$d%%</string>
 
     <!-- Statistics: obligations -->
-    <string name="statistics_obligations_paid_label">Zapłacono</string>
-    <string name="statistics_obligations_count_label">Pozycji</string>
-    <string name="statistics_obligations_outstanding_label">Do zapłaty</string>
-    <string name="statistics_obligations_largest_label">Największa opłata</string>
-    <string name="statistics_obligations_payments_title">Faktycznie zapłacone opłaty</string>
-    <string name="statistics_obligations_payments_description">Każda opłata liczona raz, w miesiącu w którym została zapłacona.</string>
-    <string name="statistics_obligations_payments_empty">Brak zapłaconych opłat w wybranym okresie.</string>
-    <string name="statistics_obligations_categories_title">Opłaty według kategorii</string>
-    <string name="statistics_obligations_top_title">Największe opłaty</string>
-    <string name="statistics_obligations_top_description">Kwoty faktycznie zapłacone w wybranym okresie.</string>
+    <string name="statistics_obligations_paid_label">Paid</string>
+    <string name="statistics_obligations_count_label">Items</string>
+    <string name="statistics_obligations_outstanding_label">To pay</string>
+    <string name="statistics_obligations_largest_label">Largest obligation</string>
+    <string name="statistics_obligations_payments_title">Payments actually made</string>
+    <string name="statistics_obligations_payments_description">Each obligation counted once, in the month it was paid.</string>
+    <string name="statistics_obligations_payments_empty">No obligations were paid in the selected period.</string>
+    <string name="statistics_obligations_categories_title">Obligations by category</string>
+    <string name="statistics_obligations_top_title">Largest obligations</string>
+    <string name="statistics_obligations_top_description">Amounts actually paid in the selected period.</string>
 
     <!-- Statistics: combined -->
-    <string name="statistics_combined_title">Koszty łącznie</string>
-    <string name="statistics_combined_subscriptions_label">Subskrypcje</string>
-    <string name="statistics_combined_subscriptions_note">szacowany koszt</string>
-    <string name="statistics_combined_obligations_label">Ubezpieczenia i opłaty</string>
-    <string name="statistics_combined_obligations_note">faktycznie zapłacono</string>
-    <string name="statistics_combined_total_label">Łącznie</string>
-    <string name="statistics_combined_total_note">Suma szacowanego kosztu subskrypcji i faktycznie zapłaconych opłat — to nie jest historia transakcji.</string>
-    <string name="statistics_combined_chart_title">Koszty w czasie</string>
-    <string name="statistics_combined_chart_description">Subskrypcje to koszt znormalizowany (szacowany), opłaty to rzeczywiste płatności.</string>
-    <string name="statistics_source_subscription">Subskrypcja</string>
-    <string name="statistics_source_obligation">Opłata</string>
+    <string name="statistics_combined_title">Total costs</string>
+    <string name="statistics_combined_subscriptions_label">Subscriptions</string>
+    <string name="statistics_combined_subscriptions_note">estimated cost</string>
+    <string name="statistics_combined_obligations_label">Insurance &amp; obligations</string>
+    <string name="statistics_combined_obligations_note">actually paid</string>
+    <string name="statistics_combined_total_label">Total</string>
+    <string name="statistics_combined_total_note">Estimated subscription cost plus obligations actually paid — this is not a transaction history.</string>
+    <string name="statistics_combined_chart_title">Costs over time</string>
+    <string name="statistics_combined_chart_description">Subscriptions are a normalized (estimated) cost, obligations are real payments.</string>
+    <string name="statistics_source_subscription">Subscription</string>
+    <string name="statistics_source_obligation">Obligation</string>
 
     <!-- Categories: subscriptions -->
     <string name="category_video">Video</string>
-    <string name="category_music">Muzyka</string>
+    <string name="category_music">Music</string>
     <string name="category_ai">AI</string>
-    <string name="category_cloud">Chmura</string>
-    <string name="category_software">Oprogramowanie</string>
+    <string name="category_cloud">Cloud</string>
+    <string name="category_software">Software</string>
     <string name="category_hosting">Hosting</string>
-    <string name="category_shopping">Zakupy</string>
-    <string name="category_gaming">Gry</string>
-    <string name="category_books">Książki</string>
-    <string name="category_other">Inne</string>
+    <string name="category_shopping">Shopping</string>
+    <string name="category_gaming">Gaming</string>
+    <string name="category_books">Books</string>
+    <string name="category_other">Other</string>
 
     <!-- Categories: obligations -->
-    <string name="obligation_category_vehicle_insurance">Ubezpieczenie pojazdu</string>
-    <string name="obligation_category_home_insurance">Ubezpieczenie domu</string>
-    <string name="obligation_category_land_insurance">Ubezpieczenie gruntu</string>
-    <string name="obligation_category_drone_insurance">Ubezpieczenie drona</string>
-    <string name="obligation_category_property_tax">Podatek od nieruchomości</string>
-    <string name="obligation_category_land_tax">Podatek od gruntu</string>
-    <string name="obligation_category_other">Inne</string>
+    <string name="obligation_category_vehicle_insurance">Vehicle insurance</string>
+    <string name="obligation_category_home_insurance">Home insurance</string>
+    <string name="obligation_category_land_insurance">Land insurance</string>
+    <string name="obligation_category_drone_insurance">Drone insurance</string>
+    <string name="obligation_category_property_tax">Property tax</string>
+    <string name="obligation_category_land_tax">Land tax</string>
+    <string name="obligation_category_other">Other</string>
 
     <!-- Tags: obligations. Short by design - a badge has to stay readable inside a list row. -->
-    <string name="tag_vehicle_insurance">OC</string>
-    <string name="tag_home_insurance">Dom</string>
-    <string name="tag_land_insurance">Grunt</string>
-    <string name="tag_drone_insurance">Dron</string>
-    <string name="tag_tax">Podatek</string>
-    <string name="tag_other">Inne</string>
+    <string name="tag_vehicle_insurance">Vehicle</string>
+    <string name="tag_home_insurance">Home</string>
+    <string name="tag_land_insurance">Land</string>
+    <string name="tag_drone_insurance">Drone</string>
+    <string name="tag_tax">Tax</string>
+    <string name="tag_other">Other</string>
 
     <!-- Providers -->
-    <string name="provider_other">Inne</string>
+    <string name="provider_other">Other</string>
 
     <!--
-        Month names in the locative case ("w sierpniu"), which CLDR does not provide: its two forms
-        are the nominative "sierpień" and the genitive "sierpnia". Used only after the preposition.
+        Month names as they read after "Paid in". The Polish translation carries the locative case
+        ("w sierpniu"), which CLDR does not provide - its two forms are the nominative "sierpień" and
+        the genitive "sierpnia" - which is why the names are a resource rather than a date pattern.
     -->
     <string-array name="months_locative">
-        <item>styczniu</item>
-        <item>lutym</item>
-        <item>marcu</item>
-        <item>kwietniu</item>
-        <item>maju</item>
-        <item>czerwcu</item>
-        <item>lipcu</item>
-        <item>sierpniu</item>
-        <item>wrześniu</item>
-        <item>październiku</item>
-        <item>listopadzie</item>
-        <item>grudniu</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
     <!-- Reminders -->
-    <string name="drawer_reminders">Przypomnienia</string>
-    <string name="reminders_title">Przypomnienia</string>
-    <string name="reminders_global_title">Przypomnienia</string>
-    <string name="reminders_global_description">Otrzymuj informacje o zbliżających się terminach.</string>
-    <string name="reminders_global_switch_description">Włącz lub wyłącz wszystkie przypomnienia</string>
-    <string name="reminders_off_title">Przypomnienia są wyłączone</string>
-    <string name="reminders_off_description">Nie otrzymasz powiadomień o nadchodzących płatnościach i terminach. Poniższa lista pokazuje, co włączy się po ponownym uruchomieniu przypomnień.</string>
-    <string name="reminders_off_action">Włącz przypomnienia</string>
+    <string name="drawer_reminders">Reminders</string>
+    <string name="reminders_title">Reminders</string>
+    <string name="reminders_global_title">Reminders</string>
+    <string name="reminders_global_description">Get told about deadlines before they arrive.</string>
+    <string name="reminders_global_switch_description">Turn all reminders on or off</string>
+    <string name="reminders_off_title">Reminders are off</string>
+    <string name="reminders_off_description">You will not be notified about upcoming payments and deadlines. The list below shows what comes back when you turn reminders on again.</string>
+    <string name="reminders_off_action">Turn reminders on</string>
 
-    <string name="reminders_permission_title">Powiadomienia systemowe są wyłączone</string>
-    <string name="reminders_permission_description">Przypomnienia są skonfigurowane, ale Android nie pozwala aplikacji ich wyświetlać.</string>
-    <string name="reminders_permission_grant">Włącz powiadomienia</string>
-    <string name="reminders_permission_settings">Otwórz ustawienia</string>
-    <string name="reminders_permission_rationale_title">Pozwól na powiadomienia</string>
-    <string name="reminders_permission_rationale_message">Przypomnienia działają wyłącznie na tym urządzeniu. Powiadomimy Cię o kończącym się ubezpieczeniu, zbliżającym się terminie płatności i odnowieniu subskrypcji.</string>
-    <string name="reminders_permission_rationale_confirm">Dalej</string>
-    <string name="reminders_permission_denied">Bez zgody na powiadomienia przypomnienia nie zostaną wyświetlone.</string>
+    <string name="reminders_permission_title">System notifications are off</string>
+    <string name="reminders_permission_description">Reminders are set up, but Android is not letting the app show them.</string>
+    <string name="reminders_permission_grant">Turn notifications on</string>
+    <string name="reminders_permission_settings">Open settings</string>
+    <string name="reminders_permission_rationale_title">Allow notifications</string>
+    <string name="reminders_permission_rationale_message">Reminders work entirely on this device. We will tell you about insurance about to expire, a payment coming due and a subscription about to renew.</string>
+    <string name="reminders_permission_rationale_confirm">Continue</string>
+    <string name="reminders_permission_denied">Without permission to post notifications, reminders cannot be shown.</string>
 
-    <string name="reminders_upcoming_title">Nadchodzące</string>
-    <string name="reminders_inactive_title">Bez aktywnego terminu</string>
-    <string name="reminders_filter_subscriptions">Subskrypcje</string>
-    <string name="reminders_filter_insurance">Ubezpieczenia</string>
-    <string name="reminders_filter_fees">Opłaty</string>
+    <string name="reminders_upcoming_title">Upcoming</string>
+    <string name="reminders_inactive_title">No active deadline</string>
+    <string name="reminders_filter_subscriptions">Subscriptions</string>
+    <string name="reminders_filter_insurance">Insurance</string>
+    <string name="reminders_filter_fees">Obligations</string>
 
-    <string name="reminders_empty_title">Brak nadchodzących przypomnień</string>
-    <string name="reminders_empty_description">Dodaj datę odnowienia, termin płatności lub datę ważności, aby zobaczyć tutaj nadchodzące przypomnienia.</string>
-    <string name="reminders_empty_filtered_title">Brak przypomnień w tym filtrze</string>
-    <string name="reminders_empty_filtered_description">Zmień filtr, aby zobaczyć pozostałe przypomnienia.</string>
+    <string name="reminders_empty_title">No upcoming reminders</string>
+    <string name="reminders_empty_description">Add a renewal date, a payment deadline or an expiry date to see upcoming reminders here.</string>
+    <string name="reminders_empty_filtered_title">No reminders in this filter</string>
+    <string name="reminders_empty_filtered_description">Change the filter to see the remaining reminders.</string>
 
-    <string name="reminders_target_expiry">Ważne do</string>
-    <string name="reminders_target_due">Termin płatności</string>
-    <string name="reminders_target_renewal">Odnowienie</string>
-    <string name="reminders_next_label">Najbliższe przypomnienie</string>
+    <string name="reminders_target_expiry">Valid until</string>
+    <string name="reminders_target_due">Payment due</string>
+    <string name="reminders_target_renewal">Renewal</string>
+    <string name="reminders_next_label">Next reminder</string>
     <string name="reminders_next_value">%1$s • %2$s</string>
-    <string name="reminders_when_today">dzisiaj</string>
-    <string name="reminders_when_tomorrow">jutro</string>
-    <string name="reminders_relative_today">Dzisiaj</string>
-    <string name="reminders_relative_tomorrow">Jutro</string>
-    <string name="reminders_status_disabled">Przypomnienia wyłączone</string>
-    <string name="reminders_status_no_date">Brak terminu</string>
-    <string name="reminders_status_passed">Termin minął</string>
+    <string name="reminders_when_today">today</string>
+    <string name="reminders_when_tomorrow">tomorrow</string>
+    <string name="reminders_relative_today">Today</string>
+    <string name="reminders_relative_tomorrow">Tomorrow</string>
+    <string name="reminders_status_disabled">Reminders off</string>
+    <string name="reminders_status_no_date">No deadline</string>
+    <string name="reminders_status_passed">Deadline passed</string>
 
-    <string name="reminders_defaults_title">Domyślne przypomnienia</string>
-    <string name="reminders_defaults_description">Reguły stosowane automatycznie do nowych i istniejących pozycji.</string>
-    <string name="reminders_defaults_insurance">Ubezpieczenia</string>
-    <string name="reminders_defaults_payments">Opłaty</string>
-    <string name="reminders_defaults_subscriptions">Subskrypcje</string>
-    <!-- Quoted so aapt keeps the surrounding spaces: "30 dni • 7 dni • 1 dzień". -->
+    <string name="reminders_defaults_title">Default reminders</string>
+    <string name="reminders_defaults_description">Rules applied automatically to new and existing items.</string>
+    <string name="reminders_defaults_insurance">Insurance</string>
+    <string name="reminders_defaults_payments">Obligations</string>
+    <string name="reminders_defaults_subscriptions">Subscriptions</string>
+    <!-- Quoted so aapt keeps the surrounding spaces: "30 days • 7 days • 1 day". -->
     <string name="reminders_defaults_separator">" • "</string>
 
-    <string name="reminders_debug_title">Narzędzia deweloperskie</string>
-    <string name="reminders_debug_send">Wyślij testowe powiadomienie</string>
-    <string name="reminders_debug_sent">Wysłano testowe powiadomienie</string>
+    <string name="reminders_debug_title">Developer tools</string>
+    <string name="reminders_debug_send">Send a test notification</string>
+    <string name="reminders_debug_sent">Test notification sent</string>
 
     <!-- Reminder section on the details screens -->
-    <string name="reminder_section_title">Przypomnienia</string>
-    <string name="reminder_section_switch_description">Przypomnienia dla tej pozycji</string>
-    <string name="reminder_section_next_label">Najbliższe przypomnienie</string>
-    <string name="reminder_section_off_subscription">Przypomnienia dla tej subskrypcji są wyłączone.</string>
-    <string name="reminder_section_off_obligation">Przypomnienia dla tej pozycji są wyłączone.</string>
-    <string name="reminder_section_no_billing_date">Brak daty następnego odnowienia.</string>
-    <string name="reminder_section_no_billing_date_hint">Dodaj datę odnowienia, aby otrzymywać przypomnienia.</string>
-    <string name="reminder_section_no_date_obligation">Brak terminu, o którym moglibyśmy przypomnieć.</string>
-    <string name="reminder_section_no_date_obligation_hint">Dodaj datę ważności lub termin płatności, aby otrzymywać przypomnienia.</string>
-    <string name="reminder_section_paid">Ta opłata jest oznaczona jako zapłacona, więc nie przypominamy już o terminie.</string>
-    <string name="reminder_section_passed">Wszystkie przypomnienia dla tego terminu już minęły.</string>
-    <string name="reminder_section_global_off">Przypomnienia są wyłączone globalnie — ta pozycja odezwie się po ich włączeniu.</string>
-    <string name="reminder_section_system_off">Android blokuje powiadomienia aplikacji, więc to przypomnienie nie zostanie wyświetlone.</string>
+    <string name="reminder_section_title">Reminders</string>
+    <string name="reminder_section_switch_description">Reminders for this item</string>
+    <string name="reminder_section_next_label">Next reminder</string>
+    <string name="reminder_section_off_subscription">Reminders for this subscription are off.</string>
+    <string name="reminder_section_off_obligation">Reminders for this item are off.</string>
+    <string name="reminder_section_no_billing_date">No next renewal date.</string>
+    <string name="reminder_section_no_billing_date_hint">Add a renewal date to get reminders.</string>
+    <string name="reminder_section_no_date_obligation">No deadline to remind you about.</string>
+    <string name="reminder_section_no_date_obligation_hint">Add an expiry date or a payment deadline to get reminders.</string>
+    <string name="reminder_section_paid">This obligation is marked as paid, so we no longer remind you about its deadline.</string>
+    <string name="reminder_section_passed">Every reminder for this deadline has already passed.</string>
+    <string name="reminder_section_global_off">Reminders are off globally — this item will speak up once you turn them on.</string>
+    <string name="reminder_section_system_off">Android is blocking the app\'s notifications, so this reminder will not be shown.</string>
 
     <!-- Reminders in the add/edit forms -->
-    <string name="form_reminders_label">Przypomnienia</string>
-    <string name="form_reminders_hint_subscription">Powiadomimy Cię 7 i 1 dzień wcześniej.</string>
-    <string name="form_reminders_hint_insurance">Powiadomimy Cię 30, 7 i 1 dzień wcześniej.</string>
-    <string name="form_reminders_hint_payment">Powiadomimy Cię 7 i 1 dzień wcześniej.</string>
+    <string name="form_reminders_label">Reminders</string>
+    <string name="form_reminders_hint_subscription">We will notify you 7 days and 1 day ahead.</string>
+    <string name="form_reminders_hint_insurance">We will notify you 30 days, 7 days and 1 day ahead.</string>
+    <string name="form_reminders_hint_payment">We will notify you 7 days and 1 day ahead.</string>
 
     <plurals name="reminders_relative_days">
-        <item quantity="one">Za %1$d dzień</item>
-        <item quantity="few">Za %1$d dni</item>
-        <item quantity="many">Za %1$d dni</item>
-        <item quantity="other">Za %1$d dni</item>
+        <item quantity="one">In %1$d day</item>
+        <item quantity="other">In %1$d days</item>
     </plurals>
 
     <plurals name="reminders_when_days">
-        <item quantity="one">za %1$d dzień</item>
-        <item quantity="few">za %1$d dni</item>
-        <item quantity="many">za %1$d dni</item>
-        <item quantity="other">za %1$d dni</item>
+        <item quantity="one">in %1$d day</item>
+        <item quantity="other">in %1$d days</item>
     </plurals>
 
     <plurals name="reminders_days_before">
-        <item quantity="one">%1$d dzień</item>
-        <item quantity="few">%1$d dni</item>
-        <item quantity="many">%1$d dni</item>
-        <item quantity="other">%1$d dni</item>
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
     </plurals>
 
     <plurals name="reminder_section_days_before_expiry">
-        <item quantity="one">%1$d dzień przed wygaśnięciem</item>
-        <item quantity="few">%1$d dni przed wygaśnięciem</item>
-        <item quantity="many">%1$d dni przed wygaśnięciem</item>
-        <item quantity="other">%1$d dni przed wygaśnięciem</item>
+        <item quantity="one">%1$d day before it expires</item>
+        <item quantity="other">%1$d days before it expires</item>
     </plurals>
 
     <plurals name="reminder_section_days_before_due">
-        <item quantity="one">%1$d dzień przed terminem</item>
-        <item quantity="few">%1$d dni przed terminem</item>
-        <item quantity="many">%1$d dni przed terminem</item>
-        <item quantity="other">%1$d dni przed terminem</item>
+        <item quantity="one">%1$d day before it is due</item>
+        <item quantity="other">%1$d days before it is due</item>
     </plurals>
 
     <plurals name="reminder_section_days_before_renewal">
-        <item quantity="one">%1$d dzień przed odnowieniem</item>
-        <item quantity="few">%1$d dni przed odnowieniem</item>
-        <item quantity="many">%1$d dni przed odnowieniem</item>
-        <item quantity="other">%1$d dni przed odnowieniem</item>
+        <item quantity="one">%1$d day before it renews</item>
+        <item quantity="other">%1$d days before it renews</item>
     </plurals>
 
     <plurals name="deadline_expires_in">
-        <item quantity="one">Wygasa za %1$d dzień</item>
-        <item quantity="few">Wygasa za %1$d dni</item>
-        <item quantity="many">Wygasa za %1$d dni</item>
-        <item quantity="other">Wygasa za %1$d dni</item>
+        <item quantity="one">Expires in %1$d day</item>
+        <item quantity="other">Expires in %1$d days</item>
     </plurals>
 
     <plurals name="deadline_due_in">
-        <item quantity="one">Termin za %1$d dzień</item>
-        <item quantity="few">Termin za %1$d dni</item>
-        <item quantity="many">Termin za %1$d dni</item>
-        <item quantity="other">Termin za %1$d dni</item>
+        <item quantity="one">Due in %1$d day</item>
+        <item quantity="other">Due in %1$d days</item>
     </plurals>
 
     <plurals name="statistics_without_date">
-        <item quantity="one">%1$d subskrypcja bez daty odnowienia (%2$s / mies.)</item>
-        <item quantity="few">%1$d subskrypcje bez daty odnowienia (%2$s / mies.)</item>
-        <item quantity="many">%1$d subskrypcji bez daty odnowienia (%2$s / mies.)</item>
-        <item quantity="other">%1$d subskrypcji bez daty odnowienia (%2$s / mies.)</item>
+        <item quantity="one">%1$d subscription without a renewal date (%2$s / mo)</item>
+        <item quantity="other">%1$d subscriptions without a renewal date (%2$s / mo)</item>
     </plurals>
+
     <!-- Import / Export -->
     <string name="drawer_data_transfer">Import / Export</string>
     <string name="data_transfer_title">Import / Export</string>
 
-    <string name="data_transfer_intro_title">Twoje dane</string>
-    <string name="data_transfer_intro_description">Wszystkie dane aplikacji są przechowywane lokalnie na tym urządzeniu.\n\nUtwórz szyfrowaną kopię zapasową, aby móc przenieść je na inne urządzenie.</string>
+    <string name="data_transfer_intro_title">Your data</string>
+    <string name="data_transfer_intro_description">All app data is stored locally on this device.\n\nCreate an encrypted backup to move it to another device.</string>
 
-    <string name="data_transfer_export_title">Eksportuj kopię</string>
-    <string name="data_transfer_export_description">Zapisz zaszyfrowany backup do wybranego pliku.</string>
-    <string name="data_transfer_share_title">Wyślij kopię</string>
-    <string name="data_transfer_share_description">Utwórz backup i udostępnij go przez aplikację pocztową.</string>
-    <string name="data_transfer_import_title">Importuj kopię</string>
-    <string name="data_transfer_import_description">Odtwórz dane z wcześniej utworzonego backupu.</string>
-    <string name="data_transfer_picker_hint">Plik wskażesz za pomocą systemowego menedżera dokumentów — aplikacja nie potrzebuje dostępu do pozostałych plików na urządzeniu.</string>
+    <string name="data_transfer_export_title">Export a backup</string>
+    <string name="data_transfer_export_description">Save an encrypted backup to a file you choose.</string>
+    <string name="data_transfer_share_title">Send a backup</string>
+    <string name="data_transfer_share_description">Create a backup and share it through your mail app.</string>
+    <string name="data_transfer_import_title">Import a backup</string>
+    <string name="data_transfer_import_description">Restore your data from a backup you created earlier.</string>
+    <string name="data_transfer_picker_hint">You pick the file through the system document manager — the app needs no access to anything else on the device.</string>
 
-    <string name="data_transfer_security_title">Szyfrowane kopie</string>
-    <string name="data_transfer_security_description">Kopie zapasowe Griff są szyfrowane. Do ich odtworzenia wymagane jest hasło ustawione podczas eksportu.</string>
-    <string name="data_transfer_locality_title">Twoje dane pozostają lokalne</string>
-    <string name="data_transfer_locality_description">Griff nie przesyła kopii na własny serwer. To Ty decydujesz, gdzie zapiszesz lub udostępnisz plik.</string>
+    <string name="data_transfer_security_title">Encrypted backups</string>
+    <string name="data_transfer_security_description">Griff backups are encrypted. Restoring one needs the password set during the export.</string>
+    <string name="data_transfer_locality_title">Your data stays local</string>
+    <string name="data_transfer_locality_description">Griff does not upload backups to a server of its own. Where the file is saved or shared is entirely your choice.</string>
 
     <!-- Password dialogs -->
-    <string name="data_transfer_password_title">Zabezpiecz kopię</string>
-    <string name="data_transfer_password_description">Backup zawiera informacje o Twoich subskrypcjach, opłatach i terminach.\n\nUstaw hasło potrzebne do odtworzenia danych na innym urządzeniu.</string>
-    <string name="data_transfer_password_label">Hasło</string>
-    <string name="data_transfer_password_confirm_label">Powtórz hasło</string>
-    <string name="data_transfer_password_show">Pokaż hasło</string>
-    <string name="data_transfer_password_hide">Ukryj hasło</string>
-    <string name="data_transfer_password_warning">Zapamiętaj hasło. Bez niego nie będzie możliwe odtworzenie zaszyfrowanej kopii.</string>
-    <string name="data_transfer_password_create">Utwórz kopię</string>
-    <string name="data_transfer_password_error_too_short">Hasło musi mieć co najmniej %1$d znaków</string>
-    <string name="data_transfer_password_error_mismatch">Hasła nie są identyczne</string>
-    <string name="data_transfer_password_error_confirm_empty">Powtórz hasło</string>
-    <string name="data_transfer_password_error_empty">Podaj hasło</string>
+    <string name="data_transfer_password_title">Protect the backup</string>
+    <string name="data_transfer_password_description">The backup holds information about your subscriptions, obligations and deadlines.\n\nSet the password needed to restore the data on another device.</string>
+    <string name="data_transfer_password_label">Password</string>
+    <string name="data_transfer_password_confirm_label">Repeat password</string>
+    <string name="data_transfer_password_show">Show password</string>
+    <string name="data_transfer_password_hide">Hide password</string>
+    <string name="data_transfer_password_warning">Remember the password. Without it the encrypted backup cannot be restored.</string>
+    <string name="data_transfer_password_create">Create backup</string>
+    <string name="data_transfer_password_error_mismatch">Passwords do not match</string>
+    <string name="data_transfer_password_error_confirm_empty">Repeat the password</string>
+    <string name="data_transfer_password_error_empty">Enter a password</string>
 
-    <string name="data_transfer_share_recipient_label">Adres e-mail</string>
-    <string name="data_transfer_share_recipient_hint">Opcjonalnie — podpowiedź dla aplikacji pocztowej</string>
-    <string name="data_transfer_share_recipient_invalid">Podaj poprawny adres e-mail</string>
-    <string name="data_transfer_share_action">Utwórz i udostępnij</string>
+    <string name="data_transfer_share_recipient_label">E-mail address</string>
+    <string name="data_transfer_share_recipient_hint">Optional — a hint for your mail app</string>
+    <string name="data_transfer_share_recipient_invalid">Enter a valid e-mail address</string>
+    <string name="data_transfer_share_action">Create and share</string>
 
     <!-- Import password -->
-    <string name="data_transfer_import_password_title">Otwórz kopię</string>
-    <string name="data_transfer_import_password_description">Podaj hasło ustawione podczas tworzenia tej kopii zapasowej.</string>
-    <string name="data_transfer_import_password_action">Otwórz</string>
-    <string name="data_transfer_import_wrong_password">Nie udało się otworzyć kopii. Sprawdź hasło i upewnij się, że wybrany plik jest poprawną kopią Griff.</string>
+    <string name="data_transfer_import_password_title">Open the backup</string>
+    <string name="data_transfer_import_password_description">Enter the password set when this backup was created.</string>
+    <string name="data_transfer_import_password_action">Open</string>
+    <string name="data_transfer_import_wrong_password">Could not open the backup. Check the password and make sure the file you picked is a Griff backup.</string>
 
     <!-- Import preview -->
-    <string name="data_transfer_preview_title">Kopia zapasowa</string>
-    <string name="data_transfer_preview_created_label">Utworzona</string>
-    <string name="data_transfer_preview_app_version_label">Wersja aplikacji</string>
-    <string name="data_transfer_preview_contents_label">Zawartość</string>
-    <string name="data_transfer_preview_settings">ustawienia przypomnień i aplikacji</string>
-    <string name="data_transfer_preview_duplicates">Wykryto %1$d możliwe duplikaty — pozycje o tej samej nazwie, ale innym identyfikatorze. Nie zostaną scalone automatycznie.</string>
-    <string name="data_transfer_preview_local_data">Na tym urządzeniu istnieją już dane. Jak chcesz zaimportować kopię?</string>
-    <string name="data_transfer_preview_merge">Scal dane</string>
-    <string name="data_transfer_preview_replace">Zastąp obecne dane</string>
-    <string name="data_transfer_preview_restore">Odtwórz dane</string>
-    <string name="data_transfer_preview_restore_question">Zaimportować %1$d rekordów?</string>
+    <string name="data_transfer_preview_title">Backup</string>
+    <string name="data_transfer_preview_created_label">Created</string>
+    <string name="data_transfer_preview_app_version_label">App version</string>
+    <string name="data_transfer_preview_contents_label">Contents</string>
+    <string name="data_transfer_preview_settings">reminder and app settings</string>
+    <string name="data_transfer_preview_local_data">This device already holds data. How do you want to import the backup?</string>
+    <string name="data_transfer_preview_merge">Merge data</string>
+    <string name="data_transfer_preview_replace">Replace current data</string>
+    <string name="data_transfer_preview_restore">Restore data</string>
 
     <!-- Replace confirmation -->
-    <string name="data_transfer_replace_title">Zastąpić wszystkie dane?</string>
-    <string name="data_transfer_replace_message">Obecne subskrypcje, ubezpieczenia, opłaty i przenośne ustawienia zostaną usunięte i zastąpione danymi z kopii.\n\nTej operacji nie można cofnąć.</string>
-    <string name="data_transfer_replace_confirm">Zastąp dane</string>
-    <string name="data_transfer_replace_backup_hint">Zanim zastąpisz dane, możesz najpierw utworzyć kopię obecnych danych.</string>
+    <string name="data_transfer_replace_title">Replace all data?</string>
+    <string name="data_transfer_replace_message">Your current subscriptions, insurance, obligations and portable settings will be deleted and replaced with the contents of the backup.\n\nThis cannot be undone.</string>
+    <string name="data_transfer_replace_confirm">Replace data</string>
+    <string name="data_transfer_replace_backup_hint">Before you replace anything, you can back up your current data first.</string>
 
     <!-- Offline warning -->
-    <string name="data_transfer_offline_title">Brak połączenia z internetem</string>
-    <string name="data_transfer_offline_message">Kopia została utworzona, ale wiadomość może nie zostać wysłana, dopóki urządzenie nie odzyska połączenia.</string>
-    <string name="data_transfer_offline_confirm">Otwórz aplikację pocztową</string>
+    <string name="data_transfer_offline_title">No internet connection</string>
+    <string name="data_transfer_offline_message">The backup was created, but the message may not be sent until the device is back online.</string>
+    <string name="data_transfer_offline_confirm">Open mail app</string>
 
     <!-- No share target -->
-    <string name="data_transfer_no_share_target_title">Nie znaleziono aplikacji pocztowej</string>
-    <string name="data_transfer_no_share_target_message">Nie znaleziono aplikacji, która może wysłać kopię. Możesz zapisać backup lokalnie i wysłać go ręcznie.</string>
-    <string name="data_transfer_no_share_target_action">Zapisz do pliku</string>
-    <string name="data_transfer_no_share_target_dismiss">Zamknij</string>
+    <string name="data_transfer_no_share_target_title">No mail app found</string>
+    <string name="data_transfer_no_share_target_message">No app that can send the backup was found. You can save it to a file and send it yourself.</string>
+    <string name="data_transfer_no_share_target_action">Save to a file</string>
+    <string name="data_transfer_no_share_target_dismiss">Close</string>
 
     <!-- E-mail content -->
-    <string name="data_transfer_email_subject">Griff — zaszyfrowana kopia zapasowa</string>
-    <string name="data_transfer_email_body">W załączniku znajduje się zaszyfrowana kopia danych Griff.\n\nDo jej odtworzenia wymagane jest hasło ustawione podczas eksportu.</string>
-    <string name="data_transfer_email_chooser_title">Wyślij kopię zapasową</string>
+    <string name="data_transfer_email_subject">Griff — encrypted backup</string>
+    <string name="data_transfer_email_body">Attached is an encrypted backup of your Griff data.\n\nRestoring it needs the password set during the export.</string>
+    <string name="data_transfer_email_chooser_title">Send the backup</string>
 
     <!-- Progress -->
-    <string name="data_transfer_progress_exporting">Tworzenie kopii zapasowej…</string>
-    <string name="data_transfer_progress_reading">Odczytywanie kopii…</string>
-    <string name="data_transfer_progress_validating">Sprawdzanie danych…</string>
-    <string name="data_transfer_progress_importing">Odtwarzanie danych…</string>
+    <string name="data_transfer_progress_exporting">Creating the backup…</string>
+    <string name="data_transfer_progress_reading">Reading the backup…</string>
+    <string name="data_transfer_progress_validating">Checking the data…</string>
+    <string name="data_transfer_progress_importing">Restoring the data…</string>
 
     <!-- Feedback -->
-    <string name="data_transfer_export_success">Kopia zapasowa została utworzona.</string>
-    <string name="data_transfer_import_merge_success">Dane zostały pomyślnie scalone.</string>
-    <string name="data_transfer_import_replace_success">Kopia zapasowa została przywrócona.</string>
-    <string name="data_transfer_error_export_failed">Nie udało się utworzyć kopii zapasowej.</string>
-    <string name="data_transfer_error_import_failed">Nie udało się zaimportować danych.</string>
-    <string name="data_transfer_error_invalid_file">Wybrany plik nie jest kopią zapasową Griff.</string>
-    <string name="data_transfer_error_corrupted">Plik kopii zapasowej jest uszkodzony lub niekompletny.</string>
-    <string name="data_transfer_error_newer_version">Ta kopia została utworzona przez nowszą wersję Griff. Zaktualizuj aplikację i spróbuj ponownie.</string>
-    <string name="data_transfer_error_no_space_export">Brak wystarczającej ilości miejsca, aby utworzyć kopię zapasową.</string>
-    <string name="data_transfer_error_no_space_import">Brak miejsca potrzebnego do odtworzenia kopii.</string>
+    <string name="data_transfer_export_success">Backup created successfully.</string>
+    <string name="data_transfer_import_merge_success">Data merged successfully.</string>
+    <string name="data_transfer_import_replace_success">Backup restored.</string>
+    <string name="data_transfer_error_export_failed">Could not create the backup.</string>
+    <string name="data_transfer_error_import_failed">Could not import the data.</string>
+    <string name="data_transfer_error_invalid_file">The file you picked is not a Griff backup.</string>
+    <string name="data_transfer_error_corrupted">The backup file is damaged or incomplete.</string>
+    <string name="data_transfer_error_newer_version">This backup was created by a newer version of Griff. Update the app and try again.</string>
+    <string name="data_transfer_error_no_space_export">Not enough space to create the backup.</string>
+    <string name="data_transfer_error_no_space_import">Not enough space to restore the backup.</string>
 
     <!-- History -->
-    <string name="data_transfer_history_title">Ostatnie operacje</string>
-    <string name="data_transfer_history_export">Eksport</string>
+    <string name="data_transfer_history_title">Recent operations</string>
+    <string name="data_transfer_history_export">Export</string>
     <string name="data_transfer_history_import">Import</string>
-    <string name="data_transfer_history_mode_merge">Scalanie</string>
-    <string name="data_transfer_history_mode_replace">Zastąpienie danych</string>
+    <string name="data_transfer_history_mode_merge">Merge</string>
+    <string name="data_transfer_history_mode_replace">Replace</string>
     <string name="data_transfer_history_timestamp">%1$s • %2$s</string>
-    <string name="data_transfer_history_success">Zakończono pomyślnie</string>
-    <string name="data_transfer_history_empty_title">Brak historii</string>
-    <string name="data_transfer_history_empty_description">Nie utworzono jeszcze żadnej kopii zapasowej ani nie importowano danych.</string>
-    <string name="data_transfer_history_no_records">Brak rekordów</string>
-    <string name="data_transfer_history_error_invalid_file">Plik nie jest kopią zapasową Griff</string>
-    <string name="data_transfer_history_error_unreadable">Nie udało się odczytać kopii</string>
-    <string name="data_transfer_history_error_unsupported_version">Nieobsługiwana wersja kopii</string>
-    <string name="data_transfer_history_error_validation">Kopia zawiera nieprawidłowe dane</string>
-    <string name="data_transfer_history_error_no_space">Brak miejsca na urządzeniu</string>
-    <string name="data_transfer_history_error_io">Błąd odczytu lub zapisu pliku</string>
-    <string name="data_transfer_history_error_unknown">Operacja nie została ukończona</string>
+    <string name="data_transfer_history_success">Completed successfully</string>
+    <string name="data_transfer_history_empty_title">No history</string>
+    <string name="data_transfer_history_empty_description">No backup has been created and no data has been imported yet.</string>
+    <string name="data_transfer_history_no_records">No records</string>
+    <string name="data_transfer_history_error_invalid_file">Not a Griff backup file</string>
+    <string name="data_transfer_history_error_unreadable">Could not read the backup</string>
+    <string name="data_transfer_history_error_unsupported_version">Unsupported backup version</string>
+    <string name="data_transfer_history_error_validation">The backup holds invalid data</string>
+    <string name="data_transfer_history_error_no_space">No space left on the device</string>
+    <string name="data_transfer_history_error_io">File read or write error</string>
+    <string name="data_transfer_history_error_unknown">The operation did not finish</string>
 
     <plurals name="data_transfer_count_subscriptions">
-        <item quantity="one">%1$d subskrypcja</item>
-        <item quantity="few">%1$d subskrypcje</item>
-        <item quantity="many">%1$d subskrypcji</item>
-        <item quantity="other">%1$d subskrypcji</item>
+        <item quantity="one">%1$d subscription</item>
+        <item quantity="other">%1$d subscriptions</item>
     </plurals>
 
     <plurals name="data_transfer_count_obligations">
-        <item quantity="one">%1$d ubezpieczenie i opłata</item>
-        <item quantity="few">%1$d ubezpieczenia i opłaty</item>
-        <item quantity="many">%1$d ubezpieczeń i opłat</item>
-        <item quantity="other">%1$d ubezpieczeń i opłat</item>
+        <item quantity="one">%1$d insurance policy or obligation</item>
+        <item quantity="other">%1$d insurance policies and obligations</item>
     </plurals>
 
     <plurals name="data_transfer_count_obligations_short">
-        <item quantity="one">%1$d opłata</item>
-        <item quantity="few">%1$d opłaty</item>
-        <item quantity="many">%1$d opłat</item>
-        <item quantity="other">%1$d opłat</item>
+        <item quantity="one">%1$d obligation</item>
+        <item quantity="other">%1$d obligations</item>
     </plurals>
 
     <plurals name="data_transfer_count_records">
-        <item quantity="one">%1$d rekord</item>
-        <item quantity="few">%1$d rekordy</item>
-        <item quantity="many">%1$d rekordów</item>
-        <item quantity="other">%1$d rekordów</item>
+        <item quantity="one">%1$d record</item>
+        <item quantity="other">%1$d records</item>
+    </plurals>
+
+    <plurals name="data_transfer_password_error_too_short">
+        <item quantity="one">Password has to be at least %1$d character</item>
+        <item quantity="other">Password has to be at least %1$d characters</item>
+    </plurals>
+
+    <plurals name="data_transfer_preview_duplicates">
+        <item quantity="one">Found %1$d possible duplicate — an item with the same name but a different identifier. It will not be merged automatically.</item>
+        <item quantity="other">Found %1$d possible duplicates — items with the same name but a different identifier. They will not be merged automatically.</item>
+    </plurals>
+
+    <plurals name="data_transfer_preview_restore_question">
+        <item quantity="one">Import %1$d record?</item>
+        <item quantity="other">Import %1$d records?</item>
     </plurals>
 
     <!-- Transient feedback for the record screens -->
-    <string name="subscription_added">Subskrypcja została dodana.</string>
-    <string name="subscription_updated">Subskrypcja została zaktualizowana.</string>
-    <string name="obligation_added">Pozycja została dodana.</string>
-    <string name="obligation_updated">Zmiany zostały zapisane.</string>
+    <string name="subscription_added">Subscription added.</string>
+    <string name="subscription_updated">Subscription updated.</string>
+    <string name="obligation_added">Item added.</string>
+    <string name="obligation_updated">Changes saved.</string>
 
     <!-- About -->
     <string name="about_title">About</string>
-    <string name="about_emblem_description">Godło Griff Keeper</string>
-    <string name="about_intro">Griff Keeper pomaga trzymać w jednym miejscu subskrypcje, ubezpieczenia, opłaty oraz ważne terminy.</string>
-    <string name="about_intro_secondary">Kontroluj swoje wydatki, terminy odnowień i płatności oraz otrzymuj lokalne przypomnienia o zbliżających się terminach.</string>
+    <string name="about_emblem_description">Griff Keeper emblem</string>
+    <string name="about_intro">Griff Keeper helps you keep subscriptions, insurance policies, recurring payments and important deadlines in one place.</string>
+    <string name="about_intro_secondary">Track your spending and renewal and payment dates, and receive local reminders about deadlines before they arrive.</string>
 
-    <string name="about_features_title">Najważniejsze funkcje</string>
-    <string name="about_feature_subscriptions">Subskrypcje i cykliczne koszty</string>
-    <string name="about_feature_obligations">Ubezpieczenia, podatki i inne okresowe opłaty</string>
-    <string name="about_feature_reminders">Lokalne przypomnienia o odnowieniach i terminach płatności</string>
-    <string name="about_feature_statistics">Statystyki miesięcznych i rocznych wydatków</string>
-    <string name="about_feature_tags">Kategorie i tagi do filtrowania danych</string>
-    <string name="about_feature_backup">Szyfrowany import i eksport danych</string>
+    <string name="about_features_title">Key features</string>
+    <string name="about_feature_subscriptions">Subscriptions and recurring costs</string>
+    <string name="about_feature_obligations">Insurance, taxes and other periodic obligations</string>
+    <string name="about_feature_reminders">Local reminders about renewals and payment deadlines</string>
+    <string name="about_feature_statistics">Monthly and yearly spending statistics</string>
+    <string name="about_feature_tags">Categories and tags for filtering your data</string>
+    <string name="about_feature_backup">Encrypted data import and export</string>
 
-    <string name="about_privacy_title">Prywatność</string>
-    <string name="about_privacy_description">Twoje dane są przechowywane lokalnie na tym urządzeniu. Griff Keeper nie wymaga konta ani własnego serwera i nie synchronizuje danych z chmurą.</string>
+    <string name="about_privacy_title">Privacy</string>
+    <string name="about_privacy_description">Your data stays on this device. Griff Keeper needs no account and no backend of its own, and it does not synchronize anything with the cloud.</string>
 
-    <string name="about_contact_title">Kontakt i pomoc</string>
-    <string name="about_contact_description">Masz pytanie, sugestię lub znalazłeś problem? Skontaktuj się:</string>
+    <string name="about_contact_title">Contact &amp; support</string>
+    <string name="about_contact_description">A question, a suggestion or something broken? Get in touch:</string>
     <string name="about_contact_email">contact@griffsoftware.com</string>
-    <string name="about_contact_email_action">Napisz wiadomość na adres %1$s</string>
-    <string name="about_contact_email_copy">Kopiuj adres e-mail</string>
-    <string name="about_contact_email_copied">Adres e-mail został skopiowany.</string>
-    <string name="about_contact_email_no_app">Nie znaleziono aplikacji do obsługi poczty.</string>
-    <string name="about_contact_email_clip_label">Adres e-mail Griff Keeper</string>
-    <!-- English on purpose: the address is read by support, not by the user of a Polish UI -->
+    <string name="about_contact_email_action">Write to %1$s</string>
+    <string name="about_contact_email_copy">Copy e-mail address</string>
+    <string name="about_contact_email_copied">E-mail address copied.</string>
+    <string name="about_contact_email_no_app">No app that can handle mail was found.</string>
+    <string name="about_contact_email_clip_label">Griff Keeper e-mail address</string>
+    <!-- Read by support rather than by the user, so the wording stays English in both locales -->
     <string name="about_contact_email_subject">Griff Keeper — Support</string>
-    <string name="about_contact_email_body">Griff Keeper\n\nWersja: %1$s\nBuild: %2$d\n\nOpisz problem:\n</string>
+    <string name="about_contact_email_body">Griff Keeper\n\nVersion: %1$s\nBuild: %2$d\n\nDescribe the problem:\n</string>
 
-    <string name="about_version">Wersja %1$s • Build %2$d</string>
+    <string name="about_version">Version %1$s • Build %2$d</string>
     <string name="about_copyright">Griff Software</string>
 </resources>

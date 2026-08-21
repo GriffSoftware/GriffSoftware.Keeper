@@ -71,12 +71,14 @@ private fun SpendingRow(entry: SpendingShare, amountStyle: BreakdownAmount) {
         BreakdownAmount.ABSOLUTE -> MoneyFormatter.format(entry.amount)
     }
     val percent = (entry.share * PERCENT).roundToInt()
+    // Resolved before the semantics lambda, which cannot call a composable.
+    val description = stringResource(R.string.statistics_share_description, label, amount, percent)
     val colors = GriffTheme.colors.tagColors.getValue(entry.style.accent)
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .semantics { contentDescription = "$label, $amount, $percent%" },
+            .semantics { contentDescription = description },
         verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {

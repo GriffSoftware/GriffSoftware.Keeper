@@ -8,21 +8,33 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 
-/** Formats dates the way a Polish user expects them, e.g. `14 września 2026`. */
+/**
+ * Formats dates in the language the app is running in: `21 sierpnia 2026` in Polish,
+ * `August 21, 2026` in English.
+ *
+ * Nothing about the wording or the order of the parts is written here - `FormatStyle.LONG` and CLDR
+ * decide both, per locale, which is why a new language needs no change to this file. The locale
+ * defaults to [Locale.getDefault], which `MainActivity` keeps in step with the per-app language.
+ */
 object DateFormatter {
 
     private val cache = HashMap<Locale, DateTimeFormatter>()
 
-    fun formatFullDate(date: LocalDate, locale: Locale = MoneyFormatter.PolishLocale): String =
+    fun formatFullDate(date: LocalDate, locale: Locale = Locale.getDefault()): String =
         formatter(locale).format(date)
 
-    /** Compact form for list rows, e.g. `11.03.2027`. */
+    /**
+     * Compact form for list rows, e.g. `11.03.2027`.
+     *
+     * Numeric on purpose and identical in every language: it has to fit next to an amount in a list
+     * row, where a localized month name would not.
+     */
     fun formatShortDate(date: LocalDate): String = SHORT_DATE.format(date)
 
-    /** Short label for chart axes, e.g. `IX`. */
+    /** Short label for chart axes, e.g. `IX`. Roman numerals read the same in both languages. */
     fun formatRomanMonth(month: YearMonth): String = ROMAN_MONTHS[month.monthValue - 1]
 
-    fun formatMonthAndYear(month: YearMonth, locale: Locale = MoneyFormatter.PolishLocale): String =
+    fun formatMonthAndYear(month: YearMonth, locale: Locale = Locale.getDefault()): String =
         DateTimeFormatter.ofPattern("LLLL yyyy", locale).format(month)
 
     /**
@@ -40,7 +52,7 @@ object DateFormatter {
     fun formatFullDate(
         instant: Instant,
         zone: ZoneId,
-        locale: Locale = MoneyFormatter.PolishLocale,
+        locale: Locale = Locale.getDefault(),
     ): String = formatFullDate(instant.atZone(zone).toLocalDate(), locale)
 
     fun formatShortDate(instant: Instant, zone: ZoneId): String =

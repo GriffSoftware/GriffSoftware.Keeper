@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -21,6 +22,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.griff.keeper.presentation.about.AboutRoute
 import com.griff.keeper.presentation.common.TransientMessages
+import com.griff.keeper.presentation.common.locale.AppLanguages
 import com.griff.keeper.presentation.datatransfer.DataTransferRoute
 import com.griff.keeper.presentation.details.SubscriptionDetailsRoute
 import com.griff.keeper.presentation.drawer.AppDrawerContent
@@ -63,6 +65,11 @@ fun GriffKeeperApp(
         deepLinkIntents.collect { intent -> navController.handleDeepLink(intent) }
     }
 
+    // Keyed on the configuration: the language the resources are resolving against is exactly what
+    // the drawer has to show, and it changes with the configuration rather than on its own.
+    val configuration = LocalConfiguration.current
+    val language = remember(configuration) { AppLanguages.current() }
+
     val openDrawer: () -> Unit = { scope.launch { drawerState.open() } }
     val closeDrawer: () -> Unit = { scope.launch { drawerState.close() } }
 
@@ -73,10 +80,15 @@ fun GriffKeeperApp(
             AppDrawerContent(
                 selected = currentDestination.toDrawerDestination(),
                 appVersion = drawerViewModel.appVersion,
+                language = language,
                 onSelect = { destination ->
                     closeDrawer()
                     navController.navigateToDrawerDestination(destination)
                 },
+                // The navigation state is left exactly as it is: Android recreates the activity, the
+                // back stack is restored with it, and the user stays on the destination they were
+                // reading - About stays About.
+                onLanguageSelected = AppLanguages::apply,
             )
         },
     ) {

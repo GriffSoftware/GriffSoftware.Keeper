@@ -1,3 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
-    <string name="app_name">Griff Keeper</string>
+<resources>
+    <!-- The brand name, identical in every locale, so it is deliberately not translatable. -->
+    <string name="app_name" translatable="false">Griff Keeper</string>
 </resources>

@@ -12,6 +12,7 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Locale
 
 /** The three lines of a reminder notification, already localized. */
@@ -28,8 +29,14 @@ internal data class ReminderNotificationCopy(
  * platform, so they live here next to the resources they use. The title is always the record's own
  * name - it is the thing the user recognises in a crowded drawer - while the subtext carries the
  * urgency and the body carries the facts.
+ *
+ * The [context] has to be one that already resolves against the app's own language (see
+ * [withAppLocale]); the dates and amounts are formatted with that same context's locale, so a
+ * notification cannot end up half translated.
  */
 internal class ReminderNotificationTextFactory(private val context: Context) {
+
+    private val locale: Locale = context.resolvedLocale()
 
     fun copyFor(notification: ReminderNotification): ReminderNotificationCopy {
         val occurrence = notification.occurrence
@@ -101,32 +108,29 @@ internal class ReminderNotificationTextFactory(private val context: Context) {
      *
      * A notification is built by a background worker that must not depend on the presentation
      * module; the few lines of formatting are a smaller price than an upward dependency from
-     * infrastructure to UI.
+     * infrastructure to UI. Both the separators and the currency symbol come from CLDR through the
+     * active locale, so `34,99 zł` in Polish is `34.99 PLN` in English without a symbol being
+     * written out anywhere.
      */
     private fun formatMoney(money: Money, currency: Currency): String {
-        val amount = AmountFormat.format(BigDecimal.valueOf(money.minorUnits, MONEY_SCALE))
-        val symbol = when (currency) {
-            Currency.PLN -> context.getString(R.string.reminder_currency_pln)
-        }
+        val format = DecimalFormat(AMOUNT_PATTERN, DecimalFormatSymbols(locale))
+        val amount = format.format(BigDecimal.valueOf(money.minorUnits, MONEY_SCALE))
+        val symbol = java.util.Currency.getInstance(currency.code).getSymbol(locale)
         return "$amount $symbol"
     }
 
-    private fun fullDate(date: LocalDate): String = FullDate.format(date)
+    /** `20 września 2026` / `September 20, 2026` - CLDR decides the order and the case. */
+    private fun fullDate(date: LocalDate): String =
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale).format(date)
 
-    private fun dayAndMonth(date: LocalDate): String = DayAndMonth.format(date)
+    /** `28 sierpnia` / `August 28` - the year is noise when the date is a week away. */
+    private fun dayAndMonth(date: LocalDate): String =
+        DateTimeFormatter
+            .ofPattern(context.getString(R.string.reminder_date_day_month_pattern), locale)
+            .format(date)
 
     private companion object {
         const val MONEY_SCALE = 2
-
-        val PolishLocale: Locale = Locale.forLanguageTag("pl-PL")
-
-        val AmountFormat: DecimalFormat =
-            DecimalFormat("#,##0.00", DecimalFormatSymbols(PolishLocale))
-
-        /** `20 września 2026` - the genitive form Polish uses after a day number. */
-        val FullDate: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", PolishLocale)
-
-        /** `28 sierpnia` - the year is noise when the date is a week away. */
-        val DayAndMonth: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM", PolishLocale)
+        const val AMOUNT_PATTERN = "#,##0.00"
     }
 }

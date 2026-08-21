@@ -38,6 +38,15 @@ android {
         targetCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
     }
 
+    androidResources {
+        // AGP collects the locales the app and its library modules actually ship, writes the
+        // locale config resource and points the manifest at it. That is what makes Griff Keeper
+        // appear in the system per-app language settings on Android 13+, and it cannot drift from
+        // the res folders the way a hand-written list would. `res/resources.properties` names the
+        // locale that the unqualified values/ folder holds.
+        generateLocaleConfig = true
+    }
+
 
     lint {
         // Builds must not regress: any lint error fails the build.
@@ -60,6 +69,7 @@ dependencies {
     implementation(project(":infrastructure"))
     implementation(project(":presentation"))
 
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)

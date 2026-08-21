@@ -43,6 +43,8 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
+    // AppCompatDelegate.setApplicationLocales: the language picker applies the choice with it.
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     // Needed for the notification permission request launcher on the reminders screen.
     implementation(libs.androidx.activity.compose)

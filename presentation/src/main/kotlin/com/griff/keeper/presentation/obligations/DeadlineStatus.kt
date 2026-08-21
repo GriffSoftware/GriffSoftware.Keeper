@@ -10,8 +10,8 @@ import java.time.LocalDate
 /**
  * How urgent a record's deadline is.
  *
- * Only [SOON] and [OVERDUE] are ever emphasized, and both always come with words - "Wygasa za 12
- * dni", "Termin minął" - so the state never depends on the color alone.
+ * Only [SOON] and [OVERDUE] are ever emphasized, and both always come with words - "Expires in 12
+ * days", "Overdue", and their translations - so the state never depends on the color alone.
  */
 enum class DeadlineUrgency {
     /** Far enough away to be ordinary information. */

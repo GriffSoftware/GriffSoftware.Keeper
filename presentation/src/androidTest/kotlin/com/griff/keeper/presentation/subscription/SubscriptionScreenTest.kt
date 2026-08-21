@@ -14,6 +14,7 @@ import com.griff.keeper.domain.model.Money
 import com.griff.keeper.domain.model.ProviderCategory
 import com.griff.keeper.domain.model.SubscriptionTotals
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.theme.GriffKeeperTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -59,8 +60,8 @@ class SubscriptionScreenTest {
         composeRule.onNodeWithText("Spotify").assertIsDisplayed()
         composeRule.onNodeWithText("JetBrains").assertIsDisplayed()
         composeRule.onNodeWithText(context.getString(R.string.subscriptions_totals_title)).assertIsDisplayed()
-        composeRule.onNodeWithText("143,24 zł / mies.").assertIsDisplayed()
-        composeRule.onNodeWithText("1\u00A0718,88 zł / rok").assertIsDisplayed()
+        composeRule.onNodeWithText(perMonth(Money.ofUnits(143, 24))).assertIsDisplayed()
+        composeRule.onNodeWithText(perYear(Money.ofUnits(1_718, 88))).assertIsDisplayed()
     }
 
     @Test
@@ -113,8 +114,8 @@ class SubscriptionScreenTest {
         )
 
         // The summary is a bottom bar, so it is on screen even though most rows are not.
-        composeRule.onNodeWithText("400,00 zł / mies.").assertIsDisplayed()
-        composeRule.onNodeWithText("4\u00A0800,00 zł / rok").assertIsDisplayed()
+        composeRule.onNodeWithText(perMonth(Money.ofUnits(400))).assertIsDisplayed()
+        composeRule.onNodeWithText(perYear(Money.ofUnits(4_800))).assertIsDisplayed()
     }
 
     @Test
@@ -184,4 +185,17 @@ class SubscriptionScreenTest {
             }
         }
     }
+
+    /**
+     * Money is formatted through the same code the screen uses, rather than written out.
+     *
+     * The app runs in two languages and the separators and the currency symbol follow the active
+     * one, so a literal like `143,24 zł` would assert the device's language rather than the screen's
+     * behaviour and would fail on an English device for the wrong reason.
+     */
+    private fun perMonth(money: Money): String =
+        context.getString(R.string.amount_per_month, MoneyFormatter.format(money))
+
+    private fun perYear(money: Money): String =
+        context.getString(R.string.amount_per_year, MoneyFormatter.format(money))
 }

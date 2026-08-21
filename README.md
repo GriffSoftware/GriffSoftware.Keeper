@@ -30,10 +30,12 @@ Griff Keeper
 ├── Insurance & obligations
 ├── Statistics
 ├── Reminders
-└── Import / Export
+├── Import / Export
+└── Language (Polski / English)
 ```
 
-The UI language is Polish; the codebase, the documentation and every identifier are English.
+The interface is available in **Polish and English**, switchable from the navigation drawer. The
+codebase, the documentation and every identifier are English regardless of the interface language.
 
 ## Features
 
@@ -206,6 +208,30 @@ Drone, Tax and Other. Tags appear on list rows, on details screens and as filter
 the category breakdowns in Statistics, and label plus color come from one place in the presentation
 layer — so an obligation badge and a subscription badge look like members of the same system.
 
+### Language support
+
+- **Polish and English interface**, and nothing in between: every screen, dialog, snackbar,
+  validation message, notification and accessibility label is translated.
+- **In-app language switcher in the navigation drawer**, which also shows the language currently in
+  use — so the drawer answers both "where do I change it" and "what am I in" without opening
+  anything. Tapping it opens a two-option Material 3 dialog.
+- The switch takes effect immediately. Android recreates the activity to apply a new locale, and the
+  user stays on the screen they were reading rather than being sent back to the start.
+- **The choice persists** across activity recreation, process death, an app restart and a reboot,
+  and it is stored by the platform rather than by the app, so there is only one answer to "which
+  language is this app in".
+- A fresh install follows the system language, falling back to English when the system is set to a
+  language Griff Keeper does not ship.
+- **Dates, amounts, plurals and the currency symbol follow the active language** — `21 sierpnia 2026`
+  and `1 299,00 zł` against `August 21, 2026` and `1,299.00 PLN` — from CLDR rather than from
+  hand-written rules. Polish plural forms (`1 dzień`, `2 dni`, `5 dni`) come from Android `<plurals>`
+  resources, not from an `if` in the UI.
+- **Reminder notifications use the app's language, not the phone's**, including when they are built
+  by the background worker with no screen open.
+- Changing the language changes nothing else: not the light/dark theme, not the reminder settings,
+  and not a single stored record.
+- Backups are language independent — see *Backup & data portability*.
+
 ### Material 3 experience
 
 - Jetpack Compose and Material 3 throughout. **The UI is implemented entirely with Jetpack
@@ -216,8 +242,9 @@ layer — so an obligation badge and a subscription badge look like members of t
 - **Dynamic color is deliberately off**: the brand accent is the point of the palette. The parameter
   is still there so the choice can become a user setting later.
 - Edge-to-edge, a navigation drawer that shows the real `versionName` / `versionCode` of the running
-  build, and an About screen describing what the app does, where the data lives and how to reach
-  support.
+  build, an in-drawer language switcher, and an About screen describing what the app does, where the
+  data lives and how to reach support.
+- Polish and English interface, switched at runtime from the drawer.
 - Explicit loading states, confirmation dialogs before destructive actions, and snackbar feedback
   after add, edit, delete, import and export. Feedback that belongs to a screen the user has already
   left — a record deleted from its own details screen — is carried across the navigation boundary
@@ -269,7 +296,7 @@ builds.)
 | `:domain` | Kotlin JVM | `Subscription`, `Obligation`, `Money`, `Currency`, `ExpensePeriod`, `PaymentState`, categories and tags, validation, cost normalization, reminder rules and planner, statistics calculators, backup payload/merge/validation models, repository and platform ports | coroutines only |
 | `:application` | Kotlin JVM | subscription, obligation, provider, reminder, statistics and backup use cases; `AppVersionProvider` port | `:domain` |
 | `:infrastructure` | Android library | Room database, DAOs, entities and mappers; Room repositories; DataStore preferences; backup serialization, compression and encryption; WorkManager scheduler and worker; Android notifications and deep links; provider catalog; system clock; Hilt modules | `:domain`, `:application` |
-| `:presentation` | Android library | Compose screens, ViewModels, UI state, type-safe navigation graph, Material 3 theme, formatters, shared components | `:domain`, `:application` |
+| `:presentation` | Android library | Compose screens, ViewModels, UI state, type-safe navigation graph, Material 3 theme, locale-aware formatters, the language picker, shared components | `:domain`, `:application` |
 | `:app` | Android application | `GriffKeeperApplication`, `MainActivity`, composition root, `BuildConfig` bridge | all of the above |
 
 Data flows one way:
@@ -311,9 +338,16 @@ Read from `gradle/libs.versions.toml` and the module build files:
 | Coroutines | 1.11.0 |
 | kotlinx.serialization | 1.9.0 (JSON, and the navigation routes) |
 | Lifecycle | 2.10.0 |
+| AppCompat | 1.7.0 (per-app locales below Android 13) |
 
 Backup encryption uses the platform's own `javax.crypto` and `java.security` APIs — PBKDF2 and
 AES-GCM as shipped by Android — not a third-party crypto library.
+
+Localization is likewise all platform: Android string, plural and array resources (`values/` for
+English, `values-pl/` for Polish), Android per-app locales through
+`AppCompatDelegate.setApplicationLocales`, and a locale config generated by AGP from the resource
+folders (`androidResources { generateLocaleConfig = true }`), which is what makes the app appear in
+the system per-app language settings. There is no translation layer of the app's own.
 
 **Why these versions:** they are the newest mutually compatible releases that still work with
 AGP 9.0.1 / `compileSdk 36`, which is what the project's Android Studio (2025.3) supports. Newer
@@ -364,6 +398,13 @@ What travels: subscriptions, obligations and the portable preferences (the app-w
 each record's own reminder flag travels inside the record). What never travels, because it is
 device-bound and meaningless elsewhere: the Android notification permission and channel, the
 reminder delivery ledger, the import/export history, and anything in a cache.
+
+**The format does not depend on the interface language.** Categories, tags, payment states, billing
+periods and currencies are written as stable identifiers (`MUSIC`, `VEHICLE_INSURANCE`, `PLN`), dates
+as epoch milliseconds or ISO dates, and amounts as integer minor units — never as the words a screen
+happens to show. A backup written by the Polish app imports into the English one and the other way
+round, and the user's own names (`Spotify`, `OC Ford`) travel exactly as typed, because they are data
+rather than copy.
 
 Files are read and written through the **Android Storage Access Framework** (`CreateDocument` /
 `OpenDocument`), which grants access to exactly the one file the user picked — so the app needs no
@@ -425,6 +466,11 @@ leaves the data, the preferences and the reminder schedule as they were.
 | `POST_NOTIFICATIONS` | Local reminders. A runtime permission on Android 13+; the reminders screen requests it and explains itself when it is refused. |
 | `ACCESS_NETWORK_STATE` | Read only, and for one thing: warning the user that a backup they are about to hand to their mail app may sit in an outbox. A normal permission — granted at install, no dialog. |
 
+That is the whole list. In particular, **switching the interface language needs no permission**. The
+manifest does declare AppCompat's `AppLocalesMetadataHolderService` with `autoStoreLocales`, which is
+what persists the choice below Android 13; it is a disabled service carrying one meta-data flag, not
+a capability the app asks the user for.
+
 The manifest also carries one `<queries>` declaration for `ACTION_SEND` with
 `application/octet-stream`, so the app can find out whether anything on the device can actually
 receive a shared backup. That is a visibility declaration, not a permission.
@@ -441,7 +487,9 @@ Note what is absent, and stays absent:
 
 - **Money is never a floating point number.** `Money` is a value class over `Long` minor units
   (grosze) with `plus`, `times` and `dividedBy` (rounded half up) and a non-negative invariant. It
-  is formatted for display only (`34,99 zł`, `1 299,00 zł` with the Polish grouping separator).
+  is formatted for display only, in whatever language the app is in — `34,99 zł` and `1 299,00 zł`
+  for a Polish reader, `34.99 PLN` and `1,299.00 PLN` for an English one. The separators and the
+  symbol come from CLDR through the active locale; the stored amount and the currency never change.
 - **Cost normalization lives in the domain.** `monthlyEquivalent` divides a yearly price by 12 (half
   up), `yearlyEquivalent` multiplies a monthly price by 12, and the totals sum the right one — the
   yearly total is never `monthlyTotal * 12`.
@@ -480,6 +528,12 @@ Note what is absent, and stays absent:
 - **Errors that get persisted are categories, not details.** A failed operation stores an enum, not
   a message, a path or a value — the only way to guarantee that a decrypted record or a password
   fragment cannot end up in the history table.
+- **The interface language is platform state, not app state.** There is no `LanguageRepository`, no
+  use case and no preference of the app's own: Android already stores "which language is this app
+  in" — the platform from Android 13, AppCompat below it — and it survives process death and a
+  reboot. A second copy in DataStore would only be a second answer to the same question, and the two
+  would eventually disagree. `AppLanguage` is a presentation enum, because nothing about a
+  subscription or a policy changes with the language.
 - **Storage Access Framework instead of storage permissions.** The app can only see the single file
   the user pointed at.
 - **Type-safe navigation.** Routes are `@Serializable` objects and classes; only ids travel between
@@ -487,7 +541,9 @@ Note what is absent, and stays absent:
   and one ViewModel, distinguished by the presence of the id argument.
 - **Provider catalog is static data, not UI code.** `ProviderCatalogSource` in `:infrastructure`
   sits behind the `ProviderCatalog` port, ready to be swapped for a remote or database-backed
-  source. `Other` is always the last entry and is the only catalog name the UI translates.
+  source. `Other` is always the last entry and is the only catalog name the UI translates — brand
+  names (`Spotify`, `Netflix`, `Google Workspace`) are proper nouns and are shown as they are in
+  every language.
 - **Logos: simplified glyphs where they exist, monogram everywhere else.** Official multi-color
   logotypes are trademarks and are not bundled. For 20 catalog entries with an unambiguous match,
   `ProviderLogoAssets` bundles a single-color brand glyph from the community-maintained, CC0-licensed
@@ -538,16 +594,24 @@ preview and import flows.
 
 ### Infrastructure
 
-Mapper and catalog unit tests; the backup file codec and payload validation as unit tests; and
-instrumented tests on a real in-memory database for the subscription repository, the obligation
+Mapper and catalog unit tests; the backup file codec and payload validation as unit tests; a check
+that the notification strings and their plural forms exist in both languages; instrumented tests that
+reminder copy — subtext, body, dates, amounts and the notification channel — is built in the app's
+own language rather than the phone's, including the Polish plural forms for one, two and five days;
+and instrumented tests on a real in-memory database for the subscription repository, the obligation
 repository, the transactional import repository, and each Room migration against a real database
 with rows in it — plus an assertion that the migration list covers every version bump up to the
 current one, so a bump without a migration fails the build rather than reaching a device.
 
 ### Presentation
 
-Formatter and provider-logo unit tests; ViewModel tests for subscriptions, obligations, reminders
-and import/export; a cross-screen test of the transient-feedback path; and Compose UI tests for the
+Formatter and provider-logo unit tests, including the same date and amount in both languages and
+that a formatter follows the active locale; the language fallback rules (an applied language wins
+over the system one, an unsupported system language falls back to English, a region-qualified tag
+still resolves); a translation-parity check that reads `values/strings.xml` and
+`values-pl/strings.xml` and fails on a missing or orphaned resource, a plural without the quantities
+its language needs, or a translation whose format arguments have drifted from the base string's;
+ViewModel tests for subscriptions, obligations, reminders and import/export; a cross-screen test of the transient-feedback path; and Compose UI tests for the
 subscriptions screen (empty state, list, pinned totals, search, no-results state, tag chips, row
 clicks), the obligations screen (empty state, rows with tags and totals, deadline wording, search,
 period stepping, filter-aware empty state), the subscription form (save gating, validation messages,
@@ -566,7 +630,9 @@ file and an empty file all refused; an oversized file refused before it is parse
 version refused; a payload that expands past the decompression limit refused; every domain
 validation rule (negative and oversized amounts, unknown currency or billing period, blank and
 oversized names, unparseable URLs, duplicate ids within one file, a paid obligation with no payment
-date, out-of-range dates); unknown fields from a newer build ignored; a failed import leaving the
+date, out-of-range dates); a backup exported in Polish importing in English and the other way round,
+with the serialized bytes proven identical under either locale and no display name anywhere in the
+file; unknown fields from a newer build ignored; a failed import leaving the
 data, the preferences and the reminder schedule exactly as they were; and an import that is
 idempotent when the same file is applied twice.
 
@@ -576,6 +642,28 @@ An instrumented smoke test that starts `MainActivity` with the real Hilt graph, 
 on the subscriptions screen, and walks the drawer — so a broken binding or navigation setup fails in
 CI instead of on a device.
 
+Language switching is covered here too, end to end against the real app:
+
+- the copy each language resolves to, for destinations, the picker, categories and tags, validation
+  messages, feedback, accessibility labels and the About screen; the Polish and English plural forms
+  for one, two and five days; that the language names stay self-names (`Polski`, `English`) in both
+  languages; and that a system language the app does not ship falls back to English;
+- switching Polish → English and English → Polish from the drawer, checking that the screen behind
+  the drawer is translated as well as the drawer itself;
+- the drawer showing the language currently in use;
+- the choice surviving a fresh launch of the activity;
+- dismissing the picker leaving the language alone, and the picker not reopening itself on top of the
+  newly translated UI after a change;
+- the user staying on the destination they were reading — the test switches language from About, so a
+  recreation that lost the back stack would show up;
+- the light/dark theme and the reminder settings being untouched by a language change;
+- a record created in the Polish app still being there, with its own name intact, after switching to
+  English.
+
+A real process death cannot be forced from instrumentation — the test process would go down with the
+app — so persistence is covered by relaunching the activity plus reading the choice back through the
+platform's own storage.
+
 ## Possible future work
 
 | Not implemented | Where it would plug in |
@@ -584,7 +672,7 @@ CI instead of on a device.
 | Automatic multi-device sync | Same, on top of the existing portable backup model |
 | Automatic or scheduled backups | A `WorkManager` job over `ExportBackupUseCase`, next to the reminder worker |
 | Multiple currencies | The `Currency` enum is PLN-only today, and the `currency_code` column is already there |
-| English UI | `presentation/src/main/res/values-en/strings.xml` — no strings are hardcoded |
+| Further languages | A new `values-<lang>/strings.xml`; AGP picks the locale up and `AppLanguage` gains an entry |
 | User-editable reminder schedules | `ReminderDefaults` is already a value object read from settings; it needs a store and a screen. Backups already carry the schedules, so old files stay readable |
 | Google Play subscription import | An infrastructure adapter mapping Play data to `ValidatedSubscriptionInput` |
 | Calendar integration | A new port next to `ReminderPublisher` |

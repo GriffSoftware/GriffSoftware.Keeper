@@ -54,6 +54,7 @@ import com.griff.keeper.presentation.common.component.ObligationGlyph
 import com.griff.keeper.presentation.common.component.RemindersToggleField
 import com.griff.keeper.presentation.common.component.accentSegmentedButtonColors
 import com.griff.keeper.presentation.common.component.showMessage
+import com.griff.keeper.presentation.common.format.currentLocale
 import com.griff.keeper.presentation.common.format.symbol
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.theme.GriffThemePreview
@@ -245,7 +246,7 @@ private fun ObligationFormContent(
             isError = amountError != null,
             supportingText = amountError?.let { { Text(it) } },
             label = { Text(stringResource(R.string.obligation_form_amount_label)) },
-            suffix = { Text(Currency.Default.symbol()) },
+            suffix = { Text(Currency.Default.symbol(currentLocale())) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
                 imeAction = ImeAction.Next,

@@ -107,8 +107,9 @@ internal fun ImportPreviewDialog(
                             tint = GriffTheme.colors.warning,
                         )
                         Text(
-                            text = stringResource(
-                                R.string.data_transfer_preview_duplicates,
+                            text = pluralStringResource(
+                                R.plurals.data_transfer_preview_duplicates,
+                                preview.possibleDuplicates,
                                 preview.possibleDuplicates,
                             ),
                             style = MaterialTheme.typography.bodySmall,
@@ -121,8 +122,9 @@ internal fun ImportPreviewDialog(
                     text = if (preview.hasLocalData) {
                         stringResource(R.string.data_transfer_preview_local_data)
                     } else {
-                        stringResource(
-                            R.string.data_transfer_preview_restore_question,
+                        pluralStringResource(
+                            R.plurals.data_transfer_preview_restore_question,
+                            preview.recordCount,
                             preview.recordCount,
                         )
                     },

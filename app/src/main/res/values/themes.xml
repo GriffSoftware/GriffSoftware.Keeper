@@ -3,8 +3,13 @@
     <!--
       The window theme only paints the background before Compose takes over; all app styling lives
       in the Compose Material 3 theme.
+
+      The parent is an AppCompat theme because MainActivity is an AppCompatActivity - which is what
+      applies the per-app locale below Android 13 - and AppCompat refuses to run under a plain
+      platform theme. Nothing else about the appearance changes: there is still no action bar, and
+      the only attribute set is the window background.
     -->
-    <style name="Theme.GriffKeeper" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.GriffKeeper" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
     </style>
 </resources>

@@ -60,8 +60,8 @@ internal fun SubscriptionSummaryCards(
 /**
  * What was paid in the window, how many records it covers and what is still open.
  *
- * "Zapłacono" leads and takes the accent: it is the only figure here that describes money that has
- * actually moved.
+ * The amount already paid leads and takes the accent: it is the only figure here that describes
+ * money that has actually moved.
  */
 @Composable
 internal fun ObligationSummaryCards(

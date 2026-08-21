@@ -49,6 +49,7 @@ import com.griff.keeper.presentation.common.component.DateField
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.RemindersToggleField
 import com.griff.keeper.presentation.common.component.showMessage
+import com.griff.keeper.presentation.common.format.currentLocale
 import com.griff.keeper.presentation.common.format.symbol
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.form.components.BillingPeriodSelector
@@ -241,7 +242,7 @@ private fun SubscriptionFormContent(
             isError = priceError != null,
             supportingText = priceError?.let { { Text(it) } },
             label = { Text(stringResource(R.string.form_price_label)) },
-            suffix = { Text(Currency.Default.symbol()) },
+            suffix = { Text(Currency.Default.symbol(currentLocale())) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
                 imeAction = ImeAction.Next,

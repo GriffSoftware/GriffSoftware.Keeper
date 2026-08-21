@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -279,8 +280,9 @@ private fun PasswordProblemText(problem: BackupPasswordProblem) {
         BackupPasswordProblem.EMPTY ->
             stringResource(R.string.data_transfer_password_error_empty)
 
-        BackupPasswordProblem.TOO_SHORT -> stringResource(
-            R.string.data_transfer_password_error_too_short,
+        BackupPasswordProblem.TOO_SHORT -> pluralStringResource(
+            R.plurals.data_transfer_password_error_too_short,
+            BackupPasswordRules.MIN_LENGTH,
             BackupPasswordRules.MIN_LENGTH,
         )
 

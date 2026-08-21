@@ -16,6 +16,7 @@ import com.griff.keeper.domain.model.ObligationCategory
 import com.griff.keeper.domain.model.ObligationTag
 import com.griff.keeper.domain.model.ObligationTotals
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.theme.GriffKeeperTheme
 import java.time.LocalDate
 import kotlin.test.Test
@@ -99,7 +100,9 @@ class ObligationsScreenTest {
         composeRule
             .onNodeWithText(context.getString(R.string.obligations_paid_in_year, 2026))
             .assertIsDisplayed()
-        composeRule.onNodeWithText("4 820,00 zł").assertIsDisplayed()
+        // Formatted through the same code the screen uses: the separators and the currency
+        // symbol follow the active language, so a literal would assert the device's locale.
+        composeRule.onNodeWithText(MoneyFormatter.format(Money.ofUnits(4_820))).assertIsDisplayed()
     }
 
     @Test

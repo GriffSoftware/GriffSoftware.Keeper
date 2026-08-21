@@ -12,6 +12,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GriffKeeper">
 
+        <!--
+            Persistence of the chosen language below Android 13.
+
+            From Android 13 the platform stores the per-app locale itself, and the choice survives a
+            reinstall. Below that, AppCompat keeps it - but only if this flag is set, and this
+            declaration is the whole of the opt-in. The service is never started and is disabled on
+            purpose: it exists only to carry the meta-data, which is why this needs no permission of
+            any kind. Without it the app would have to keep its own copy of the language, and there
+            would be two sources of truth for what is already platform state.
+        -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
         <activity
             android:name=".app.MainActivity"
             android:exported="true"

@@ -47,6 +47,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     // The backup payload is serialized as JSON before it is compressed and encrypted.
     implementation(libs.kotlinx.serialization.json)
+    // Reminder notifications are built by a background worker, with no activity to inherit the
+    // per-app locale from; AppCompatDelegate is what tells it which language the user picked.
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.work.runtime.ktx)

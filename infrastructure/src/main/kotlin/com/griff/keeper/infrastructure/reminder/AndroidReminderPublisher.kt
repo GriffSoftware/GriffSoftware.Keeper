@@ -29,10 +29,13 @@ class AndroidReminderPublisher @Inject constructor(
     private val availability: NotificationAvailability,
 ) : ReminderPublisher {
 
-    private val textFactory = ReminderNotificationTextFactory(context)
-
     override suspend fun publish(notification: ReminderNotification) {
-        ReminderNotificationChannel.ensureCreated(context)
+        // Resolved per notification rather than once in a field: the user can change the app's
+        // language while this singleton is alive, and a worker has no activity to be recreated with.
+        val localized = context.withAppLocale()
+        // Re-creating the channel with the same id only updates its name and description, which is
+        // how the entry in the system notification settings follows the chosen language too.
+        ReminderNotificationChannel.ensureCreated(localized)
 
         // Posting without the permission is a silent no-op on Android 13+, but checking first keeps
         // the intent explicit instead of relying on that behaviour. The check is inline rather than
@@ -46,7 +49,7 @@ class AndroidReminderPublisher @Inject constructor(
         if (!granted) return
 
         val occurrence = notification.occurrence
-        val copy = textFactory.copyFor(notification)
+        val copy = ReminderNotificationTextFactory(localized).copyFor(notification)
 
         val contentIntent = PendingIntent.getActivity(
             context,

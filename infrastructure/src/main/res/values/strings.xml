@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
+<!-- English is the base locale; Polish lives in values-pl. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
     <!-- Notification channel -->
-    <string name="reminder_channel_name">Przypomnienia</string>
-    <string name="reminder_channel_description">Powiadomienia o zbliżających się płatnościach, odnowieniach i kończących się ubezpieczeniach.</string>
+    <string name="reminder_channel_name">Reminders</string>
+    <string name="reminder_channel_description">Notifications about upcoming payments, renewals and insurance about to expire.</string>
 
     <!-- Insurance expiry -->
-    <string name="reminder_insurance_subtext_tomorrow">Ubezpieczenie wygasa jutro</string>
-    <string name="reminder_insurance_text">Polisa jest ważna do %1$s.</string>
-    <string name="reminder_insurance_text_tomorrow">Polisa kończy się %1$s.</string>
+    <string name="reminder_insurance_subtext_tomorrow">Insurance expires tomorrow</string>
+    <string name="reminder_insurance_text">The policy is valid until %1$s.</string>
+    <string name="reminder_insurance_text_tomorrow">The policy ends on %1$s.</string>
 
     <!-- Payment due -->
-    <string name="reminder_payment_subtext_tomorrow">Termin płatności jutro</string>
-    <string name="reminder_payment_text">%1$s • termin %2$s</string>
-    <string name="reminder_payment_text_tomorrow">Do zapłaty: %1$s</string>
+    <string name="reminder_payment_subtext_tomorrow">Payment due tomorrow</string>
+    <string name="reminder_payment_text">%1$s • due %2$s</string>
+    <string name="reminder_payment_text_tomorrow">To pay: %1$s</string>
 
     <!-- Subscription renewal -->
-    <string name="reminder_renewal_subtext_tomorrow">Odnowienie jutro</string>
-    <string name="reminder_renewal_text">%1$s • następna płatność %2$s</string>
-    <string name="reminder_renewal_text_yearly">%1$s • subskrypcja roczna</string>
-    <string name="reminder_renewal_text_tomorrow">Planowana płatność: %1$s</string>
+    <string name="reminder_renewal_subtext_tomorrow">Renews tomorrow</string>
+    <string name="reminder_renewal_text">%1$s • next payment %2$s</string>
+    <string name="reminder_renewal_text_yearly">%1$s • yearly subscription</string>
+    <string name="reminder_renewal_text_tomorrow">Scheduled payment: %1$s</string>
 
-    <!-- Currency symbol is brand/locale data rather than translatable UI copy. -->
-    <string name="reminder_currency_pln" translatable="false">zł</string>
+    <!--
+        Date pattern rather than copy: CLDR orders the day and the month differently per language
+        ("September 28" against "28 września"), and no localized FormatStyle drops the year.
+    -->
+    <string name="reminder_date_day_month_pattern">MMMM d</string>
 
     <plurals name="reminder_insurance_subtext_in_days">
-        <item quantity="one">Ubezpieczenie wygasa za %1$d dzień</item>
-        <item quantity="few">Ubezpieczenie wygasa za %1$d dni</item>
-        <item quantity="many">Ubezpieczenie wygasa za %1$d dni</item>
-        <item quantity="other">Ubezpieczenie wygasa za %1$d dni</item>
+        <item quantity="one">Insurance expires in %1$d day</item>
+        <item quantity="other">Insurance expires in %1$d days</item>
     </plurals>
 
     <plurals name="reminder_payment_subtext_in_days">
-        <item quantity="one">Termin płatności za %1$d dzień</item>
-        <item quantity="few">Termin płatności za %1$d dni</item>
-        <item quantity="many">Termin płatności za %1$d dni</item>
-        <item quantity="other">Termin płatności za %1$d dni</item>
+        <item quantity="one">Payment due in %1$d day</item>
+        <item quantity="other">Payment due in %1$d days</item>
     </plurals>
 
     <plurals name="reminder_renewal_subtext_in_days">
-        <item quantity="one">Odnowienie za %1$d dzień</item>
-        <item quantity="few">Odnowienie za %1$d dni</item>
-        <item quantity="many">Odnowienie za %1$d dni</item>
-        <item quantity="other">Odnowienie za %1$d dni</item>
+        <item quantity="one">Renews in %1$d day</item>
+        <item quantity="other">Renews in %1$d days</item>
     </plurals>
 </resources>
