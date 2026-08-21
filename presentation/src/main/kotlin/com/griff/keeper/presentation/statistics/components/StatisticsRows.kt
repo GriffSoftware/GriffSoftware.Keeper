@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -131,14 +130,13 @@ private fun DueSoonBadge() {
         modifier = Modifier
             .background(
                 color = GriffTheme.colors.warning.copy(alpha = BadgeBackgroundAlpha),
-                shape = RoundedCornerShape(BadgeCornerRadius),
+                shape = MaterialTheme.shapes.small,
             )
             .padding(horizontal = Spacing.Small, vertical = Spacing.ExtraSmall / 2),
     )
 }
 
 private val RowLogoSize = 36.dp
-private val BadgeCornerRadius = 6.dp
 private const val BadgeBackgroundAlpha = 0.22f
 
 @ThemePreviews

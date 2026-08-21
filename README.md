@@ -236,11 +236,19 @@ layer — so an obligation badge and a subscription badge look like members of t
 
 - Jetpack Compose and Material 3 throughout. **The UI is implemented entirely with Jetpack
   Compose — no XML layouts.**
-- Light theme: near-white "financial dashboard" surfaces with a saturated Griff Blue accent.
-  Dark theme: neutral graphite with a Griff Cyan accent. Every Material 3 color role is spelled out
-  so nothing falls back to the baseline Material purple.
+- The **"Graphite Precision"** design system, mapped onto the Material 3 roles. Light theme: warm
+  off-white surfaces with a saturated Griff Blue accent. Dark theme: tiered graphite - not pure
+  black - with a Griff Cyan accent. The accent *pivots* with the mode rather than being inverted, so
+  it stays readable at both ends. Every Material 3 color role is spelled out so nothing falls back
+  to the baseline Material purple.
 - **Dynamic color is deliberately off**: the brand accent is the point of the palette. The parameter
   is still there so the choice can become a user setting later.
+- **Inter as the single type family**, requested through the Play Services font provider rather than
+  bundled, with the platform font as the fallback. The scale is tuned for data density: tighter
+  tracking and heavier weights on headlines, default tracking on body text.
+- One shape rule, split by kind rather than by size: content containers are framed at 16dp, and
+  anything the user acts on - buttons, fields, chips - sits at 8dp. Filled cards carry a hairline
+  edge that only paints on graphite, where a tonal step alone would not separate them.
 - Edge-to-edge, a navigation drawer that shows the real `versionName` / `versionCode` of the running
   build, an in-drawer language switcher, and an About screen describing what the app does, where the
   data lives and how to reach support.

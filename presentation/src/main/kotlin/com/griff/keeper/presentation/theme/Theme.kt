@@ -1,6 +1,7 @@
 package com.griff.keeper.presentation.theme
 
 import android.os.Build
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -39,7 +40,7 @@ private val LightColorScheme = lightColorScheme(
     onSurface = BrandColors.OnSurfaceLight,
     surfaceVariant = BrandColors.SurfaceVariantLight,
     onSurfaceVariant = BrandColors.OnSurfaceVariantLight,
-    surfaceTint = BrandColors.PrimaryLight,
+    surfaceTint = BrandColors.SurfaceTintLight,
     inverseSurface = BrandColors.InverseSurfaceLight,
     inverseOnSurface = BrandColors.InverseOnSurfaceLight,
     outline = BrandColors.OutlineLight,
@@ -90,7 +91,7 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = BrandColors.OnSurfaceDark,
     surfaceVariant = BrandColors.SurfaceVariantDark,
     onSurfaceVariant = BrandColors.OnSurfaceVariantDark,
-    surfaceTint = BrandColors.PrimaryDark,
+    surfaceTint = BrandColors.SurfaceTintDark,
     inverseSurface = BrandColors.InverseSurfaceDark,
     inverseOnSurface = BrandColors.InverseOnSurfaceDark,
     outline = BrandColors.OutlineDark,
@@ -134,6 +135,8 @@ internal data class GriffColors(
     /** Series colors of the combined statistics chart, one per expense source. */
     val subscriptionSeries: Color,
     val obligationSeries: Color,
+    /** Hairline that defines a card's edge; transparent in light, where the tonal step suffices. */
+    val containerStroke: Color,
 )
 
 private val LightGriffColors = GriffColors(
@@ -144,6 +147,7 @@ private val LightGriffColors = GriffColors(
     tagColors = TagPalette.Light,
     subscriptionSeries = BrandColors.PrimaryLight,
     obligationSeries = SeriesColors.ObligationLight,
+    containerStroke = ContainerStroke.Light,
 )
 
 private val DarkGriffColors = GriffColors(
@@ -154,6 +158,7 @@ private val DarkGriffColors = GriffColors(
     tagColors = TagPalette.Dark,
     subscriptionSeries = BrandColors.PrimaryDark,
     obligationSeries = SeriesColors.ObligationDark,
+    containerStroke = ContainerStroke.Dark,
 )
 
 private val LocalGriffColors = staticCompositionLocalOf { LightGriffColors }
@@ -165,6 +170,18 @@ internal object GriffTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalGriffColors.current
+
+    /**
+     * The hairline that defines a filled card's edge.
+     *
+     * `OutlinedCard` gets this from Material for free; a filled `Card` has no border of its own, so
+     * on graphite it would rely on a five-value tonal step alone. Applying it unconditionally is
+     * safe: the light stroke is transparent, so nothing is drawn where nothing is needed.
+     */
+    val containerBorder: BorderStroke
+        @Composable
+        @ReadOnlyComposable
+        get() = BorderStroke(HairlineWidth, LocalGriffColors.current.containerStroke)
 }
 
 /**
@@ -195,6 +212,7 @@ fun GriffKeeperTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
+            shapes = AppShapes,
             content = content,
         )
     }

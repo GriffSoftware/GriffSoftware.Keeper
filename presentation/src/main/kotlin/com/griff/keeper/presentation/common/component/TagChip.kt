@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,10 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -54,7 +53,7 @@ fun TagChip(
 
     Row(
         modifier = modifier
-            .background(color = colors.container, shape = RoundedCornerShape(ChipCornerRadius))
+            .background(color = colors.container, shape = GriffShapes.Interactive)
             .padding(horizontal = Spacing.Small, vertical = ChipVerticalPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
@@ -69,8 +68,7 @@ fun TagChip(
         }
         Text(
             text = stringResource(style.labelRes),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.labelMedium,
             color = colors.content,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -78,7 +76,6 @@ fun TagChip(
     }
 }
 
-private val ChipCornerRadius = 6.dp
 private val ChipVerticalPadding = 3.dp
 private val ChipIconSize = 12.dp
 

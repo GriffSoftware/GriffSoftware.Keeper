@@ -57,6 +57,7 @@ import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.currentLocale
 import com.griff.keeper.presentation.common.format.symbol
 import com.griff.keeper.presentation.common.resolve
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.TallThemePreviews
@@ -331,6 +332,7 @@ private fun ObligationFormContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Spacing.Small),
+            shape = GriffShapes.Interactive,
         ) {
             if (state.isSaving) {
                 CircularProgressIndicator(

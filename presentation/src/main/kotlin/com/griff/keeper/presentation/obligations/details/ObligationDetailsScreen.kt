@@ -64,6 +64,7 @@ import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.obligations.DeadlineStatus
 import com.griff.keeper.presentation.obligations.DeadlineUrgency
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -338,6 +339,7 @@ private fun ObligationDetailsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Spacing.Small),
+            shape = GriffShapes.Interactive,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colorScheme.error,
             ),

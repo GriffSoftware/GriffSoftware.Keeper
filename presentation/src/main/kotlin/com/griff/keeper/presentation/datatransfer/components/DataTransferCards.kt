@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -61,6 +62,7 @@ internal fun DataTransferActionCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Row(
             modifier = Modifier
@@ -134,6 +136,7 @@ internal fun ShareUnavailableCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Column(
             modifier = Modifier.padding(Spacing.Large),
@@ -161,7 +164,7 @@ internal fun ShareUnavailableCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.Small)) {
-                OutlinedButton(onClick = onSaveToFile) {
+                OutlinedButton(onClick = onSaveToFile, shape = GriffShapes.Interactive) {
                     Text(stringResource(R.string.data_transfer_no_share_target_action))
                 }
                 TextButton(onClick = onDismiss) {
@@ -184,6 +187,7 @@ private fun InformationCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Column(
             modifier = Modifier.padding(Spacing.Large),

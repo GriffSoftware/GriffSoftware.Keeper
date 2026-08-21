@@ -54,6 +54,7 @@ import com.griff.keeper.presentation.common.format.symbol
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.form.components.BillingPeriodSelector
 import com.griff.keeper.presentation.form.components.ProviderPicker
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.ThemePreviews
@@ -292,6 +293,7 @@ private fun SubscriptionFormContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Spacing.Small),
+            shape = GriffShapes.Interactive,
         ) {
             if (state.isSaving) {
                 CircularProgressIndicator(

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.ImportExport
@@ -41,6 +40,7 @@ import com.griff.keeper.application.appinfo.AppVersion
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.locale.AppLanguage
 import com.griff.keeper.presentation.common.locale.LanguagePickerDialog
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.ThemePreviews
@@ -107,7 +107,7 @@ internal fun AppDrawerContent(
                 )
             }
 
-            val itemShape = RoundedCornerShape(SelectionCornerRadius)
+            val itemShape = GriffShapes.Marker
             val itemColors = NavigationDrawerItemDefaults.colors(
                 selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                 selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -256,9 +256,6 @@ internal fun AppDrawerContent(
  * emblem's own aspect ratio (from [R.drawable.ic_griff_emblem]) determines its width.
  */
 private val HeaderEmblemHeight = 80.dp
-
-/** Material would draw a full pill here; the brand asks for a corner that is barely rounded. */
-private val SelectionCornerRadius = 4.dp
 
 @ThemePreviews
 @Composable

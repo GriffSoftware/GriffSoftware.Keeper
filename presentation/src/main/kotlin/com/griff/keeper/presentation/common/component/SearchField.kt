@@ -2,7 +2,6 @@ package com.griff.keeper.presentation.common.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.ThemePreviews
@@ -44,7 +44,7 @@ fun SearchField(
             .fillMaxWidth()
             .padding(horizontal = Spacing.Large, vertical = Spacing.Small),
         singleLine = true,
-        shape = RoundedCornerShape(FieldCornerRadius),
+        shape = GriffShapes.Interactive,
         placeholder = { Text(placeholder) },
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search, contentDescription = null)
@@ -69,8 +69,6 @@ fun SearchField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
     )
 }
-
-private val FieldCornerRadius = 14.dp
 
 @ThemePreviews
 @Composable

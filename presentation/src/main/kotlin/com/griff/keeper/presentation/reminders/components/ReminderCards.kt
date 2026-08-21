@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.griff.keeper.domain.reminder.ReminderDefaults
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.reminders.ReminderPhrases
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.Spacing
 
@@ -43,6 +44,7 @@ internal fun GlobalRemindersCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Row(
             modifier = Modifier
@@ -93,6 +95,7 @@ internal fun SystemNotificationsBlockedCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Column(
             modifier = Modifier.padding(Spacing.Large),
@@ -121,7 +124,10 @@ internal fun SystemNotificationsBlockedCard(
             )
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.Small)) {
                 if (canRequestPermission) {
-                    OutlinedButton(onClick = onRequestPermission) {
+                    OutlinedButton(
+                        onClick = onRequestPermission,
+                        shape = GriffShapes.Interactive,
+                    ) {
                         Text(stringResource(R.string.reminders_permission_grant))
                     }
                 }
@@ -149,6 +155,7 @@ internal fun RemindersDisabledCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Column(
             modifier = Modifier.padding(Spacing.Large),
@@ -163,7 +170,7 @@ internal fun RemindersDisabledCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedButton(onClick = onEnable) {
+            OutlinedButton(onClick = onEnable, shape = GriffShapes.Interactive) {
                 Text(stringResource(R.string.reminders_off_action))
             }
         }

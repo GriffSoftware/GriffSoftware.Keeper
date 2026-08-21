@@ -61,6 +61,7 @@ import com.griff.keeper.presentation.common.component.DetailsInfoRow
 import com.griff.keeper.presentation.common.component.TagChip
 import com.griff.keeper.presentation.reminders.components.ItemReminderSection
 import com.griff.keeper.presentation.reminders.rememberSystemNotificationsEnabled
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.ThemePreviews
@@ -308,6 +309,7 @@ private fun SubscriptionDetailsContent(
                 if (managementUrl != null && !openUrl(managementUrl)) onManagementUrlOpenFailed()
             },
             enabled = managementUrl != null && !isDeleting,
+            shape = GriffShapes.Interactive,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Spacing.Small),
@@ -336,6 +338,7 @@ private fun SubscriptionDetailsContent(
             onClick = onDeleteRequest,
             enabled = !isDeleting,
             modifier = Modifier.fillMaxWidth(),
+            shape = GriffShapes.Interactive,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colorScheme.error,
             ),

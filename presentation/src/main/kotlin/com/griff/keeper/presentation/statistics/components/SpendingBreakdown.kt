@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.TagStyle
 import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.statistics.SpendingShare
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -105,14 +105,14 @@ private fun SpendingRow(entry: SpendingShare, amountStyle: BreakdownAmount) {
                 .height(BarHeight)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(BarHeight / 2),
+                    shape = GriffShapes.Pill,
                 ),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(fraction = entry.share.coerceIn(MinBarFraction, 1f))
                     .height(BarHeight)
-                    .background(color = colors.content, shape = RoundedCornerShape(BarHeight / 2)),
+                    .background(color = colors.content, shape = GriffShapes.Pill),
             )
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.Spacing
 
 /**
@@ -34,7 +35,11 @@ internal fun DebugToolsSection(
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        OutlinedButton(onClick = onSendTestNotification, modifier = Modifier.fillMaxWidth()) {
+        OutlinedButton(
+            onClick = onSendTestNotification,
+            modifier = Modifier.fillMaxWidth(),
+            shape = GriffShapes.Interactive,
+        ) {
             Text(stringResource(R.string.reminders_debug_send))
         }
     }

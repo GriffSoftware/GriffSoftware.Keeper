@@ -67,6 +67,7 @@ import com.griff.keeper.presentation.common.UiMessage
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.resolve
+import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.MinTouchTarget
 import com.griff.keeper.presentation.theme.Spacing
@@ -278,6 +279,7 @@ private fun PrivacyCard() {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ),
+        border = GriffTheme.containerBorder,
     ) {
         Column(
             modifier = Modifier.padding(Spacing.Large),
