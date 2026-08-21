@@ -102,6 +102,7 @@
     <string name="drawer_subscriptions">Subskrypcje</string>
     <string name="drawer_obligations">Ubezpieczenia i opłaty</string>
     <string name="drawer_statistics">Statystyki</string>
+    <string name="drawer_about">About</string>
     <string name="drawer_version">Wersja %1$s</string>
     <string name="drawer_build">Build %1$d</string>
 
@@ -572,4 +573,36 @@
     <string name="subscription_updated">Subskrypcja została zaktualizowana.</string>
     <string name="obligation_added">Pozycja została dodana.</string>
     <string name="obligation_updated">Zmiany zostały zapisane.</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_emblem_description">Godło Griff Keeper</string>
+    <string name="about_intro">Griff Keeper pomaga trzymać w jednym miejscu subskrypcje, ubezpieczenia, opłaty oraz ważne terminy.</string>
+    <string name="about_intro_secondary">Kontroluj swoje wydatki, terminy odnowień i płatności oraz otrzymuj lokalne przypomnienia o zbliżających się terminach.</string>
+
+    <string name="about_features_title">Najważniejsze funkcje</string>
+    <string name="about_feature_subscriptions">Subskrypcje i cykliczne koszty</string>
+    <string name="about_feature_obligations">Ubezpieczenia, podatki i inne okresowe opłaty</string>
+    <string name="about_feature_reminders">Lokalne przypomnienia o odnowieniach i terminach płatności</string>
+    <string name="about_feature_statistics">Statystyki miesięcznych i rocznych wydatków</string>
+    <string name="about_feature_tags">Kategorie i tagi do filtrowania danych</string>
+    <string name="about_feature_backup">Szyfrowany import i eksport danych</string>
+
+    <string name="about_privacy_title">Prywatność</string>
+    <string name="about_privacy_description">Twoje dane są przechowywane lokalnie na tym urządzeniu. Griff Keeper nie wymaga konta ani własnego serwera i nie synchronizuje danych z chmurą.</string>
+
+    <string name="about_contact_title">Kontakt i pomoc</string>
+    <string name="about_contact_description">Masz pytanie, sugestię lub znalazłeś problem? Skontaktuj się:</string>
+    <string name="about_contact_email">contact@griffsoftware.com</string>
+    <string name="about_contact_email_action">Napisz wiadomość na adres %1$s</string>
+    <string name="about_contact_email_copy">Kopiuj adres e-mail</string>
+    <string name="about_contact_email_copied">Adres e-mail został skopiowany.</string>
+    <string name="about_contact_email_no_app">Nie znaleziono aplikacji do obsługi poczty.</string>
+    <string name="about_contact_email_clip_label">Adres e-mail Griff Keeper</string>
+    <!-- English on purpose: the address is read by support, not by the user of a Polish UI -->
+    <string name="about_contact_email_subject">Griff Keeper — Support</string>
+    <string name="about_contact_email_body">Griff Keeper\n\nWersja: %1$s\nBuild: %2$d\n\nOpisz problem:\n</string>
+
+    <string name="about_version">Wersja %1$s • Build %2$d</string>
+    <string name="about_copyright">Griff Software</string>
 </resources>

@@ -20,6 +20,8 @@ adding those later without a rewrite.
 - Statistics: summary cards, period filter (month / year / rolling 12 months), forecast of real
   charges based on renewal dates, category breakdown and the most expensive subscriptions
 - Navigation drawer with the real `versionName` / `versionCode` of the running build
+- About screen: what the app is, its main capabilities, where the data lives, a support address that
+  opens a mail app (or can be copied) and the real version of the build
 - Light and dark theme, dynamic color on Android 12+, edge-to-edge, Polish UI
 
 ## Architecture
@@ -176,8 +178,9 @@ work. A real signing config has to be added before publishing.
 - `:infrastructure` — mapper and catalog unit tests plus instrumented tests of
   `RoomSubscriptionRepository` on a real in-memory database.
 - `:presentation` — formatter and `SubscriptionViewModel` unit tests, and Compose UI tests for the
-  subscriptions screen (empty state, list, totals, search, row clicks) and the subscription form
-  (save button gating, validation messages, provider selection).
+  subscriptions screen (empty state, list, totals, search, row clicks), the subscription form
+  (save button gating, validation messages, provider selection) and the About screen (content,
+  version, the email and copy actions).
 - `:app` — instrumented smoke test that starts `MainActivity` with the real Hilt graph, so a broken
   binding or navigation setup fails in CI instead of on a device.
 

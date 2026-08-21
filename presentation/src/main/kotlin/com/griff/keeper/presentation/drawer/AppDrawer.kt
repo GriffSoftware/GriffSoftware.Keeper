@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.InsertChartOutlined
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.VerifiedUser
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +43,7 @@ enum class DrawerDestination {
     STATISTICS,
     REMINDERS,
     DATA_TRANSFER,
+    ABOUT,
 }
 
 /**
@@ -138,6 +140,16 @@ internal fun AppDrawerContent(
                 icon = { Icon(Icons.Default.ImportExport, contentDescription = null) },
                 selected = selected == DrawerDestination.DATA_TRANSFER,
                 onClick = { onSelect(DrawerDestination.DATA_TRANSFER) },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                shape = itemShape,
+                colors = itemColors,
+            )
+            // Last in the list: not a place the user works, but where the app explains itself.
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.drawer_about)) },
+                icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                selected = selected == DrawerDestination.ABOUT,
+                onClick = { onSelect(DrawerDestination.ABOUT) },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 shape = itemShape,
                 colors = itemColors,

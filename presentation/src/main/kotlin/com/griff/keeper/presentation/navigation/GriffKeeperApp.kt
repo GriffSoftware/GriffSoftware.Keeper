@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.griff.keeper.presentation.about.AboutRoute
 import com.griff.keeper.presentation.common.TransientMessages
 import com.griff.keeper.presentation.datatransfer.DataTransferRoute
 import com.griff.keeper.presentation.details.SubscriptionDetailsRoute
@@ -127,6 +128,15 @@ fun GriffKeeperApp(
                 DataTransferRoute(onOpenDrawer = openDrawer)
             }
 
+            composable<AboutRoute> {
+                // The version is already in this composition, so the screen is handed the same
+                // values the drawer shows rather than reading them again.
+                AboutRoute(
+                    appVersion = drawerViewModel.appVersion,
+                    onOpenDrawer = openDrawer,
+                )
+            }
+
             composable<SubscriptionDetailsRoute>(
                 // Tapping a reminder opens the record itself; navigation rebuilds the stack up to
                 // the start destination, so Back lands on the subscriptions list rather than
@@ -210,6 +220,7 @@ private fun NavHostController.navigateToDrawerDestination(destination: DrawerDes
         DrawerDestination.STATISTICS -> StatisticsRoute
         DrawerDestination.REMINDERS -> RemindersRoute
         DrawerDestination.DATA_TRANSFER -> DataTransferRoute
+        DrawerDestination.ABOUT -> AboutRoute
     }
     navigate(route) {
         popUpTo(SubscriptionRoute) { inclusive = destination == DrawerDestination.SUBSCRIPTIONS }
@@ -222,6 +233,7 @@ private fun NavDestination?.toDrawerDestination(): DrawerDestination = when {
     this?.hasRoute<StatisticsRoute>() == true -> DrawerDestination.STATISTICS
     this?.hasRoute<RemindersRoute>() == true -> DrawerDestination.REMINDERS
     this?.hasRoute<DataTransferRoute>() == true -> DrawerDestination.DATA_TRANSFER
+    this?.hasRoute<AboutRoute>() == true -> DrawerDestination.ABOUT
     else -> DrawerDestination.SUBSCRIPTIONS
 }
 
@@ -230,4 +242,5 @@ private fun NavDestination?.isDrawerDestination(): Boolean =
         this?.hasRoute<ObligationsRoute>() == true ||
         this?.hasRoute<StatisticsRoute>() == true ||
         this?.hasRoute<RemindersRoute>() == true ||
-        this?.hasRoute<DataTransferRoute>() == true
+        this?.hasRoute<DataTransferRoute>() == true ||
+        this?.hasRoute<AboutRoute>() == true
