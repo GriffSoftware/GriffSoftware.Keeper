@@ -2,9 +2,11 @@ package com.griff.keeper.infrastructure.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.griff.keeper.infrastructure.database.dao.BackupOperationDao
 import com.griff.keeper.infrastructure.database.dao.ObligationDao
 import com.griff.keeper.infrastructure.database.dao.ReminderEventDao
 import com.griff.keeper.infrastructure.database.dao.SubscriptionDao
+import com.griff.keeper.infrastructure.database.entity.BackupOperationEntity
 import com.griff.keeper.infrastructure.database.entity.ObligationEntity
 import com.griff.keeper.infrastructure.database.entity.ReminderEventEntity
 import com.griff.keeper.infrastructure.database.entity.SubscriptionEntity
@@ -20,7 +22,12 @@ import com.griff.keeper.infrastructure.database.entity.SubscriptionEntity
  * loss.
  */
 @Database(
-    entities = [SubscriptionEntity::class, ObligationEntity::class, ReminderEventEntity::class],
+    entities = [
+        SubscriptionEntity::class,
+        ObligationEntity::class,
+        ReminderEventEntity::class,
+        BackupOperationEntity::class,
+    ],
     version = GriffDatabase.VERSION,
     exportSchema = true,
 )
@@ -32,8 +39,10 @@ abstract class GriffDatabase : RoomDatabase() {
 
     abstract fun reminderEventDao(): ReminderEventDao
 
+    abstract fun backupOperationDao(): BackupOperationDao
+
     companion object {
-        const val VERSION = 3
+        const val VERSION = 4
         const val NAME = "subscriptions.db"
     }
 }

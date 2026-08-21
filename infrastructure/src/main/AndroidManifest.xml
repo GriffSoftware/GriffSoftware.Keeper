@@ -7,4 +7,38 @@
     -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!--
+        Read only, and only to warn the user that an e-mail they are about to hand to their mail app
+        may sit in an outbox. A normal permission: granted at install, no runtime dialog.
+
+        Note what is absent, and stays absent. There is no INTERNET permission, because Griff never
+        opens a connection - the mail is sent by whichever client the user picks. And there is no
+        storage permission of any kind: import and export go through the system document picker,
+        which grants access to the single file the user chose, so MANAGE_EXTERNAL_STORAGE,
+        WRITE_EXTERNAL_STORAGE and the READ_MEDIA_* family are all unnecessary.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application>
+
+        <!--
+            Hands one encrypted backup to the mail app the user picks, as a content:// URI.
+
+            A file:// URI is rejected by modern Android and would expose a path into private storage;
+            a FileProvider grants read access to exactly one file, to exactly the app that received
+            the intent, for exactly as long as the intent lives. Not exported and no permissions
+            granted by default: access comes only from FLAG_GRANT_READ_URI_PERMISSION on the share
+            intent itself.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.backupfiles"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/backup_file_paths" />
+        </provider>
+    </application>
+
 </manifest>

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -44,6 +45,8 @@ dependencies {
     implementation(project(":application"))
 
     implementation(libs.kotlinx.coroutines.core)
+    // The backup payload is serialized as JSON before it is compressed and encrypted.
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.work.runtime.ktx)

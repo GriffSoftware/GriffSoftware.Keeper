@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Lets the app find out whether anything can actually receive a shared backup.
+
+        From API 30 an app cannot see other packages by default, so without this declaration
+        `resolveActivity` would return null even on a phone full of mail clients - and the app would
+        tell the user there is no way to send the file when there plainly is. Scoped to exactly the
+        intent "Wyślij kopię" builds: nothing else about the installed apps is asked for, and this is
+        a visibility declaration, not a permission.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="application/octet-stream" />
+        </intent>
+    </queries>
+
+</manifest>

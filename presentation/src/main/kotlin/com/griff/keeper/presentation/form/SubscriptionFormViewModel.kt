@@ -41,7 +41,16 @@ import kotlinx.coroutines.launch
 
 /** One-off signals of the add/edit form. */
 sealed interface SubscriptionFormEvent {
-    data class Saved(val subscriptionId: String) : SubscriptionFormEvent
+    /**
+     * The record was written and the form is done.
+     *
+     * Carries the confirmation because the form closes itself: by the time it could show a snackbar
+     * it no longer exists, so the message travels to whichever screen the user lands on.
+     */
+    data class Saved(
+        val subscriptionId: String,
+        val message: UiMessage,
+    ) : SubscriptionFormEvent
 }
 
 /**
@@ -182,7 +191,21 @@ class SubscriptionFormViewModel @Inject constructor(
                     }
                 }
             }
-                .onSuccess { savedId -> _events.tryEmit(SubscriptionFormEvent.Saved(savedId)) }
+                .onSuccess { savedId ->
+                    _events.tryEmit(
+                        SubscriptionFormEvent.Saved(
+                            subscriptionId = savedId,
+                            message = UiMessage(
+                                textRes = if (editedId == null) {
+                                    R.string.subscription_added
+                                } else {
+                                    R.string.subscription_updated
+                                },
+                                severity = MessageSeverity.SUCCESS,
+                            ),
+                        ),
+                    )
+                }
                 .onFailure { throwable ->
                     if (throwable is CancellationException) throw throwable
                     _uiState.update {

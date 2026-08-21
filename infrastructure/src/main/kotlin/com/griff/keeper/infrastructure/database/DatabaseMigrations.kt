@@ -10,7 +10,8 @@ import androidx.sqlite.execSQL
  * Every version bump adds an entry here together with the exported schema of the new version;
  * destructive fallbacks are never used, because the user's subscriptions have to survive an update.
  */
-internal val DatabaseMigrations: Array<Migration> = arrayOf(MigrateV1ToV2, MigrateV2ToV3)
+internal val DatabaseMigrations: Array<Migration> =
+    arrayOf(MigrateV1ToV2, MigrateV2ToV3, MigrateV3ToV4)
 
 /**
  * Adds the obligations table and the subscription category column.
@@ -68,6 +69,37 @@ private object MigrateV2ToV3 : Migration(2, 3) {
                 `reminder_key` TEXT NOT NULL,
                 `sent_at_epoch_millis` INTEGER NOT NULL,
                 PRIMARY KEY(`reminder_key`)
+            )
+            """.trimIndent(),
+        )
+    }
+}
+
+/**
+ * Adds the local import/export log.
+ *
+ * Purely additive, and the table starts empty because nothing has been imported or exported yet on
+ * this installation. Note what is *not* here: the log is device-local bookkeeping, so an update
+ * cannot bring history over from anywhere, and a later REPLACE import must leave this table alone.
+ */
+private object MigrateV3ToV4 : Migration(3, 4) {
+
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `backup_operations` (
+                `id` TEXT NOT NULL,
+                `type` TEXT NOT NULL,
+                `started_at_epoch_millis` INTEGER NOT NULL,
+                `finished_at_epoch_millis` INTEGER NOT NULL,
+                `status` TEXT NOT NULL,
+                `file_name` TEXT,
+                `import_mode` TEXT,
+                `subscription_count` INTEGER NOT NULL,
+                `obligation_count` INTEGER NOT NULL,
+                `settings_count` INTEGER NOT NULL,
+                `error_type` TEXT,
+                PRIMARY KEY(`id`)
             )
             """.trimIndent(),
         )

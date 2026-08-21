@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.griff.keeper.infrastructure.database.DatabaseMigrations
 import com.griff.keeper.infrastructure.database.GriffDatabase
+import com.griff.keeper.infrastructure.database.dao.BackupOperationDao
 import com.griff.keeper.infrastructure.database.dao.ObligationDao
 import com.griff.keeper.infrastructure.database.dao.ReminderEventDao
 import com.griff.keeper.infrastructure.database.dao.SubscriptionDao
@@ -39,4 +40,8 @@ internal object DatabaseModule {
     @Provides
     fun provideReminderEventDao(database: GriffDatabase): ReminderEventDao =
         database.reminderEventDao()
+
+    @Provides
+    fun provideBackupOperationDao(database: GriffDatabase): BackupOperationDao =
+        database.backupOperationDao()
 }

@@ -71,6 +71,8 @@ fun SubscriptionDetailsRoute(
     onNavigateUp: () -> Unit,
     onEdit: (String) -> Unit,
     onDeleted: (UiMessage) -> Unit,
+    pendingMessage: UiMessage? = null,
+    onPendingMessageShown: () -> Unit = {},
     viewModel: SubscriptionDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -102,6 +104,8 @@ fun SubscriptionDetailsRoute(
         onManagementUrlOpenFailed = viewModel::onManagementUrlOpenFailed,
         onRemindersEnabledChange = viewModel::onRemindersEnabledChange,
         onMessageShown = viewModel::onMessageShown,
+        pendingMessage = pendingMessage,
+        onPendingMessageShown = onPendingMessageShown,
     )
 }
 
@@ -117,14 +121,26 @@ internal fun SubscriptionDetailsScreen(
     onManagementUrlOpenFailed: () -> Unit,
     onRemindersEnabledChange: (Boolean) -> Unit,
     onMessageShown: () -> Unit,
+    pendingMessage: UiMessage? = null,
+    onPendingMessageShown: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val message = state.message?.resolve()
+    // Feedback from a screen that has already closed - typically the edit form, which pops back to
+    // here - so this is where it gets shown.
+    val externalMessage = pendingMessage?.resolve()
 
     LaunchedEffect(message) {
         if (message != null) {
             snackbarHostState.showMessage(message)
             onMessageShown()
+        }
+    }
+
+    LaunchedEffect(externalMessage) {
+        if (externalMessage != null) {
+            snackbarHostState.showMessage(externalMessage)
+            onPendingMessageShown()
         }
     }
 

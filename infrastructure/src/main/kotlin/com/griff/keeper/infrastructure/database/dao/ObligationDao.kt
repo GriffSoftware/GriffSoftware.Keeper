@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.griff.keeper.infrastructure.database.entity.ObligationEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -33,4 +34,15 @@ interface ObligationDao {
 
     @Query("DELETE FROM obligations WHERE id = :id")
     suspend fun deleteById(id: String)
+
+    /** Bulk write used by a backup import, see [SubscriptionDao.upsertAll]. */
+    @Upsert
+    suspend fun upsertAll(obligations: List<ObligationEntity>)
+
+    /** Wipes the table for a REPLACE import. Never called outside a transaction. */
+    @Query("DELETE FROM obligations")
+    suspend fun deleteAll()
+
+    @Query("SELECT COUNT(*) FROM obligations")
+    suspend fun count(): Int
 }

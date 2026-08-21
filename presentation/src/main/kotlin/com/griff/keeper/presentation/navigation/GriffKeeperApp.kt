@@ -7,10 +7,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -21,7 +19,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import com.griff.keeper.presentation.common.UiMessage
+import com.griff.keeper.presentation.common.TransientMessages
+import com.griff.keeper.presentation.datatransfer.DataTransferRoute
 import com.griff.keeper.presentation.details.SubscriptionDetailsRoute
 import com.griff.keeper.presentation.drawer.AppDrawerContent
 import com.griff.keeper.presentation.drawer.AppDrawerViewModel
@@ -52,8 +51,10 @@ fun GriffKeeperApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
 
-    var pendingSubscriptionMessage by remember { mutableStateOf<UiMessage?>(null) }
-    var pendingObligationsMessage by remember { mutableStateOf<UiMessage?>(null) }
+    // Confirmations for records live longer than the screens that cause them: a form closes itself
+    // and a details screen disappears when its record is deleted, so the message follows the user to
+    // wherever they land instead of being lost with the screen that produced it.
+    val messages = remember { TransientMessages() }
 
     // The intent the activity started with is consumed by NavHost itself; these are the ones that
     // arrive later, when a reminder is tapped while the app is already open.
@@ -89,8 +90,8 @@ fun GriffKeeperApp(
                         navController.navigate(SubscriptionDetailsRoute(id))
                     },
                     onAddSubscription = { navController.navigate(AddSubscriptionRoute) },
-                    pendingMessage = pendingSubscriptionMessage,
-                    onPendingMessageShown = { pendingSubscriptionMessage = null },
+                    pendingMessage = messages.pending,
+                    onPendingMessageShown = messages::consume,
                 )
             }
 
@@ -101,8 +102,8 @@ fun GriffKeeperApp(
                         navController.navigate(ObligationDetailsRoute(id))
                     },
                     onAddObligation = { navController.navigate(AddObligationRoute) },
-                    pendingMessage = pendingObligationsMessage,
-                    onPendingMessageShown = { pendingObligationsMessage = null },
+                    pendingMessage = messages.pending,
+                    onPendingMessageShown = messages::consume,
                 )
             }
 
@@ -122,6 +123,10 @@ fun GriffKeeperApp(
                 )
             }
 
+            composable<DataTransferRoute> {
+                DataTransferRoute(onOpenDrawer = openDrawer)
+            }
+
             composable<SubscriptionDetailsRoute>(
                 // Tapping a reminder opens the record itself; navigation rebuilds the stack up to
                 // the start destination, so Back lands on the subscriptions list rather than
@@ -134,21 +139,29 @@ fun GriffKeeperApp(
                 SubscriptionDetailsRoute(
                     onNavigateUp = { navController.popBackStack() },
                     onEdit = { navController.navigate(EditSubscriptionRoute(route.subscriptionId)) },
-                    onDeleted = { message -> pendingSubscriptionMessage = message },
+                    onDeleted = messages::show,
+                    pendingMessage = messages.pending,
+                    onPendingMessageShown = messages::consume,
                 )
             }
 
             composable<AddSubscriptionRoute> {
                 SubscriptionFormRoute(
                     onNavigateUp = { navController.popBackStack() },
-                    onSaved = { navController.popBackStack() },
+                    onSaved = { _, message ->
+                        messages.show(message)
+                        navController.popBackStack()
+                    },
                 )
             }
 
             composable<EditSubscriptionRoute> {
                 SubscriptionFormRoute(
                     onNavigateUp = { navController.popBackStack() },
-                    onSaved = { navController.popBackStack() },
+                    onSaved = { _, message ->
+                        messages.show(message)
+                        navController.popBackStack()
+                    },
                 )
             }
 
@@ -161,21 +174,29 @@ fun GriffKeeperApp(
                 ObligationDetailsRoute(
                     onNavigateUp = { navController.popBackStack() },
                     onEdit = { navController.navigate(EditObligationRoute(route.obligationId)) },
-                    onDeleted = { message -> pendingObligationsMessage = message },
+                    onDeleted = messages::show,
+                    pendingMessage = messages.pending,
+                    onPendingMessageShown = messages::consume,
                 )
             }
 
             composable<AddObligationRoute> {
                 ObligationFormRoute(
                     onNavigateUp = { navController.popBackStack() },
-                    onSaved = { navController.popBackStack() },
+                    onSaved = { _, message ->
+                        messages.show(message)
+                        navController.popBackStack()
+                    },
                 )
             }
 
             composable<EditObligationRoute> {
                 ObligationFormRoute(
                     onNavigateUp = { navController.popBackStack() },
-                    onSaved = { navController.popBackStack() },
+                    onSaved = { _, message ->
+                        messages.show(message)
+                        navController.popBackStack()
+                    },
                 )
             }
         }
@@ -188,6 +209,7 @@ private fun NavHostController.navigateToDrawerDestination(destination: DrawerDes
         DrawerDestination.OBLIGATIONS -> ObligationsRoute
         DrawerDestination.STATISTICS -> StatisticsRoute
         DrawerDestination.REMINDERS -> RemindersRoute
+        DrawerDestination.DATA_TRANSFER -> DataTransferRoute
     }
     navigate(route) {
         popUpTo(SubscriptionRoute) { inclusive = destination == DrawerDestination.SUBSCRIPTIONS }
@@ -199,6 +221,7 @@ private fun NavDestination?.toDrawerDestination(): DrawerDestination = when {
     this?.hasRoute<ObligationsRoute>() == true -> DrawerDestination.OBLIGATIONS
     this?.hasRoute<StatisticsRoute>() == true -> DrawerDestination.STATISTICS
     this?.hasRoute<RemindersRoute>() == true -> DrawerDestination.REMINDERS
+    this?.hasRoute<DataTransferRoute>() == true -> DrawerDestination.DATA_TRANSFER
     else -> DrawerDestination.SUBSCRIPTIONS
 }
 
@@ -206,4 +229,5 @@ private fun NavDestination?.isDrawerDestination(): Boolean =
     this?.hasRoute<SubscriptionRoute>() == true ||
         this?.hasRoute<ObligationsRoute>() == true ||
         this?.hasRoute<StatisticsRoute>() == true ||
-        this?.hasRoute<RemindersRoute>() == true
+        this?.hasRoute<RemindersRoute>() == true ||
+        this?.hasRoute<DataTransferRoute>() == true

@@ -42,6 +42,7 @@ import com.griff.keeper.domain.model.ProviderCategory
 import com.griff.keeper.domain.validation.SubscriptionField
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.Labels
+import com.griff.keeper.presentation.common.UiMessage
 import com.griff.keeper.presentation.common.component.CategoryOption
 import com.griff.keeper.presentation.common.component.CategorySelector
 import com.griff.keeper.presentation.common.component.DateField
@@ -59,7 +60,7 @@ import com.griff.keeper.presentation.theme.ThemePreviews
 @Composable
 fun SubscriptionFormRoute(
     onNavigateUp: () -> Unit,
-    onSaved: (String) -> Unit,
+    onSaved: (String, UiMessage) -> Unit,
     viewModel: SubscriptionFormViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -67,7 +68,7 @@ fun SubscriptionFormRoute(
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is SubscriptionFormEvent.Saved -> onSaved(event.subscriptionId)
+                is SubscriptionFormEvent.Saved -> onSaved(event.subscriptionId, event.message)
             }
         }
     }

@@ -20,6 +20,9 @@ data object StatisticsRoute
 data object RemindersRoute
 
 @Serializable
+data object DataTransferRoute
+
+@Serializable
 data class SubscriptionDetailsRoute(val subscriptionId: String)
 
 @Serializable

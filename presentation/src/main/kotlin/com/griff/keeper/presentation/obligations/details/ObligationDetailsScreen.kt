@@ -75,6 +75,8 @@ fun ObligationDetailsRoute(
     onNavigateUp: () -> Unit,
     onEdit: (String) -> Unit,
     onDeleted: (UiMessage) -> Unit,
+    pendingMessage: UiMessage? = null,
+    onPendingMessageShown: () -> Unit = {},
     viewModel: ObligationDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -105,6 +107,8 @@ fun ObligationDetailsRoute(
         onDeleteDismiss = viewModel::onDeleteDismiss,
         onRemindersEnabledChange = viewModel::onRemindersEnabledChange,
         onMessageShown = viewModel::onMessageShown,
+        pendingMessage = pendingMessage,
+        onPendingMessageShown = onPendingMessageShown,
     )
 }
 
@@ -119,14 +123,26 @@ internal fun ObligationDetailsScreen(
     onDeleteDismiss: () -> Unit,
     onRemindersEnabledChange: (Boolean) -> Unit,
     onMessageShown: () -> Unit,
+    pendingMessage: UiMessage? = null,
+    onPendingMessageShown: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val message = state.message?.resolve()
+    // Feedback from a screen that has already closed - typically the edit form, which pops back to
+    // here - so this is where it gets shown.
+    val externalMessage = pendingMessage?.resolve()
 
     LaunchedEffect(message) {
         if (message != null) {
             snackbarHostState.showMessage(message)
             onMessageShown()
+        }
+    }
+
+    LaunchedEffect(externalMessage) {
+        if (externalMessage != null) {
+            snackbarHostState.showMessage(externalMessage)
+            onPendingMessageShown()
         }
     }
 

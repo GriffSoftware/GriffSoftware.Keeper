@@ -45,6 +45,7 @@ import com.griff.keeper.domain.model.PaymentStatus
 import com.griff.keeper.domain.validation.ObligationField
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.Labels
+import com.griff.keeper.presentation.common.UiMessage
 import com.griff.keeper.presentation.common.component.CategoryOption
 import com.griff.keeper.presentation.common.component.CategorySelector
 import com.griff.keeper.presentation.common.component.DateField
@@ -63,7 +64,7 @@ import java.time.LocalDate
 @Composable
 fun ObligationFormRoute(
     onNavigateUp: () -> Unit,
-    onSaved: (String) -> Unit,
+    onSaved: (String, UiMessage) -> Unit,
     viewModel: ObligationFormViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -71,7 +72,7 @@ fun ObligationFormRoute(
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is ObligationFormEvent.Saved -> onSaved(event.obligationId)
+                is ObligationFormEvent.Saved -> onSaved(event.obligationId, event.message)
             }
         }
     }

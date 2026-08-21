@@ -56,7 +56,7 @@
     <string name="delete_dialog_title">Usunąć subskrypcję?</string>
     <string name="delete_dialog_message">Czy na pewno chcesz usunąć %1$s? Tej operacji nie można cofnąć.</string>
     <string name="delete_dialog_confirm">Usuń</string>
-    <string name="delete_success">Usunięto subskrypcję %1$s</string>
+    <string name="delete_success">Subskrypcja „%1$s” została usunięta.</string>
 
     <!-- Subscription form -->
     <string name="form_title_add">Dodaj subskrypcję</string>
@@ -153,7 +153,7 @@
     <string name="obligation_details_not_provided">Nie podano</string>
     <string name="obligation_delete_dialog_title">Usunąć pozycję?</string>
     <string name="obligation_delete_dialog_message">Czy na pewno chcesz usunąć „%1$s”? Tej operacji nie można cofnąć.</string>
-    <string name="obligation_delete_success">Usunięto pozycję „%1$s”</string>
+    <string name="obligation_delete_success">Pozycja „%1$s” została usunięta.</string>
 
     <!-- Obligation form -->
     <string name="obligation_form_title_add">Dodaj ubezpieczenie lub opłatę</string>
@@ -422,4 +422,154 @@
         <item quantity="many">%1$d subskrypcji bez daty odnowienia (%2$s / mies.)</item>
         <item quantity="other">%1$d subskrypcji bez daty odnowienia (%2$s / mies.)</item>
     </plurals>
+    <!-- Import / Export -->
+    <string name="drawer_data_transfer">Import / Export</string>
+    <string name="data_transfer_title">Import / Export</string>
+
+    <string name="data_transfer_intro_title">Twoje dane</string>
+    <string name="data_transfer_intro_description">Wszystkie dane aplikacji są przechowywane lokalnie na tym urządzeniu.\n\nUtwórz szyfrowaną kopię zapasową, aby móc przenieść je na inne urządzenie.</string>
+
+    <string name="data_transfer_export_title">Eksportuj kopię</string>
+    <string name="data_transfer_export_description">Zapisz zaszyfrowany backup do wybranego pliku.</string>
+    <string name="data_transfer_share_title">Wyślij kopię</string>
+    <string name="data_transfer_share_description">Utwórz backup i udostępnij go przez aplikację pocztową.</string>
+    <string name="data_transfer_import_title">Importuj kopię</string>
+    <string name="data_transfer_import_description">Odtwórz dane z wcześniej utworzonego backupu.</string>
+    <string name="data_transfer_picker_hint">Plik wskażesz za pomocą systemowego menedżera dokumentów — aplikacja nie potrzebuje dostępu do pozostałych plików na urządzeniu.</string>
+
+    <string name="data_transfer_security_title">Szyfrowane kopie</string>
+    <string name="data_transfer_security_description">Kopie zapasowe Griff są szyfrowane. Do ich odtworzenia wymagane jest hasło ustawione podczas eksportu.</string>
+    <string name="data_transfer_locality_title">Twoje dane pozostają lokalne</string>
+    <string name="data_transfer_locality_description">Griff nie przesyła kopii na własny serwer. To Ty decydujesz, gdzie zapiszesz lub udostępnisz plik.</string>
+
+    <!-- Password dialogs -->
+    <string name="data_transfer_password_title">Zabezpiecz kopię</string>
+    <string name="data_transfer_password_description">Backup zawiera informacje o Twoich subskrypcjach, opłatach i terminach.\n\nUstaw hasło potrzebne do odtworzenia danych na innym urządzeniu.</string>
+    <string name="data_transfer_password_label">Hasło</string>
+    <string name="data_transfer_password_confirm_label">Powtórz hasło</string>
+    <string name="data_transfer_password_show">Pokaż hasło</string>
+    <string name="data_transfer_password_hide">Ukryj hasło</string>
+    <string name="data_transfer_password_warning">Zapamiętaj hasło. Bez niego nie będzie możliwe odtworzenie zaszyfrowanej kopii.</string>
+    <string name="data_transfer_password_create">Utwórz kopię</string>
+    <string name="data_transfer_password_error_too_short">Hasło musi mieć co najmniej %1$d znaków</string>
+    <string name="data_transfer_password_error_mismatch">Hasła nie są identyczne</string>
+    <string name="data_transfer_password_error_confirm_empty">Powtórz hasło</string>
+    <string name="data_transfer_password_error_empty">Podaj hasło</string>
+
+    <string name="data_transfer_share_recipient_label">Adres e-mail</string>
+    <string name="data_transfer_share_recipient_hint">Opcjonalnie — podpowiedź dla aplikacji pocztowej</string>
+    <string name="data_transfer_share_recipient_invalid">Podaj poprawny adres e-mail</string>
+    <string name="data_transfer_share_action">Utwórz i udostępnij</string>
+
+    <!-- Import password -->
+    <string name="data_transfer_import_password_title">Otwórz kopię</string>
+    <string name="data_transfer_import_password_description">Podaj hasło ustawione podczas tworzenia tej kopii zapasowej.</string>
+    <string name="data_transfer_import_password_action">Otwórz</string>
+    <string name="data_transfer_import_wrong_password">Nie udało się otworzyć kopii. Sprawdź hasło i upewnij się, że wybrany plik jest poprawną kopią Griff.</string>
+
+    <!-- Import preview -->
+    <string name="data_transfer_preview_title">Kopia zapasowa</string>
+    <string name="data_transfer_preview_created_label">Utworzona</string>
+    <string name="data_transfer_preview_app_version_label">Wersja aplikacji</string>
+    <string name="data_transfer_preview_contents_label">Zawartość</string>
+    <string name="data_transfer_preview_settings">ustawienia przypomnień i aplikacji</string>
+    <string name="data_transfer_preview_duplicates">Wykryto %1$d możliwe duplikaty — pozycje o tej samej nazwie, ale innym identyfikatorze. Nie zostaną scalone automatycznie.</string>
+    <string name="data_transfer_preview_local_data">Na tym urządzeniu istnieją już dane. Jak chcesz zaimportować kopię?</string>
+    <string name="data_transfer_preview_merge">Scal dane</string>
+    <string name="data_transfer_preview_replace">Zastąp obecne dane</string>
+    <string name="data_transfer_preview_restore">Odtwórz dane</string>
+    <string name="data_transfer_preview_restore_question">Zaimportować %1$d rekordów?</string>
+
+    <!-- Replace confirmation -->
+    <string name="data_transfer_replace_title">Zastąpić wszystkie dane?</string>
+    <string name="data_transfer_replace_message">Obecne subskrypcje, ubezpieczenia, opłaty i przenośne ustawienia zostaną usunięte i zastąpione danymi z kopii.\n\nTej operacji nie można cofnąć.</string>
+    <string name="data_transfer_replace_confirm">Zastąp dane</string>
+    <string name="data_transfer_replace_backup_hint">Zanim zastąpisz dane, możesz najpierw utworzyć kopię obecnych danych.</string>
+
+    <!-- Offline warning -->
+    <string name="data_transfer_offline_title">Brak połączenia z internetem</string>
+    <string name="data_transfer_offline_message">Kopia została utworzona, ale wiadomość może nie zostać wysłana, dopóki urządzenie nie odzyska połączenia.</string>
+    <string name="data_transfer_offline_confirm">Otwórz aplikację pocztową</string>
+
+    <!-- No share target -->
+    <string name="data_transfer_no_share_target_title">Nie znaleziono aplikacji pocztowej</string>
+    <string name="data_transfer_no_share_target_message">Nie znaleziono aplikacji, która może wysłać kopię. Możesz zapisać backup lokalnie i wysłać go ręcznie.</string>
+    <string name="data_transfer_no_share_target_action">Zapisz do pliku</string>
+    <string name="data_transfer_no_share_target_dismiss">Zamknij</string>
+
+    <!-- E-mail content -->
+    <string name="data_transfer_email_subject">Griff — zaszyfrowana kopia zapasowa</string>
+    <string name="data_transfer_email_body">W załączniku znajduje się zaszyfrowana kopia danych Griff.\n\nDo jej odtworzenia wymagane jest hasło ustawione podczas eksportu.</string>
+    <string name="data_transfer_email_chooser_title">Wyślij kopię zapasową</string>
+
+    <!-- Progress -->
+    <string name="data_transfer_progress_exporting">Tworzenie kopii zapasowej…</string>
+    <string name="data_transfer_progress_reading">Odczytywanie kopii…</string>
+    <string name="data_transfer_progress_validating">Sprawdzanie danych…</string>
+    <string name="data_transfer_progress_importing">Odtwarzanie danych…</string>
+
+    <!-- Feedback -->
+    <string name="data_transfer_export_success">Kopia zapasowa została utworzona.</string>
+    <string name="data_transfer_import_merge_success">Dane zostały pomyślnie scalone.</string>
+    <string name="data_transfer_import_replace_success">Kopia zapasowa została przywrócona.</string>
+    <string name="data_transfer_error_export_failed">Nie udało się utworzyć kopii zapasowej.</string>
+    <string name="data_transfer_error_import_failed">Nie udało się zaimportować danych.</string>
+    <string name="data_transfer_error_invalid_file">Wybrany plik nie jest kopią zapasową Griff.</string>
+    <string name="data_transfer_error_corrupted">Plik kopii zapasowej jest uszkodzony lub niekompletny.</string>
+    <string name="data_transfer_error_newer_version">Ta kopia została utworzona przez nowszą wersję Griff. Zaktualizuj aplikację i spróbuj ponownie.</string>
+    <string name="data_transfer_error_no_space_export">Brak wystarczającej ilości miejsca, aby utworzyć kopię zapasową.</string>
+    <string name="data_transfer_error_no_space_import">Brak miejsca potrzebnego do odtworzenia kopii.</string>
+
+    <!-- History -->
+    <string name="data_transfer_history_title">Ostatnie operacje</string>
+    <string name="data_transfer_history_export">Eksport</string>
+    <string name="data_transfer_history_import">Import</string>
+    <string name="data_transfer_history_mode_merge">Scalanie</string>
+    <string name="data_transfer_history_mode_replace">Zastąpienie danych</string>
+    <string name="data_transfer_history_timestamp">%1$s • %2$s</string>
+    <string name="data_transfer_history_success">Zakończono pomyślnie</string>
+    <string name="data_transfer_history_empty_title">Brak historii</string>
+    <string name="data_transfer_history_empty_description">Nie utworzono jeszcze żadnej kopii zapasowej ani nie importowano danych.</string>
+    <string name="data_transfer_history_no_records">Brak rekordów</string>
+    <string name="data_transfer_history_error_invalid_file">Plik nie jest kopią zapasową Griff</string>
+    <string name="data_transfer_history_error_unreadable">Nie udało się odczytać kopii</string>
+    <string name="data_transfer_history_error_unsupported_version">Nieobsługiwana wersja kopii</string>
+    <string name="data_transfer_history_error_validation">Kopia zawiera nieprawidłowe dane</string>
+    <string name="data_transfer_history_error_no_space">Brak miejsca na urządzeniu</string>
+    <string name="data_transfer_history_error_io">Błąd odczytu lub zapisu pliku</string>
+    <string name="data_transfer_history_error_unknown">Operacja nie została ukończona</string>
+
+    <plurals name="data_transfer_count_subscriptions">
+        <item quantity="one">%1$d subskrypcja</item>
+        <item quantity="few">%1$d subskrypcje</item>
+        <item quantity="many">%1$d subskrypcji</item>
+        <item quantity="other">%1$d subskrypcji</item>
+    </plurals>
+
+    <plurals name="data_transfer_count_obligations">
+        <item quantity="one">%1$d ubezpieczenie i opłata</item>
+        <item quantity="few">%1$d ubezpieczenia i opłaty</item>
+        <item quantity="many">%1$d ubezpieczeń i opłat</item>
+        <item quantity="other">%1$d ubezpieczeń i opłat</item>
+    </plurals>
+
+    <plurals name="data_transfer_count_obligations_short">
+        <item quantity="one">%1$d opłata</item>
+        <item quantity="few">%1$d opłaty</item>
+        <item quantity="many">%1$d opłat</item>
+        <item quantity="other">%1$d opłat</item>
+    </plurals>
+
+    <plurals name="data_transfer_count_records">
+        <item quantity="one">%1$d rekord</item>
+        <item quantity="few">%1$d rekordy</item>
+        <item quantity="many">%1$d rekordów</item>
+        <item quantity="other">%1$d rekordów</item>
+    </plurals>
+
+    <!-- Transient feedback for the record screens -->
+    <string name="subscription_added">Subskrypcja została dodana.</string>
+    <string name="subscription_updated">Subskrypcja została zaktualizowana.</string>
+    <string name="obligation_added">Pozycja została dodana.</string>
+    <string name="obligation_updated">Zmiany zostały zapisane.</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The single directory the provider may serve.
+
+    Scoped to one subdirectory of the app's private cache, not to the cache root: the provider should
+    only ever be able to hand out a file this feature deliberately staged there, never anything else
+    the app happens to have cached.
+-->
+<paths>
+    <cache-path
+        name="backups"
+        path="backups/" />
+</paths>

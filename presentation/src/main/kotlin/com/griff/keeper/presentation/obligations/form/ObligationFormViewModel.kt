@@ -37,7 +37,16 @@ import kotlinx.coroutines.launch
 
 /** One-off signals of the obligation add/edit form. */
 sealed interface ObligationFormEvent {
-    data class Saved(val obligationId: String) : ObligationFormEvent
+    /**
+     * The record was written and the form is done.
+     *
+     * Carries the confirmation for the same reason as on the subscription form: the screen that
+     * caused it closes itself, so the message has to travel to the one the user lands on.
+     */
+    data class Saved(
+        val obligationId: String,
+        val message: UiMessage,
+    ) : ObligationFormEvent
 }
 
 /**
@@ -122,7 +131,21 @@ class ObligationFormViewModel @Inject constructor(
                     }
                 }
             }
-                .onSuccess { savedId -> _events.tryEmit(ObligationFormEvent.Saved(savedId)) }
+                .onSuccess { savedId ->
+                    _events.tryEmit(
+                        ObligationFormEvent.Saved(
+                            obligationId = savedId,
+                            message = UiMessage(
+                                textRes = if (editedId == null) {
+                                    R.string.obligation_added
+                                } else {
+                                    R.string.obligation_updated
+                                },
+                                severity = MessageSeverity.SUCCESS,
+                            ),
+                        ),
+                    )
+                }
                 .onFailure { throwable ->
                     if (throwable is CancellationException) throw throwable
                     _uiState.update {
