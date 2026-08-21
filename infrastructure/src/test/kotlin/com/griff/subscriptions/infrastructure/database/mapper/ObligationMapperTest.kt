@@ -33,6 +33,15 @@ class ObligationMapperTest {
         assertEquals(LocalDate.of(2027, 3, 11).toEpochDay(), entity.validUntilEpochDay)
         assertNull(entity.dueDateEpochDay)
         assertEquals("Polisa PZU nr ABC123", entity.notes)
+        assertEquals(true, entity.remindersEnabled)
+    }
+
+    @Test
+    fun `the reminder switch survives a round trip in both positions`() {
+        val off = obligation.copy(remindersEnabled = false)
+
+        assertEquals(false, ObligationMapper.toEntity(off).remindersEnabled)
+        assertEquals(off, ObligationMapper.toDomain(ObligationMapper.toEntity(off)))
     }
 
     @Test

@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.griff.subscriptions.infrastructure.database.DatabaseMigrations
 import com.griff.subscriptions.infrastructure.database.GriffDatabase
 import com.griff.subscriptions.infrastructure.database.dao.ObligationDao
+import com.griff.subscriptions.infrastructure.database.dao.ReminderEventDao
 import com.griff.subscriptions.infrastructure.database.dao.SubscriptionDao
 import dagger.Module
 import dagger.Provides
@@ -34,4 +35,8 @@ internal object DatabaseModule {
 
     @Provides
     fun provideObligationDao(database: GriffDatabase): ObligationDao = database.obligationDao()
+
+    @Provides
+    fun provideReminderEventDao(database: GriffDatabase): ReminderEventDao =
+        database.reminderEventDao()
 }

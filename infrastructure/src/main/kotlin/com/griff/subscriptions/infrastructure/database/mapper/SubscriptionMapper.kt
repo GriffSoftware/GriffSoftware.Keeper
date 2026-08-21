@@ -26,6 +26,7 @@ internal object SubscriptionMapper {
         billingPeriod = BillingPeriod.valueOf(entity.billingPeriod),
         managementUrl = entity.managementUrl?.let(ManagementUrl::ofOrNull),
         nextBillingDate = entity.nextBillingDateEpochDay?.let(LocalDate::ofEpochDay),
+        remindersEnabled = entity.remindersEnabled,
         createdAt = Instant.ofEpochMilli(entity.createdAtEpochMillis),
         updatedAt = Instant.ofEpochMilli(entity.updatedAtEpochMillis),
     )
@@ -40,6 +41,7 @@ internal object SubscriptionMapper {
         billingPeriod = subscription.billingPeriod.name,
         managementUrl = subscription.managementUrl?.value,
         nextBillingDateEpochDay = subscription.nextBillingDate?.toEpochDay(),
+        remindersEnabled = subscription.remindersEnabled,
         createdAtEpochMillis = subscription.createdAt.toEpochMilli(),
         updatedAtEpochMillis = subscription.updatedAt.toEpochMilli(),
     )

@@ -64,6 +64,7 @@ object ObligationInputValidator {
                 dueDate = input.dueDate,
                 validUntil = input.validUntil,
                 notes = trimmedNotes.ifEmpty { null },
+                remindersEnabled = input.remindersEnabled,
             ),
         )
     }

@@ -49,6 +49,7 @@ class SubscriptionInputValidatorTest {
                 billingPeriod = BillingPeriod.MONTHLY,
                 managementUrl = "nope",
                 nextBillingDate = null,
+                remindersEnabled = true,
             ),
         )
 
@@ -104,6 +105,7 @@ class SubscriptionInputValidatorTest {
         billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
         managementUrl: String = "",
         nextBillingDate: LocalDate? = null,
+        remindersEnabled: Boolean = true,
     ) = SubscriptionInput(
         providerId = providerId,
         name = name,
@@ -112,5 +114,6 @@ class SubscriptionInputValidatorTest {
         billingPeriod = billingPeriod,
         managementUrl = managementUrl,
         nextBillingDate = nextBillingDate,
+        remindersEnabled = remindersEnabled,
     )
 }

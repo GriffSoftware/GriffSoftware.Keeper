@@ -30,6 +30,8 @@ data class SubscriptionFormUiState(
     val billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
     val nextBillingDate: LocalDate? = null,
     val managementUrl: String = "",
+    /** New subscriptions opt in; the global switch, not this flag, is what silences everything. */
+    val remindersEnabled: Boolean = true,
     /** Field to error message resource; only fields the user should see an error for. */
     val fieldErrors: Map<SubscriptionField, Int> = emptyMap(),
     val isSaveEnabled: Boolean = false,

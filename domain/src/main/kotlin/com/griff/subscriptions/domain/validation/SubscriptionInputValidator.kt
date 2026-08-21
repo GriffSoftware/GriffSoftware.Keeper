@@ -64,6 +64,7 @@ object SubscriptionInputValidator {
                 billingPeriod = input.billingPeriod,
                 managementUrl = managementUrl,
                 nextBillingDate = input.nextBillingDate,
+                remindersEnabled = input.remindersEnabled,
             ),
         )
     }

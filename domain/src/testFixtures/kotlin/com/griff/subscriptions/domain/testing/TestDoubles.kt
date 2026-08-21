@@ -17,8 +17,15 @@ import com.griff.subscriptions.domain.model.ProviderId
 import com.griff.subscriptions.domain.model.Subscription
 import com.griff.subscriptions.domain.model.SubscriptionId
 import com.griff.subscriptions.domain.model.SubscriptionName
+import com.griff.subscriptions.domain.reminder.NotificationAvailability
+import com.griff.subscriptions.domain.reminder.ReminderEventStore
+import com.griff.subscriptions.domain.reminder.ReminderNotification
+import com.griff.subscriptions.domain.reminder.ReminderPublisher
+import com.griff.subscriptions.domain.reminder.ReminderScheduler
+import com.griff.subscriptions.domain.reminder.ReminderSettings
 import com.griff.subscriptions.domain.repository.ObligationRepository
 import com.griff.subscriptions.domain.repository.ProviderCatalog
+import com.griff.subscriptions.domain.repository.ReminderSettingsRepository
 import com.griff.subscriptions.domain.repository.SubscriptionRepository
 import com.griff.subscriptions.domain.time.ClockProvider
 import java.time.Instant
@@ -195,6 +202,7 @@ fun testSubscription(
     billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
     nextBillingDate: LocalDate? = null,
     managementUrl: String? = null,
+    remindersEnabled: Boolean = true,
     createdAt: Instant = Instant.parse("2026-01-01T00:00:00Z"),
 ): Subscription = Subscription(
     id = SubscriptionId(id),
@@ -206,6 +214,7 @@ fun testSubscription(
     billingPeriod = billingPeriod,
     managementUrl = managementUrl?.let(ManagementUrl::ofOrNull),
     nextBillingDate = nextBillingDate,
+    remindersEnabled = remindersEnabled,
     createdAt = createdAt,
     updatedAt = createdAt,
 )
@@ -219,6 +228,7 @@ fun testObligation(
     dueDate: LocalDate? = null,
     validUntil: LocalDate? = LocalDate.of(2027, 3, 11),
     notes: String? = null,
+    remindersEnabled: Boolean = true,
     createdAt: Instant = Instant.parse("2026-01-01T00:00:00Z"),
 ): Obligation = Obligation(
     id = ObligationId(id),
@@ -230,6 +240,74 @@ fun testObligation(
     dueDate = dueDate,
     validUntil = validUntil,
     notes = notes,
+    remindersEnabled = remindersEnabled,
     createdAt = createdAt,
     updatedAt = createdAt,
 )
+
+/** In-memory [ReminderSettingsRepository]; the global switch is the only stored preference. */
+class FakeReminderSettingsRepository(
+    initial: ReminderSettings = ReminderSettings.Default,
+) : ReminderSettingsRepository {
+
+    private val state = MutableStateFlow(initial)
+
+    override fun observe(): Flow<ReminderSettings> = state
+
+    override suspend fun current(): ReminderSettings = state.value
+
+    override suspend fun setGlobalEnabled(enabled: Boolean) {
+        state.value = state.value.copy(globalEnabled = enabled)
+    }
+}
+
+/** In-memory deduplication ledger, with the same "record once" semantics as the real table. */
+class FakeReminderEventStore(initial: Set<String> = emptySet()) : ReminderEventStore {
+
+    private val state = MutableStateFlow(initial)
+
+    val keys: Set<String> get() = state.value
+
+    override fun observeDeliveredKeys(): Flow<Set<String>> = state
+
+    override suspend fun deliveredKeys(): Set<String> = state.value
+
+    override suspend fun markDelivered(key: String, sentAt: Instant) {
+        sentTimes[key] = sentAt
+        state.value = state.value + key
+    }
+
+    override suspend fun deleteSentBefore(threshold: Instant) {
+        val expired = sentTimes.filterValues { it < threshold }.keys
+        expired.forEach(sentTimes::remove)
+        state.value = state.value - expired
+    }
+
+    private val sentTimes = mutableMapOf<String, Instant>()
+}
+
+/** Records what would have been shown, so tests can assert on reminders without Android. */
+class RecordingReminderPublisher : ReminderPublisher {
+
+    private val _published = mutableListOf<ReminderNotification>()
+    val published: List<ReminderNotification> get() = _published
+
+    override suspend fun publish(notification: ReminderNotification) {
+        _published += notification
+    }
+}
+
+/** Stands in for the Android notification permission. */
+class FakeNotificationAvailability(var enabled: Boolean = true) : NotificationAvailability {
+    override fun areNotificationsEnabled(): Boolean = enabled
+}
+
+/** Counts scheduling requests, which have to be idempotent. */
+class RecordingReminderScheduler : ReminderScheduler {
+    var scheduleCount: Int = 0
+        private set
+
+    override fun ensureScheduled() {
+        scheduleCount++
+    }
+}

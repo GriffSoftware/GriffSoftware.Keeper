@@ -26,6 +26,7 @@ class AddSubscriptionUseCase @Inject constructor(
             billingPeriod = input.billingPeriod,
             managementUrl = input.managementUrl,
             nextBillingDate = input.nextBillingDate,
+            remindersEnabled = input.remindersEnabled,
             createdAt = now,
             updatedAt = now,
         )

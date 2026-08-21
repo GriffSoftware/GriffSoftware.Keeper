@@ -28,6 +28,7 @@ class UpdateSubscriptionUseCase @Inject constructor(
                 billingPeriod = input.billingPeriod,
                 managementUrl = input.managementUrl,
                 nextBillingDate = input.nextBillingDate,
+                remindersEnabled = input.remindersEnabled,
                 updatedAt = clock.now(),
             ),
         )

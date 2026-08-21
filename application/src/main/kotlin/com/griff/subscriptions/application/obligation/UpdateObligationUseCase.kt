@@ -28,6 +28,7 @@ class UpdateObligationUseCase @Inject constructor(
                 dueDate = input.dueDate,
                 validUntil = input.validUntil,
                 notes = input.notes,
+                remindersEnabled = input.remindersEnabled,
                 updatedAt = clock.now(),
             ),
         )

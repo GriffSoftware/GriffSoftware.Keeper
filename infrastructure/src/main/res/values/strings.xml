@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
+    <!-- Notification channel -->
+    <string name="reminder_channel_name">Przypomnienia</string>
+    <string name="reminder_channel_description">Powiadomienia o zbliżających się płatnościach, odnowieniach i kończących się ubezpieczeniach.</string>
+
+    <!-- Insurance expiry -->
+    <string name="reminder_insurance_subtext_tomorrow">Ubezpieczenie wygasa jutro</string>
+    <string name="reminder_insurance_text">Polisa jest ważna do %1$s.</string>
+    <string name="reminder_insurance_text_tomorrow">Polisa kończy się %1$s.</string>
+
+    <!-- Payment due -->
+    <string name="reminder_payment_subtext_tomorrow">Termin płatności jutro</string>
+    <string name="reminder_payment_text">%1$s • termin %2$s</string>
+    <string name="reminder_payment_text_tomorrow">Do zapłaty: %1$s</string>
+
+    <!-- Subscription renewal -->
+    <string name="reminder_renewal_subtext_tomorrow">Odnowienie jutro</string>
+    <string name="reminder_renewal_text">%1$s • następna płatność %2$s</string>
+    <string name="reminder_renewal_text_yearly">%1$s • subskrypcja roczna</string>
+    <string name="reminder_renewal_text_tomorrow">Planowana płatność: %1$s</string>
+
+    <!-- Currency symbol is brand/locale data rather than translatable UI copy. -->
+    <string name="reminder_currency_pln" translatable="false">zł</string>
+
+    <plurals name="reminder_insurance_subtext_in_days">
+        <item quantity="one">Ubezpieczenie wygasa za %1$d dzień</item>
+        <item quantity="few">Ubezpieczenie wygasa za %1$d dni</item>
+        <item quantity="many">Ubezpieczenie wygasa za %1$d dni</item>
+        <item quantity="other">Ubezpieczenie wygasa za %1$d dni</item>
+    </plurals>
+
+    <plurals name="reminder_payment_subtext_in_days">
+        <item quantity="one">Termin płatności za %1$d dzień</item>
+        <item quantity="few">Termin płatności za %1$d dni</item>
+        <item quantity="many">Termin płatności za %1$d dni</item>
+        <item quantity="other">Termin płatności za %1$d dni</item>
+    </plurals>
+
+    <plurals name="reminder_renewal_subtext_in_days">
+        <item quantity="one">Odnowienie za %1$d dzień</item>
+        <item quantity="few">Odnowienie za %1$d dni</item>
+        <item quantity="many">Odnowienie za %1$d dni</item>
+        <item quantity="other">Odnowienie za %1$d dni</item>
+    </plurals>
+</resources>

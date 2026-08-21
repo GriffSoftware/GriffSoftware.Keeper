@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.InsertChartOutlined
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,6 +39,7 @@ enum class DrawerDestination {
     SUBSCRIPTIONS,
     OBLIGATIONS,
     STATISTICS,
+    REMINDERS,
 }
 
 /**
@@ -116,6 +118,15 @@ internal fun AppDrawerContent(
                 icon = { Icon(Icons.Default.InsertChartOutlined, contentDescription = null) },
                 selected = selected == DrawerDestination.STATISTICS,
                 onClick = { onSelect(DrawerDestination.STATISTICS) },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                shape = itemShape,
+                colors = itemColors,
+            )
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.drawer_reminders)) },
+                icon = { Icon(Icons.Default.Notifications, contentDescription = null) },
+                selected = selected == DrawerDestination.REMINDERS,
+                onClick = { onSelect(DrawerDestination.REMINDERS) },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 shape = itemShape,
                 colors = itemColors,

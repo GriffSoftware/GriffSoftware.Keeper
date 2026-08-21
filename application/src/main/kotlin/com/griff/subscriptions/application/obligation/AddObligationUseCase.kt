@@ -26,6 +26,7 @@ class AddObligationUseCase @Inject constructor(
             dueDate = input.dueDate,
             validUntil = input.validUntil,
             notes = input.notes,
+            remindersEnabled = input.remindersEnabled,
             createdAt = now,
             updatedAt = now,
         )

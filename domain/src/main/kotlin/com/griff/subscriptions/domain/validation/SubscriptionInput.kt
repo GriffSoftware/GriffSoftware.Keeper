@@ -19,6 +19,7 @@ data class SubscriptionInput(
     val billingPeriod: BillingPeriod,
     val managementUrl: String,
     val nextBillingDate: LocalDate?,
+    val remindersEnabled: Boolean,
 )
 
 /**
@@ -36,6 +37,7 @@ data class ValidatedSubscriptionInput internal constructor(
     val billingPeriod: BillingPeriod,
     val managementUrl: ManagementUrl?,
     val nextBillingDate: LocalDate?,
+    val remindersEnabled: Boolean,
 )
 
 enum class SubscriptionField {

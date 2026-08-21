@@ -3,8 +3,10 @@ package com.griff.subscriptions.infrastructure.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.griff.subscriptions.infrastructure.database.dao.ObligationDao
+import com.griff.subscriptions.infrastructure.database.dao.ReminderEventDao
 import com.griff.subscriptions.infrastructure.database.dao.SubscriptionDao
 import com.griff.subscriptions.infrastructure.database.entity.ObligationEntity
+import com.griff.subscriptions.infrastructure.database.entity.ReminderEventEntity
 import com.griff.subscriptions.infrastructure.database.entity.SubscriptionEntity
 
 /**
@@ -18,7 +20,7 @@ import com.griff.subscriptions.infrastructure.database.entity.SubscriptionEntity
  * loss.
  */
 @Database(
-    entities = [SubscriptionEntity::class, ObligationEntity::class],
+    entities = [SubscriptionEntity::class, ObligationEntity::class, ReminderEventEntity::class],
     version = GriffDatabase.VERSION,
     exportSchema = true,
 )
@@ -28,8 +30,10 @@ abstract class GriffDatabase : RoomDatabase() {
 
     abstract fun obligationDao(): ObligationDao
 
+    abstract fun reminderEventDao(): ReminderEventDao
+
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
         const val NAME = "subscriptions.db"
     }
 }

@@ -32,6 +32,8 @@ android {
 
     buildFeatures {
         compose = true
+        // The reminders screen hides its notification test tool behind BuildConfig.DEBUG.
+        buildConfig = true
     }
 }
 
@@ -42,6 +44,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
+    // Needed for the notification permission request launcher on the reminders screen.
+    implementation(libs.androidx.activity.compose)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)

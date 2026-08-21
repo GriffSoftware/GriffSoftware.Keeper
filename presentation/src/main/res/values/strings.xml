@@ -284,6 +284,124 @@
         <item>grudniu</item>
     </string-array>
 
+    <!-- Reminders -->
+    <string name="drawer_reminders">Przypomnienia</string>
+    <string name="reminders_title">Przypomnienia</string>
+    <string name="reminders_global_title">Przypomnienia</string>
+    <string name="reminders_global_description">Otrzymuj informacje o zbliżających się terminach.</string>
+    <string name="reminders_global_switch_description">Włącz lub wyłącz wszystkie przypomnienia</string>
+    <string name="reminders_off_title">Przypomnienia są wyłączone</string>
+    <string name="reminders_off_description">Nie otrzymasz powiadomień o nadchodzących płatnościach i terminach. Poniższa lista pokazuje, co włączy się po ponownym uruchomieniu przypomnień.</string>
+    <string name="reminders_off_action">Włącz przypomnienia</string>
+
+    <string name="reminders_permission_title">Powiadomienia systemowe są wyłączone</string>
+    <string name="reminders_permission_description">Przypomnienia są skonfigurowane, ale Android nie pozwala aplikacji ich wyświetlać.</string>
+    <string name="reminders_permission_grant">Włącz powiadomienia</string>
+    <string name="reminders_permission_settings">Otwórz ustawienia</string>
+    <string name="reminders_permission_rationale_title">Pozwól na powiadomienia</string>
+    <string name="reminders_permission_rationale_message">Przypomnienia działają wyłącznie na tym urządzeniu. Powiadomimy Cię o kończącym się ubezpieczeniu, zbliżającym się terminie płatności i odnowieniu subskrypcji.</string>
+    <string name="reminders_permission_rationale_confirm">Dalej</string>
+    <string name="reminders_permission_denied">Bez zgody na powiadomienia przypomnienia nie zostaną wyświetlone.</string>
+
+    <string name="reminders_upcoming_title">Nadchodzące</string>
+    <string name="reminders_inactive_title">Bez aktywnego terminu</string>
+    <string name="reminders_filter_subscriptions">Subskrypcje</string>
+    <string name="reminders_filter_insurance">Ubezpieczenia</string>
+    <string name="reminders_filter_fees">Opłaty</string>
+
+    <string name="reminders_empty_title">Brak nadchodzących przypomnień</string>
+    <string name="reminders_empty_description">Dodaj datę odnowienia, termin płatności lub datę ważności, aby zobaczyć tutaj nadchodzące przypomnienia.</string>
+    <string name="reminders_empty_filtered_title">Brak przypomnień w tym filtrze</string>
+    <string name="reminders_empty_filtered_description">Zmień filtr, aby zobaczyć pozostałe przypomnienia.</string>
+
+    <string name="reminders_target_expiry">Ważne do</string>
+    <string name="reminders_target_due">Termin płatności</string>
+    <string name="reminders_target_renewal">Odnowienie</string>
+    <string name="reminders_next_label">Najbliższe przypomnienie</string>
+    <string name="reminders_next_value">%1$s • %2$s</string>
+    <string name="reminders_when_today">dzisiaj</string>
+    <string name="reminders_when_tomorrow">jutro</string>
+    <string name="reminders_relative_today">Dzisiaj</string>
+    <string name="reminders_relative_tomorrow">Jutro</string>
+    <string name="reminders_status_disabled">Przypomnienia wyłączone</string>
+    <string name="reminders_status_no_date">Brak terminu</string>
+    <string name="reminders_status_passed">Termin minął</string>
+
+    <string name="reminders_defaults_title">Domyślne przypomnienia</string>
+    <string name="reminders_defaults_description">Reguły stosowane automatycznie do nowych i istniejących pozycji.</string>
+    <string name="reminders_defaults_insurance">Ubezpieczenia</string>
+    <string name="reminders_defaults_payments">Opłaty</string>
+    <string name="reminders_defaults_subscriptions">Subskrypcje</string>
+    <!-- Quoted so aapt keeps the surrounding spaces: "30 dni • 7 dni • 1 dzień". -->
+    <string name="reminders_defaults_separator">" • "</string>
+
+    <string name="reminders_debug_title">Narzędzia deweloperskie</string>
+    <string name="reminders_debug_send">Wyślij testowe powiadomienie</string>
+    <string name="reminders_debug_sent">Wysłano testowe powiadomienie</string>
+
+    <!-- Reminder section on the details screens -->
+    <string name="reminder_section_title">Przypomnienia</string>
+    <string name="reminder_section_switch_description">Przypomnienia dla tej pozycji</string>
+    <string name="reminder_section_next_label">Najbliższe przypomnienie</string>
+    <string name="reminder_section_off_subscription">Przypomnienia dla tej subskrypcji są wyłączone.</string>
+    <string name="reminder_section_off_obligation">Przypomnienia dla tej pozycji są wyłączone.</string>
+    <string name="reminder_section_no_billing_date">Brak daty następnego odnowienia.</string>
+    <string name="reminder_section_no_billing_date_hint">Dodaj datę odnowienia, aby otrzymywać przypomnienia.</string>
+    <string name="reminder_section_no_date_obligation">Brak terminu, o którym moglibyśmy przypomnieć.</string>
+    <string name="reminder_section_no_date_obligation_hint">Dodaj datę ważności lub termin płatności, aby otrzymywać przypomnienia.</string>
+    <string name="reminder_section_paid">Ta opłata jest oznaczona jako zapłacona, więc nie przypominamy już o terminie.</string>
+    <string name="reminder_section_passed">Wszystkie przypomnienia dla tego terminu już minęły.</string>
+    <string name="reminder_section_global_off">Przypomnienia są wyłączone globalnie — ta pozycja odezwie się po ich włączeniu.</string>
+    <string name="reminder_section_system_off">Android blokuje powiadomienia aplikacji, więc to przypomnienie nie zostanie wyświetlone.</string>
+
+    <!-- Reminders in the add/edit forms -->
+    <string name="form_reminders_label">Przypomnienia</string>
+    <string name="form_reminders_hint_subscription">Powiadomimy Cię 7 i 1 dzień wcześniej.</string>
+    <string name="form_reminders_hint_insurance">Powiadomimy Cię 30, 7 i 1 dzień wcześniej.</string>
+    <string name="form_reminders_hint_payment">Powiadomimy Cię 7 i 1 dzień wcześniej.</string>
+
+    <plurals name="reminders_relative_days">
+        <item quantity="one">Za %1$d dzień</item>
+        <item quantity="few">Za %1$d dni</item>
+        <item quantity="many">Za %1$d dni</item>
+        <item quantity="other">Za %1$d dni</item>
+    </plurals>
+
+    <plurals name="reminders_when_days">
+        <item quantity="one">za %1$d dzień</item>
+        <item quantity="few">za %1$d dni</item>
+        <item quantity="many">za %1$d dni</item>
+        <item quantity="other">za %1$d dni</item>
+    </plurals>
+
+    <plurals name="reminders_days_before">
+        <item quantity="one">%1$d dzień</item>
+        <item quantity="few">%1$d dni</item>
+        <item quantity="many">%1$d dni</item>
+        <item quantity="other">%1$d dni</item>
+    </plurals>
+
+    <plurals name="reminder_section_days_before_expiry">
+        <item quantity="one">%1$d dzień przed wygaśnięciem</item>
+        <item quantity="few">%1$d dni przed wygaśnięciem</item>
+        <item quantity="many">%1$d dni przed wygaśnięciem</item>
+        <item quantity="other">%1$d dni przed wygaśnięciem</item>
+    </plurals>
+
+    <plurals name="reminder_section_days_before_due">
+        <item quantity="one">%1$d dzień przed terminem</item>
+        <item quantity="few">%1$d dni przed terminem</item>
+        <item quantity="many">%1$d dni przed terminem</item>
+        <item quantity="other">%1$d dni przed terminem</item>
+    </plurals>
+
+    <plurals name="reminder_section_days_before_renewal">
+        <item quantity="one">%1$d dzień przed odnowieniem</item>
+        <item quantity="few">%1$d dni przed odnowieniem</item>
+        <item quantity="many">%1$d dni przed odnowieniem</item>
+        <item quantity="other">%1$d dni przed odnowieniem</item>
+    </plurals>
+
     <plurals name="deadline_expires_in">
         <item quantity="one">Wygasa za %1$d dzień</item>
         <item quantity="few">Wygasa za %1$d dni</item>

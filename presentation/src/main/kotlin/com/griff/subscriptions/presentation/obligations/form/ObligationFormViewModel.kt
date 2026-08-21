@@ -99,6 +99,8 @@ class ObligationFormViewModel @Inject constructor(
 
     fun onNotesChange(value: String) = update { it.copy(notes = value) }
 
+    fun onRemindersEnabledChange(value: Boolean) = update { it.copy(remindersEnabled = value) }
+
     fun onMessageShown() = _uiState.update { it.copy(message = null) }
 
     fun onSave() {
@@ -167,6 +169,7 @@ class ObligationFormViewModel @Inject constructor(
         dueDate = obligation.dueDate,
         validUntil = obligation.validUntil,
         notes = obligation.notes ?: "",
+        remindersEnabled = obligation.remindersEnabled,
     )
 
     private fun currentInput(): ObligationInput = with(_uiState.value) {
@@ -181,6 +184,7 @@ class ObligationFormViewModel @Inject constructor(
             dueDate = dueDate,
             validUntil = validUntil,
             notes = notes,
+            remindersEnabled = remindersEnabled,
         )
     }
 

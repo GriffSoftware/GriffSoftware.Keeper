@@ -24,6 +24,7 @@ fun validatedInput(
     billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
     managementUrl: String = "",
     nextBillingDate: LocalDate? = null,
+    remindersEnabled: Boolean = true,
 ): ValidatedSubscriptionInput {
     val validation = SubscriptionInputValidator.validate(
         SubscriptionInput(
@@ -34,6 +35,7 @@ fun validatedInput(
             billingPeriod = billingPeriod,
             managementUrl = managementUrl,
             nextBillingDate = nextBillingDate,
+            remindersEnabled = remindersEnabled,
         ),
     )
     return (validation as SubscriptionInputValidation.Valid).input
@@ -49,6 +51,7 @@ fun validatedObligationInput(
     dueDate: LocalDate? = null,
     validUntil: LocalDate? = LocalDate.of(2027, 3, 11),
     notes: String = "",
+    remindersEnabled: Boolean = true,
 ): ValidatedObligationInput {
     val validation = ObligationInputValidator.validate(
         ObligationInput(
@@ -60,6 +63,7 @@ fun validatedObligationInput(
             dueDate = dueDate,
             validUntil = validUntil,
             notes = notes,
+            remindersEnabled = remindersEnabled,
         ),
     )
     return (validation as ObligationInputValidation.Valid).input

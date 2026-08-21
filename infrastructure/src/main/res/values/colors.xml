@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Griff Blue, the same accent the light theme uses for its primary color. Android tints the
+        small icon and the app name in the notification header with it, which is the one place the
+        brand can still be recognised after the system has flattened everything else.
+    -->
+    <color name="griff_notification_accent">#2563EB</color>
+</resources>

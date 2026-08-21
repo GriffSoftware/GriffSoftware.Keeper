@@ -25,6 +25,7 @@ internal object ObligationMapper {
         dueDate = entity.dueDateEpochDay?.let(LocalDate::ofEpochDay),
         validUntil = entity.validUntilEpochDay?.let(LocalDate::ofEpochDay),
         notes = entity.notes,
+        remindersEnabled = entity.remindersEnabled,
         createdAt = Instant.ofEpochMilli(entity.createdAtEpochMillis),
         updatedAt = Instant.ofEpochMilli(entity.updatedAtEpochMillis),
     )
@@ -40,6 +41,7 @@ internal object ObligationMapper {
         dueDateEpochDay = obligation.dueDate?.toEpochDay(),
         validUntilEpochDay = obligation.validUntil?.toEpochDay(),
         notes = obligation.notes,
+        remindersEnabled = obligation.remindersEnabled,
         createdAtEpochMillis = obligation.createdAt.toEpochMilli(),
         updatedAtEpochMillis = obligation.updatedAt.toEpochMilli(),
     )

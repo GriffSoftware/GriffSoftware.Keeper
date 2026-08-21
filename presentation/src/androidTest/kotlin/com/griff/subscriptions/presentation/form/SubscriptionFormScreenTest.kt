@@ -106,6 +106,7 @@ class SubscriptionFormScreenTest {
                     onBillingPeriodChange = {},
                     onNextBillingDateChange = {},
                     onManagementUrlChange = {},
+                    onRemindersEnabledChange = {},
                     onSave = {},
                     onMessageShown = {},
                 )

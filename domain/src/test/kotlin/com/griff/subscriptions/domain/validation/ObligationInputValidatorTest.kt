@@ -92,6 +92,7 @@ class ObligationInputValidatorTest {
                 dueDate = null,
                 validUntil = null,
                 notes = "x".repeat(ObligationInputValidator.MAX_NOTES_LENGTH + 1),
+                remindersEnabled = true,
             ),
         )
 
@@ -147,6 +148,7 @@ class ObligationInputValidatorTest {
         dueDate: LocalDate? = null,
         validUntil: LocalDate? = LocalDate.of(2027, 3, 11),
         notes: String = "",
+        remindersEnabled: Boolean = true,
     ) = ObligationInput(
         name = name,
         category = category,
@@ -156,5 +158,6 @@ class ObligationInputValidatorTest {
         dueDate = dueDate,
         validUntil = validUntil,
         notes = notes,
+        remindersEnabled = remindersEnabled,
     )
 }

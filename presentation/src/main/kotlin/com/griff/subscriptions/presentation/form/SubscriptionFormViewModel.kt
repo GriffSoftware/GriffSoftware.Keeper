@@ -156,6 +156,11 @@ class SubscriptionFormViewModel @Inject constructor(
         revalidate()
     }
 
+    fun onRemindersEnabledChange(value: Boolean) {
+        _uiState.update { it.copy(remindersEnabled = value) }
+        revalidate()
+    }
+
     fun onMessageShown() = _uiState.update { it.copy(message = null) }
 
     fun onSave() {
@@ -240,6 +245,7 @@ class SubscriptionFormViewModel @Inject constructor(
             billingPeriod = subscription.billingPeriod,
             nextBillingDate = subscription.nextBillingDate,
             managementUrl = subscription.managementUrl?.value ?: "",
+            remindersEnabled = subscription.remindersEnabled,
         )
     }
 
@@ -253,6 +259,7 @@ class SubscriptionFormViewModel @Inject constructor(
             billingPeriod = billingPeriod,
             managementUrl = managementUrl,
             nextBillingDate = nextBillingDate,
+            remindersEnabled = remindersEnabled,
         )
     }
 

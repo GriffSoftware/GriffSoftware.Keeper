@@ -21,6 +21,13 @@ data class Subscription(
     val billingPeriod: BillingPeriod,
     val managementUrl: ManagementUrl?,
     val nextBillingDate: LocalDate?,
+    /**
+     * Whether this subscription may produce reminders.
+     *
+     * Independent of the app-wide switch: turning reminders off globally must not rewrite the
+     * records, so that turning them back on restores exactly what the user had chosen per service.
+     */
+    val remindersEnabled: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant,
 ) {

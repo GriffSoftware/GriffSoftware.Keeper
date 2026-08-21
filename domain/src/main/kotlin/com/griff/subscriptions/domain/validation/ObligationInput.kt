@@ -18,6 +18,7 @@ data class ObligationInput(
     val dueDate: LocalDate?,
     val validUntil: LocalDate?,
     val notes: String,
+    val remindersEnabled: Boolean,
 )
 
 /**
@@ -35,6 +36,7 @@ data class ValidatedObligationInput internal constructor(
     val dueDate: LocalDate?,
     val validUntil: LocalDate?,
     val notes: String?,
+    val remindersEnabled: Boolean,
 )
 
 enum class ObligationField {

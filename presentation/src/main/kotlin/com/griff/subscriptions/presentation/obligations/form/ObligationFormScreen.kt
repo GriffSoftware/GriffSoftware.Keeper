@@ -50,6 +50,7 @@ import com.griff.subscriptions.presentation.common.component.CategorySelector
 import com.griff.subscriptions.presentation.common.component.DateField
 import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
 import com.griff.subscriptions.presentation.common.component.ObligationGlyph
+import com.griff.subscriptions.presentation.common.component.RemindersToggleField
 import com.griff.subscriptions.presentation.common.component.accentSegmentedButtonColors
 import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.symbol
@@ -86,6 +87,7 @@ fun ObligationFormRoute(
         onDueDateChange = viewModel::onDueDateChange,
         onValidUntilChange = viewModel::onValidUntilChange,
         onNotesChange = viewModel::onNotesChange,
+        onRemindersEnabledChange = viewModel::onRemindersEnabledChange,
         onSave = viewModel::onSave,
         onMessageShown = viewModel::onMessageShown,
     )
@@ -104,6 +106,7 @@ internal fun ObligationFormScreen(
     onDueDateChange: (LocalDate?) -> Unit,
     onValidUntilChange: (LocalDate?) -> Unit,
     onNotesChange: (String) -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
     onSave: () -> Unit,
     onMessageShown: () -> Unit,
 ) {
@@ -160,6 +163,7 @@ internal fun ObligationFormScreen(
                     onDueDateChange = onDueDateChange,
                     onValidUntilChange = onValidUntilChange,
                     onNotesChange = onNotesChange,
+                    onRemindersEnabledChange = onRemindersEnabledChange,
                     onSave = onSave,
                 )
             }
@@ -187,6 +191,7 @@ private fun ObligationFormContent(
     onDueDateChange: (LocalDate?) -> Unit,
     onValidUntilChange: (LocalDate?) -> Unit,
     onNotesChange: (String) -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
     onSave: () -> Unit,
 ) {
     Column(
@@ -303,6 +308,21 @@ private fun ObligationFormContent(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
         )
 
+        // The hint states the schedule the chosen category will actually use, which is the only
+        // reminder detail worth carrying in a form about the record itself.
+        RemindersToggleField(
+            enabled = state.remindersEnabled,
+            hint = stringResource(
+                if (state.category?.expires == true) {
+                    R.string.form_reminders_hint_insurance
+                } else {
+                    R.string.form_reminders_hint_payment
+                },
+            ),
+            isEditable = state.isEditable,
+            onEnabledChange = onRemindersEnabledChange,
+        )
+
         Button(
             onClick = onSave,
             enabled = state.isSaveEnabled && !state.isSaving,
@@ -387,6 +407,7 @@ private fun ObligationFormScreenPreview() {
             onDueDateChange = {},
             onValidUntilChange = {},
             onNotesChange = {},
+            onRemindersEnabledChange = {},
             onSave = {},
             onMessageShown = {},
         )

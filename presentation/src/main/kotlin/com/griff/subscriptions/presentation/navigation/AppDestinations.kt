@@ -17,6 +17,9 @@ data object ObligationsRoute
 data object StatisticsRoute
 
 @Serializable
+data object RemindersRoute
+
+@Serializable
 data class SubscriptionDetailsRoute(val subscriptionId: String)
 
 @Serializable

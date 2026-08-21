@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.griff.subscriptions.application.provider.GetProviderUseCase
+import com.griff.subscriptions.application.reminder.ObserveSubscriptionReminderUseCase
+import com.griff.subscriptions.application.reminder.SetSubscriptionRemindersEnabledUseCase
 import com.griff.subscriptions.application.subscription.DeleteSubscriptionUseCase
 import com.griff.subscriptions.application.subscription.GetSubscriptionCategoryUseCase
 import com.griff.subscriptions.application.subscription.ObserveSubscriptionUseCase
@@ -39,6 +41,8 @@ class SubscriptionDetailsViewModel @Inject constructor(
     private val deleteSubscription: DeleteSubscriptionUseCase,
     private val getProvider: GetProviderUseCase,
     private val getCategory: GetSubscriptionCategoryUseCase,
+    observeReminder: ObserveSubscriptionReminderUseCase,
+    private val setRemindersEnabled: SetSubscriptionRemindersEnabledUseCase,
 ) : ViewModel() {
 
     private val subscriptionId = SubscriptionId(
@@ -72,6 +76,34 @@ class SubscriptionDetailsViewModel @Inject constructor(
                     }
                 }
                 .collect { subscription -> onSubscriptionLoaded(subscription) }
+        }
+
+        viewModelScope.launch {
+            observeReminder(subscriptionId)
+                .catch { throwable -> if (throwable is CancellationException) throw throwable }
+                .collect { reminders -> _uiState.update { it.copy(reminders = reminders) } }
+        }
+    }
+
+    /**
+     * Writes the record's own switch and nothing else.
+     *
+     * The app-wide switch stays where it is: turning reminders off for one subscription is a
+     * statement about that subscription, not about the feature.
+     */
+    fun onRemindersEnabledChange(enabled: Boolean) {
+        viewModelScope.launch {
+            setRemindersEnabled(subscriptionId, enabled).onFailure { throwable ->
+                if (throwable is CancellationException) throw throwable
+                _uiState.update {
+                    it.copy(
+                        message = UiMessage(
+                            R.string.error_save_failed,
+                            severity = MessageSeverity.ERROR,
+                        ),
+                    )
+                }
+            }
         }
     }
 

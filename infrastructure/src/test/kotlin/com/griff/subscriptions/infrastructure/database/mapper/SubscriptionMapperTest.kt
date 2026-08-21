@@ -27,6 +27,7 @@ class SubscriptionMapperTest {
         billingPeriod = BillingPeriod.MONTHLY,
         managementUrl = ManagementUrl.ofOrNull("https://spotify.com/account"),
         nextBillingDate = LocalDate.of(2026, 9, 14),
+        remindersEnabled = true,
         createdAt = Instant.parse("2026-08-20T09:00:00Z"),
         updatedAt = Instant.parse("2026-08-21T10:30:00Z"),
     )
@@ -42,6 +43,7 @@ class SubscriptionMapperTest {
         assertEquals("MONTHLY", entity.billingPeriod)
         assertEquals("https://spotify.com/account", entity.managementUrl)
         assertEquals(LocalDate.of(2026, 9, 14).toEpochDay(), entity.nextBillingDateEpochDay)
+        assertEquals(true, entity.remindersEnabled)
         assertEquals(subscription.createdAt.toEpochMilli(), entity.createdAtEpochMillis)
         assertEquals(subscription.updatedAt.toEpochMilli(), entity.updatedAtEpochMillis)
     }

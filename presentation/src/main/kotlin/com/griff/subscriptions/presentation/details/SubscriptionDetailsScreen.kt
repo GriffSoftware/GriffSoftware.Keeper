@@ -46,6 +46,7 @@ import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
 import com.griff.subscriptions.presentation.common.Tags
 import com.griff.subscriptions.presentation.common.MessageSeverity
+import com.griff.subscriptions.application.reminder.ItemReminderState
 import com.griff.subscriptions.presentation.common.UiMessage
 import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
 import com.griff.subscriptions.presentation.common.component.ProviderLogo
@@ -58,6 +59,8 @@ import com.griff.subscriptions.presentation.common.resolve
 import com.griff.subscriptions.presentation.common.component.DeleteConfirmationDialog
 import com.griff.subscriptions.presentation.common.component.DetailsInfoRow
 import com.griff.subscriptions.presentation.common.component.TagChip
+import com.griff.subscriptions.presentation.reminders.components.ItemReminderSection
+import com.griff.subscriptions.presentation.reminders.rememberSystemNotificationsEnabled
 import com.griff.subscriptions.presentation.theme.GriffThemePreview
 import com.griff.subscriptions.presentation.theme.Spacing
 import com.griff.subscriptions.presentation.theme.ThemePreviews
@@ -97,6 +100,7 @@ fun SubscriptionDetailsRoute(
         onDeleteConfirm = viewModel::onDeleteConfirm,
         onDeleteDismiss = viewModel::onDeleteDismiss,
         onManagementUrlOpenFailed = viewModel::onManagementUrlOpenFailed,
+        onRemindersEnabledChange = viewModel::onRemindersEnabledChange,
         onMessageShown = viewModel::onMessageShown,
     )
 }
@@ -111,6 +115,7 @@ internal fun SubscriptionDetailsScreen(
     onDeleteConfirm: () -> Unit,
     onDeleteDismiss: () -> Unit,
     onManagementUrlOpenFailed: () -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
     onMessageShown: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -169,9 +174,11 @@ internal fun SubscriptionDetailsScreen(
 
                 state.details != null -> SubscriptionDetailsContent(
                     details = state.details,
+                    reminders = state.reminders,
                     isDeleting = state.isDeleting,
                     onDeleteRequest = onDeleteRequest,
                     onManagementUrlOpenFailed = onManagementUrlOpenFailed,
+                    onRemindersEnabledChange = onRemindersEnabledChange,
                 )
             }
         }
@@ -191,11 +198,14 @@ internal fun SubscriptionDetailsScreen(
 @Composable
 private fun SubscriptionDetailsContent(
     details: SubscriptionDetails,
+    reminders: ItemReminderState?,
     isDeleting: Boolean,
     onDeleteRequest: () -> Unit,
     onManagementUrlOpenFailed: () -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
 ) {
     val openUrl = rememberUrlOpener()
+    val systemNotificationsEnabled = rememberSystemNotificationsEnabled()
 
     Column(
         modifier = Modifier
@@ -261,6 +271,19 @@ private fun SubscriptionDetailsContent(
                     ),
                 )
             }
+        }
+
+        if (reminders != null) {
+            ItemReminderSection(
+                state = reminders,
+                systemNotificationsEnabled = systemNotificationsEnabled,
+                disabledText = stringResource(R.string.reminder_section_off_subscription),
+                noDateText = stringResource(R.string.reminder_section_no_billing_date),
+                noDateHint = stringResource(R.string.reminder_section_no_billing_date_hint),
+                onEnabledChange = onRemindersEnabledChange,
+                isEditable = !isDeleting,
+                modifier = Modifier.padding(top = Spacing.Small),
+            )
         }
 
         val managementUrl = details.managementUrl
@@ -350,6 +373,7 @@ private fun SubscriptionDetailsScreenPreview() {
             onDeleteConfirm = {},
             onDeleteDismiss = {},
             onManagementUrlOpenFailed = {},
+            onRemindersEnabledChange = {},
             onMessageShown = {},
         )
     }

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.griff.subscriptions.application.obligation.DeleteObligationUseCase
 import com.griff.subscriptions.application.obligation.ObserveObligationUseCase
+import com.griff.subscriptions.application.reminder.ObserveObligationReminderUseCase
+import com.griff.subscriptions.application.reminder.SetObligationRemindersEnabledUseCase
 import com.griff.subscriptions.domain.model.Obligation
 import com.griff.subscriptions.domain.model.ObligationId
 import com.griff.subscriptions.domain.time.ClockProvider
@@ -37,6 +39,8 @@ class ObligationDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     observeObligation: ObserveObligationUseCase,
     private val deleteObligation: DeleteObligationUseCase,
+    observeReminder: ObserveObligationReminderUseCase,
+    private val setRemindersEnabled: SetObligationRemindersEnabledUseCase,
     private val clock: ClockProvider,
 ) : ViewModel() {
 
@@ -75,6 +79,29 @@ class ObligationDetailsViewModel @Inject constructor(
                         it.copy(isLoading = false, details = obligation?.toDetails())
                     }
                 }
+        }
+
+        viewModelScope.launch {
+            observeReminder(obligationId)
+                .catch { throwable -> if (throwable is CancellationException) throw throwable }
+                .collect { reminders -> _uiState.update { it.copy(reminders = reminders) } }
+        }
+    }
+
+    /** Writes the record's own switch only; see the subscription details view model. */
+    fun onRemindersEnabledChange(enabled: Boolean) {
+        viewModelScope.launch {
+            setRemindersEnabled(obligationId, enabled).onFailure { throwable ->
+                if (throwable is CancellationException) throw throwable
+                _uiState.update {
+                    it.copy(
+                        message = UiMessage(
+                            R.string.error_save_failed,
+                            severity = MessageSeverity.ERROR,
+                        ),
+                    )
+                }
+            }
         }
     }
 

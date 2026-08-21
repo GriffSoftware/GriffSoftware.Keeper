@@ -39,6 +39,12 @@ data class SubscriptionEntity(
     val managementUrl: String?,
     @ColumnInfo(name = "next_billing_date_epoch_day")
     val nextBillingDateEpochDay: Long?,
+    /**
+     * Existing rows default to `1`: a user who updates the app has never seen the switch, and the
+     * only defensible reading of that is "yes, remind me" - the same default a new record gets.
+     */
+    @ColumnInfo(name = "reminders_enabled", defaultValue = "1")
+    val remindersEnabled: Boolean,
     @ColumnInfo(name = "created_at_epoch_millis")
     val createdAtEpochMillis: Long,
     @ColumnInfo(name = "updated_at_epoch_millis")

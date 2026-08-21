@@ -26,6 +26,14 @@ data class Obligation(
     val dueDate: LocalDate?,
     val validUntil: LocalDate?,
     val notes: String?,
+    /**
+     * Whether this record may produce reminders.
+     *
+     * Independent of the app-wide switch, for the same reason as on
+     * [com.griff.subscriptions.domain.model.Subscription]: the global switch blocks delivery, it
+     * does not edit the user's per-record choices.
+     */
+    val remindersEnabled: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant,
 ) {

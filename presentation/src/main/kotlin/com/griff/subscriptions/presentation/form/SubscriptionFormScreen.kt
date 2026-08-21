@@ -46,6 +46,7 @@ import com.griff.subscriptions.presentation.common.component.CategoryOption
 import com.griff.subscriptions.presentation.common.component.CategorySelector
 import com.griff.subscriptions.presentation.common.component.DateField
 import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
+import com.griff.subscriptions.presentation.common.component.RemindersToggleField
 import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.symbol
 import com.griff.subscriptions.presentation.common.resolve
@@ -83,6 +84,7 @@ fun SubscriptionFormRoute(
         onBillingPeriodChange = viewModel::onBillingPeriodChange,
         onNextBillingDateChange = viewModel::onNextBillingDateChange,
         onManagementUrlChange = viewModel::onManagementUrlChange,
+        onRemindersEnabledChange = viewModel::onRemindersEnabledChange,
         onSave = viewModel::onSave,
         onMessageShown = viewModel::onMessageShown,
     )
@@ -102,6 +104,7 @@ internal fun SubscriptionFormScreen(
     onBillingPeriodChange: (BillingPeriod) -> Unit,
     onNextBillingDateChange: (LocalDate?) -> Unit,
     onManagementUrlChange: (String) -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
     onSave: () -> Unit,
     onMessageShown: () -> Unit,
 ) {
@@ -159,6 +162,7 @@ internal fun SubscriptionFormScreen(
                     onBillingPeriodChange = onBillingPeriodChange,
                     onNextBillingDateChange = onNextBillingDateChange,
                     onManagementUrlChange = onManagementUrlChange,
+                    onRemindersEnabledChange = onRemindersEnabledChange,
                     onSave = onSave,
                 )
             }
@@ -178,6 +182,7 @@ private fun SubscriptionFormContent(
     onBillingPeriodChange: (BillingPeriod) -> Unit,
     onNextBillingDateChange: (LocalDate?) -> Unit,
     onManagementUrlChange: (String) -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
     onSave: () -> Unit,
 ) {
     Column(
@@ -272,6 +277,13 @@ private fun SubscriptionFormContent(
             ),
         )
 
+        RemindersToggleField(
+            enabled = state.remindersEnabled,
+            hint = stringResource(R.string.form_reminders_hint_subscription),
+            isEditable = state.isEditable,
+            onEnabledChange = onRemindersEnabledChange,
+        )
+
         Button(
             onClick = onSave,
             enabled = state.isSaveEnabled && !state.isSaving,
@@ -320,6 +332,7 @@ private fun SubscriptionFormScreenPreview() {
             onBillingPeriodChange = {},
             onNextBillingDateChange = {},
             onManagementUrlChange = {},
+            onRemindersEnabledChange = {},
             onSave = {},
             onMessageShown = {},
         )

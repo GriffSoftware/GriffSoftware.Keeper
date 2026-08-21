@@ -46,6 +46,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.core.ktx)
 
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
@@ -63,6 +66,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.kotlin.test.junit)
     androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(testFixtures(project(":domain")))
     androidTestImplementation(libs.kotlinx.coroutines.test)
 }

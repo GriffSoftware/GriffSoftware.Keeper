@@ -15,11 +15,35 @@
         <activity
             android:name=".app.MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.GriffSubscriptions"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+                Reminder deep links. The scheme is private to the app - the notification sets the
+                package explicitly - and exists so the notification can name a destination without
+                the infrastructure layer having to know which activity hosts it.
+
+                One filter per host, with one attribute per data tag: a single filter listing both
+                hosts would match the cross product of every scheme and host it mentions.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="griff" />
+                <data android:host="subscription" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="griff" />
+                <data android:host="obligation" />
             </intent-filter>
         </activity>
     </application>

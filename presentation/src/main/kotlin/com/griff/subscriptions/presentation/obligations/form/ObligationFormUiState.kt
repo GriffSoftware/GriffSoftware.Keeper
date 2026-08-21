@@ -21,6 +21,8 @@ data class ObligationFormUiState(
     val dueDate: LocalDate? = null,
     val validUntil: LocalDate? = null,
     val notes: String = "",
+    /** New records opt in; the global switch, not this flag, is what silences everything. */
+    val remindersEnabled: Boolean = true,
     /** Field to error message resource; only fields the user should see an error for. */
     val fieldErrors: Map<ObligationField, Int> = emptyMap(),
     val isSaveEnabled: Boolean = false,

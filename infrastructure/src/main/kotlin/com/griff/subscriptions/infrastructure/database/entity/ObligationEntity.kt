@@ -38,6 +38,9 @@ data class ObligationEntity(
     val validUntilEpochDay: Long?,
     @ColumnInfo(name = "notes")
     val notes: String?,
+    /** Defaults to `1` for rows that predate the feature, see [SubscriptionEntity]. */
+    @ColumnInfo(name = "reminders_enabled", defaultValue = "1")
+    val remindersEnabled: Boolean,
     @ColumnInfo(name = "created_at_epoch_millis")
     val createdAtEpochMillis: Long,
     @ColumnInfo(name = "updated_at_epoch_millis")

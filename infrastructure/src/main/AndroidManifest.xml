@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Declared by the module that actually posts notifications, so the reminder feature carries its
+        own platform requirements instead of leaving them to be remembered in the app manifest.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+</manifest>

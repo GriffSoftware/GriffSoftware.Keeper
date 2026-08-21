@@ -46,6 +46,7 @@ import com.griff.subscriptions.domain.model.ObligationCategory
 import com.griff.subscriptions.domain.model.PaymentStatus
 import com.griff.subscriptions.presentation.R
 import com.griff.subscriptions.presentation.common.Labels
+import com.griff.subscriptions.application.reminder.ItemReminderState
 import com.griff.subscriptions.presentation.common.MessageSeverity
 import com.griff.subscriptions.presentation.common.Tags
 import com.griff.subscriptions.presentation.common.UiMessage
@@ -55,6 +56,8 @@ import com.griff.subscriptions.presentation.common.component.GriffSnackbarHost
 import com.griff.subscriptions.presentation.common.component.ObligationIcon
 import com.griff.subscriptions.presentation.common.component.ObligationIconDefaults
 import com.griff.subscriptions.presentation.common.component.TagChip
+import com.griff.subscriptions.presentation.reminders.components.ItemReminderSection
+import com.griff.subscriptions.presentation.reminders.rememberSystemNotificationsEnabled
 import com.griff.subscriptions.presentation.common.component.showMessage
 import com.griff.subscriptions.presentation.common.format.DateFormatter
 import com.griff.subscriptions.presentation.common.format.MoneyFormatter
@@ -100,6 +103,7 @@ fun ObligationDetailsRoute(
         onDeleteRequest = viewModel::onDeleteRequest,
         onDeleteConfirm = viewModel::onDeleteConfirm,
         onDeleteDismiss = viewModel::onDeleteDismiss,
+        onRemindersEnabledChange = viewModel::onRemindersEnabledChange,
         onMessageShown = viewModel::onMessageShown,
     )
 }
@@ -113,6 +117,7 @@ internal fun ObligationDetailsScreen(
     onDeleteRequest: () -> Unit,
     onDeleteConfirm: () -> Unit,
     onDeleteDismiss: () -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
     onMessageShown: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -173,8 +178,10 @@ internal fun ObligationDetailsScreen(
 
                 state.details != null -> ObligationDetailsContent(
                     details = state.details,
+                    reminders = state.reminders,
                     isDeleting = state.isDeleting,
                     onDeleteRequest = onDeleteRequest,
+                    onRemindersEnabledChange = onRemindersEnabledChange,
                 )
             }
         }
@@ -201,9 +208,13 @@ internal fun ObligationDetailsScreen(
 @Composable
 private fun ObligationDetailsContent(
     details: ObligationDetails,
+    reminders: ItemReminderState?,
     isDeleting: Boolean,
     onDeleteRequest: () -> Unit,
+    onRemindersEnabledChange: (Boolean) -> Unit,
 ) {
+    val systemNotificationsEnabled = rememberSystemNotificationsEnabled()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -283,6 +294,26 @@ private fun ObligationDetailsContent(
                     )
                 }
             }
+        }
+
+        if (reminders != null) {
+            ItemReminderSection(
+                state = reminders,
+                systemNotificationsEnabled = systemNotificationsEnabled,
+                disabledText = stringResource(R.string.reminder_section_off_obligation),
+                // A settled charge has no deadline left to warn about; an insurance still expires,
+                // so the same record can move between these two states as its payment status
+                // changes.
+                noDateText = if (details.paymentStatus == PaymentStatus.PAID) {
+                    stringResource(R.string.reminder_section_paid)
+                } else {
+                    stringResource(R.string.reminder_section_no_date_obligation)
+                },
+                noDateHint = stringResource(R.string.reminder_section_no_date_obligation_hint),
+                onEnabledChange = onRemindersEnabledChange,
+                isEditable = !isDeleting,
+                modifier = Modifier.padding(top = Spacing.Small),
+            )
         }
 
         OutlinedButton(
@@ -376,6 +407,7 @@ private fun ObligationDetailsScreenPreview() {
             onDeleteRequest = {},
             onDeleteConfirm = {},
             onDeleteDismiss = {},
+            onRemindersEnabledChange = {},
             onMessageShown = {},
         )
     }
