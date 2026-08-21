@@ -1,8 +1,8 @@
-# Griff Subscriptions
+# Griff Keeper
 
-Android app for keeping every private subscription (Netflix, Spotify, ChatGPT, Google Workspace,
-hosting, domains, …) in one place: what you pay, how often, when the next renewal is due, and what
-it all costs per month and per year.
+Android app for keeping every recurring private cost in one place: subscriptions (Netflix, Spotify,
+ChatGPT, Google Workspace, hosting, domains, …), insurance policies and one-off fees — what you pay,
+how often, when the next renewal or deadline is due, and what it all costs per month and per year.
 
 The first version is fully offline — everything is stored locally in Room. There is no backend, no
 account, no cloud sync and no Google Play billing integration, but the architecture is prepared for
@@ -72,7 +72,9 @@ Room Flow -> Repository -> UseCase -> ViewModel StateFlow -> Compose
 ```
 
 Screens are split into `Route` (Hilt + state collection), `Screen` (Scaffold, snackbars, dialogs)
-and `Content` (stateless layout), which keeps the Compose UI testable without Hilt.
+and `Content` (stateless layout), which keeps the Compose UI testable without Hilt. The start
+destination is `SubscriptionRoute` — the subscriptions list — named after what it shows rather than
+after its position in the graph.
 
 ## Tech stack
 
@@ -105,8 +107,11 @@ work. A real signing config has to be added before publishing.
 
 ## Data storage
 
-- Room database `subscriptions.db`, `version = 1`, `exportSchema = true`; the schema is written to
-  `infrastructure/schemas/` and should be committed with every version bump.
+- Room database `subscriptions.db`, `version = 3`, `exportSchema = true`; the schema is written to
+  `infrastructure/schemas/` and should be committed with every version bump. The file name predates
+  the rebranding and is kept on purpose: renaming it would leave an existing database behind and
+  look exactly like data loss. It is an implementation detail — nothing outside `GriffDatabase`
+  refers to it.
 - `fallbackToDestructiveMigration()` is deliberately **not** used. New versions add a `Migration` to
   `DatabaseMigrations` in `infrastructure/database/DatabaseMigrations.kt`.
 - The entity stores primitives only: amounts as `Long` minor units, dates as epoch day / epoch
@@ -157,9 +162,10 @@ work. A real signing config has to be added before publishing.
 - **Type-safe navigation.** Routes are `@Serializable` objects/classes; only ids travel between
   destinations and each screen loads its own data through use cases. Add and edit share one screen
   and one ViewModel, distinguished by the presence of the `subscriptionId` argument.
-- **Application id.** Changed from the template's `com.example.griffsubscriptions` to
-  `com.griff.subscriptions` (`com.example` cannot be published to Google Play). Debug builds use the
-  `.debug` suffix so both variants can be installed side by side.
+- **Application id.** `com.griff.keeper`, matching the product name; it replaced the earlier
+  `com.griff.subscriptions` during the rebranding to Griff Keeper, which Android treats as a
+  different app (see *Data storage* below). Debug builds use the `.debug` suffix so both variants
+  can be installed side by side.
 
 ## Tests
 
@@ -169,9 +175,9 @@ work. A real signing config has to be added before publishing.
   `testFixtures` source set of `:domain` so every layer reuses them.
 - `:infrastructure` — mapper and catalog unit tests plus instrumented tests of
   `RoomSubscriptionRepository` on a real in-memory database.
-- `:presentation` — formatter and `HomeViewModel` unit tests, and Compose UI tests for the home
-  screen (empty state, list, totals, search, row clicks) and the subscription form (save button
-  gating, validation messages, provider selection).
+- `:presentation` — formatter and `SubscriptionViewModel` unit tests, and Compose UI tests for the
+  subscriptions screen (empty state, list, totals, search, row clicks) and the subscription form
+  (save button gating, validation messages, provider selection).
 - `:app` — instrumented smoke test that starts `MainActivity` with the real Hilt graph, so a broken
   binding or navigation setup fails in CI instead of on a device.
 

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".app.GriffSubscriptionsApplication"
+        android:name=".app.GriffKeeperApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,13 +10,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GriffSubscriptions">
+        android:theme="@style/Theme.GriffKeeper">
 
         <activity
             android:name=".app.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.GriffSubscriptions"
+            android:theme="@style/Theme.GriffKeeper"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

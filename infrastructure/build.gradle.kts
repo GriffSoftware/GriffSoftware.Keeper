@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.griff.subscriptions.infrastructure"
+    namespace = "com.griff.keeper.infrastructure"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

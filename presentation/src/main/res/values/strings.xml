@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
     <!-- Global -->
-    <string name="app_display_name">Griff Subscriptions</string>
-    <string name="app_tagline">Menedżer subskrypcji</string>
+    <string name="app_display_name">Griff Keeper</string>
+    <string name="app_tagline">Subskrypcje, opłaty i przypomnienia</string>
     <string name="action_back">Wróć</string>
     <string name="action_cancel">Anuluj</string>
     <string name="amount_per_month">%1$s / mies.</string>
@@ -26,18 +26,18 @@
     <string name="billing_period_monthly_recurrence">Co miesiąc</string>
     <string name="billing_period_yearly_recurrence">Co rok</string>
 
-    <!-- Home -->
-    <string name="home_title">Subskrypcje</string>
-    <string name="home_search_placeholder">Szukaj subskrypcji</string>
-    <string name="home_empty_title">Brak subskrypcji</string>
-    <string name="home_empty_description">Dodaj pierwszą subskrypcję, aby zobaczyć swoje miesięczne wydatki.</string>
-    <string name="home_no_results_query">Żadna subskrypcja nie pasuje do zapytania „%1$s”.</string>
-    <string name="home_no_results_category">Brak subskrypcji w kategorii „%1$s”.</string>
-    <string name="home_no_results_category_and_query">Brak subskrypcji w kategorii „%1$s” dla zapytania „%2$s”.</string>
-    <string name="home_add_subscription">Dodaj subskrypcję</string>
-    <string name="home_totals_title">Łącznie</string>
-    <string name="home_totals_filtered_title">Łącznie (widoczne pozycje)</string>
-    <string name="home_item_description">%1$s, %2$s, %3$s, %4$s</string>
+    <!-- Subscriptions list -->
+    <string name="subscriptions_title">Subskrypcje</string>
+    <string name="subscriptions_search_placeholder">Szukaj subskrypcji</string>
+    <string name="subscriptions_empty_title">Brak subskrypcji</string>
+    <string name="subscriptions_empty_description">Dodaj pierwszą subskrypcję, aby zobaczyć swoje miesięczne wydatki.</string>
+    <string name="subscriptions_no_results_query">Żadna subskrypcja nie pasuje do zapytania „%1$s”.</string>
+    <string name="subscriptions_no_results_category">Brak subskrypcji w kategorii „%1$s”.</string>
+    <string name="subscriptions_no_results_category_and_query">Brak subskrypcji w kategorii „%1$s” dla zapytania „%2$s”.</string>
+    <string name="subscriptions_add">Dodaj subskrypcję</string>
+    <string name="subscriptions_totals_title">Łącznie</string>
+    <string name="subscriptions_totals_filtered_title">Łącznie (widoczne pozycje)</string>
+    <string name="subscriptions_item_description">%1$s, %2$s, %3$s, %4$s</string>
 
     <!-- Subscription details -->
     <string name="details_title">Szczegóły subskrypcji</string>
@@ -99,7 +99,7 @@
     <string name="error_open_url_failed">Nie udało się otworzyć strony zarządzania.</string>
 
     <!-- Drawer -->
-    <string name="drawer_home">Subskrypcje</string>
+    <string name="drawer_subscriptions">Subskrypcje</string>
     <string name="drawer_obligations">Ubezpieczenia i opłaty</string>
     <string name="drawer_statistics">Statystyki</string>
     <string name="drawer_version">Wersja %1$s</string>

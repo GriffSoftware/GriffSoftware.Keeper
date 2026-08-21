@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.griff.subscriptions.presentation"
+    namespace = "com.griff.keeper.presentation"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

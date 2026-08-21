@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.griff.subscriptions"
+    namespace = "com.griff.keeper"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.griff.subscriptions"
+        applicationId = "com.griff.keeper"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1

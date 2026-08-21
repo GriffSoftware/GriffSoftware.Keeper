@@ -24,7 +24,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "GriffSubscriptions"
+rootProject.name = "GriffKeeper"
 
 include(":app")
 include(":domain")
