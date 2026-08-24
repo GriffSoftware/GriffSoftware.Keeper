@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="window_background">#FAFBFD</color>
-    <!-- Center of the navy gradient - the splash window cannot paint a gradient, only a flat color. -->
-    <color name="griff_splash_navy">#16283A</color>
 </resources>

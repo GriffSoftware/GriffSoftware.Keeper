@@ -12,16 +12,4 @@
     <style name="Theme.GriffKeeper" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
     </style>
-
-    <!--
-      Cold-start (Android 12+) splash screen: a flat navy window shown before any activity code has
-      run, replaced by the Compose splash screen (see presentation/splash/SplashScreen.kt) once the
-      first frame draws. `postSplashScreenTheme` is what hands control back to the real app theme.
-    -->
-    <style name="Theme.GriffKeeper.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/griff_splash_navy</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_griff_emblem_splash_anim</item>
-        <item name="windowSplashScreenAnimationDuration">750</item>
-        <item name="postSplashScreenTheme">@style/Theme.GriffKeeper</item>
-    </style>
 </resources>
