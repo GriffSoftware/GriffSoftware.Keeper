@@ -76,6 +76,7 @@ class SubscriptionViewModel @Inject constructor(
             category = getCategory(this),
             billingPeriod = billingPeriod,
             price = price,
+            nextBillingDate = nextBillingDate,
         )
     }
 

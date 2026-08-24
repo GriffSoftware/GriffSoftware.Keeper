@@ -1,22 +1,22 @@
 package com.griff.keeper.presentation.obligations
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,8 @@ import com.griff.keeper.presentation.common.Tags
 import com.griff.keeper.presentation.common.UiMessage
 import com.griff.keeper.presentation.common.component.EmptyState
 import com.griff.keeper.presentation.common.component.FullScreenLoading
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffFab
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.SearchField
 import com.griff.keeper.presentation.common.component.TagFilterOption
@@ -108,52 +111,48 @@ internal fun ObligationsScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.obligations_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = stringResource(R.string.open_menu),
-                        )
-                    }
-                },
-            )
-        },
-        bottomBar = {
-            if (!state.isEmpty) {
-                ObligationTotalsBar(
-                    period = state.period,
-                    totals = state.totals,
-                    isNarrowed = state.isNarrowed,
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.obligations_title)) },
+                    navigationIcon = {
+                        IconButton(onClick = onOpenDrawer) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = stringResource(R.string.open_menu),
+                            )
+                        }
+                    },
                 )
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddObligation,
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
+            },
+            floatingActionButton = {
+                GriffFab(
+                    onClick = onAddObligation,
                     contentDescription = stringResource(R.string.obligations_add),
                 )
-            }
-        },
-        snackbarHost = { GriffSnackbarHost(snackbarHostState) },
-    ) { contentPadding ->
-        ObligationsContent(
-            state = state,
-            onQueryChange = onQueryChange,
-            onTagChange = onTagChange,
-            onPeriodChange = onPeriodChange,
-            onObligationClick = onObligationClick,
+            },
+        ) { contentPadding ->
+            ObligationsContent(
+                state = state,
+                onQueryChange = onQueryChange,
+                onTagChange = onTagChange,
+                onPeriodChange = onPeriodChange,
+                onObligationClick = onObligationClick,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+            )
+        }
+
+        // Anchored to the screen's own bottom edge rather than through Scaffold's snackbarHost
+        // slot, which leaves a gap above the FAB - the message is allowed to sit over the FAB for
+        // its brief few seconds on screen instead.
+        GriffSnackbarHost(
+            hostState = snackbarHostState,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
         )
     }
 }
@@ -168,6 +167,15 @@ private fun ObligationsContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
+        if (!state.isEmpty) {
+            ObligationTotalsBar(
+                period = state.period,
+                totals = state.totals,
+                isNarrowed = state.isNarrowed,
+                modifier = Modifier.padding(horizontal = Spacing.Large, vertical = Spacing.Small),
+            )
+        }
+
         SearchField(
             query = state.query,
             placeholder = stringResource(R.string.obligations_search_placeholder),
@@ -183,6 +191,7 @@ private fun ObligationsContent(
                 modifier = Modifier.padding(
                     start = Spacing.Large,
                     end = Spacing.Large,
+                    top = Spacing.Small,
                     bottom = Spacing.Small,
                 ),
             )
@@ -194,7 +203,7 @@ private fun ObligationsContent(
                     },
                     selected = state.selectedTag,
                     onSelect = onTagChange,
-                    modifier = Modifier.padding(bottom = Spacing.Small),
+                    modifier = Modifier.padding(top = Spacing.Small, bottom = Spacing.Small),
                 )
             }
         }
@@ -256,19 +265,27 @@ private fun ObligationList(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        // Room for the floating action button, which hovers above the summary bar.
-        contentPadding = PaddingValues(bottom = FabClearance),
+        contentPadding = PaddingValues(
+            start = Spacing.Large,
+            top = Spacing.Small,
+            end = Spacing.Large,
+            bottom = FabClearance,
+        ),
+        verticalArrangement = Arrangement.spacedBy(Spacing.Small),
     ) {
         items(items = state.items, key = { it.id }) { item ->
-            ObligationListItemRow(
-                item = item,
+            GriffCard(
                 modifier = Modifier.clickable { onObligationClick(item.id) },
-            )
+                contentPadding = PaddingValues(0.dp),
+            ) {
+                ObligationListItemRow(item = item)
+            }
         }
     }
 }
 
-private val FabClearance = 88.dp
+/** Room for the floating action button, which hovers above the list. */
+private val FabClearance = 76.dp
 
 @ThemePreviews
 @Composable

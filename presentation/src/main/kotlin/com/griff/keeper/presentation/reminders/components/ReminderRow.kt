@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.application.reminder.ReminderItemStatus
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.component.CountdownRing
 import com.griff.keeper.presentation.common.component.ObligationIcon
 import com.griff.keeper.presentation.common.component.ObligationIconDefaults
 import com.griff.keeper.presentation.common.component.ProviderLogo
@@ -71,17 +72,31 @@ internal fun ReminderRow(
             .clearAndSetSemantics { this.contentDescription = contentDescription },
         verticalAlignment = Alignment.Top,
     ) {
-        when {
-            row.obligationCategory != null -> ObligationIcon(
-                category = row.obligationCategory,
-                size = ObligationIconDefaults.Size,
+        val daysUntilTarget = row.daysUntilTarget
+        if (daysUntilTarget != null) {
+            CountdownRing(
+                daysRemaining = daysUntilTarget.coerceAtLeast(0L).toInt(),
+                // Normalized against a year: the source records span everything from a monthly
+                // subscription to a yearly policy, and there is no shared "period length" to divide
+                // by, so the ring reads as "how soon, on a common yearly scale" rather than as an
+                // exact fraction of any one record's own cycle.
+                progress = 1f - (daysUntilTarget.toFloat() / 365f).coerceIn(0f, 1f),
+                color = row.targetTint(),
+                size = RingSize,
             )
+        } else {
+            when {
+                row.obligationCategory != null -> ObligationIcon(
+                    category = row.obligationCategory,
+                    size = ObligationIconDefaults.Size,
+                )
 
-            else -> ProviderLogo(
-                logoKey = row.logoKey.orEmpty(),
-                name = row.title,
-                size = ProviderLogoDefaults.Size,
-            )
+                else -> ProviderLogo(
+                    logoKey = row.logoKey.orEmpty(),
+                    name = row.title,
+                    size = ProviderLogoDefaults.Size,
+                )
+            }
         }
 
         Spacer(Modifier.width(Spacing.Medium))
@@ -107,14 +122,6 @@ internal fun ReminderRow(
                     text = "$targetLabel • $targetDate",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            if (relativeTarget != null) {
-                Text(
-                    text = relativeTarget,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = row.targetTint(),
                 )
             }
 
@@ -211,3 +218,4 @@ private fun ReminderRowUi.statusText(): String? = when (status) {
 private const val URGENT_DAYS = 1L
 
 private val BellSize = 16.dp
+private val RingSize = 52.dp

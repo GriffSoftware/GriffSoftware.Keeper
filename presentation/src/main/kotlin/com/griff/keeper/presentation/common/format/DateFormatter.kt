@@ -38,6 +38,16 @@ object DateFormatter {
         DateTimeFormatter.ofPattern("LLLL yyyy", locale).format(month)
 
     /**
+     * Day and month without the year, e.g. `28 września`.
+     *
+     * For the one place a date names a moment close enough that the year is implied - the nearest
+     * upcoming renewal on the subscriptions hero card - the same way the year is left off a date
+     * that is obviously "this year" in conversation.
+     */
+    fun formatDayAndMonth(date: LocalDate, locale: Locale = Locale.getDefault()): String =
+        DateTimeFormatter.ofPattern("d MMMM", locale).format(date)
+
+    /**
      * Wall clock time of an instant, e.g. `00:43`.
      *
      * Takes the zone explicitly rather than reading the default: the caller already has one from the

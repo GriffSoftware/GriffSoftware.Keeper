@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.ContentCopy
@@ -29,14 +31,12 @@ import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -64,10 +64,13 @@ import com.griff.keeper.application.appinfo.AppVersion
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.MessageSeverity
 import com.griff.keeper.presentation.common.UiMessage
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffHeroCard
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.resolve
-import com.griff.keeper.presentation.theme.GriffTheme
+import com.griff.keeper.presentation.theme.GriffGradients
+import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.MinTouchTarget
 import com.griff.keeper.presentation.theme.Spacing
@@ -170,24 +173,34 @@ internal fun AboutScreen(
         snackbarHost = { GriffSnackbarHost(snackbarHostState) },
     ) { contentPadding ->
         // A list rather than a fixed column: the content is longer than a small phone in landscape,
-        // and longer still at the largest font scale.
+        // and longer still at the largest font scale. No contentPadding on the list itself - the
+        // header runs full-bleed to the top edge, so each section pads itself instead.
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            contentPadding = PaddingValues(
-                start = Spacing.Large,
-                end = Spacing.Large,
-                top = Spacing.Large,
-                bottom = Spacing.ExtraLarge,
-            ),
             verticalArrangement = Arrangement.spacedBy(Spacing.ExtraLarge),
         ) {
             item { AboutHeader() }
-            item { FeaturesSection() }
-            item { PrivacyCard() }
-            item { ContactSection(onEmailClick = onEmailClick, onCopyEmail = onCopyEmail) }
-            item { VersionFooter(appVersion = appVersion) }
+            item {
+                FeaturesSection(modifier = Modifier.padding(horizontal = Spacing.Large))
+            }
+            item {
+                PrivacyCard(modifier = Modifier.padding(horizontal = Spacing.Large))
+            }
+            item {
+                ContactSection(
+                    onEmailClick = onEmailClick,
+                    onCopyEmail = onCopyEmail,
+                    modifier = Modifier.padding(horizontal = Spacing.Large),
+                )
+            }
+            item {
+                VersionFooter(
+                    appVersion = appVersion,
+                    modifier = Modifier.padding(horizontal = Spacing.Large, vertical = Spacing.Small),
+                )
+            }
         }
     }
 }
@@ -195,41 +208,46 @@ internal fun AboutScreen(
 /**
  * The app's identity and what it is for, in the two sentences a user needs to recognize it.
  *
- * The existing emblem is used as is - it has a dark variant of its own, so it stays legible in both
- * themes without being tinted.
+ * The emblem sits on a white tile and always uses the navy/gold mark - the night variant is cyan
+ * and does not read against the header's navy gradient, the same reasoning as the drawer header and
+ * the splash screen.
  */
 @Composable
 private fun AboutHeader() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Spacing.Medium),
+    GriffHeroCard(
+        shape = GriffShapes.HeroTopAttached,
+        contentPadding = PaddingValues(horizontal = Spacing.Large, vertical = Spacing.Large),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Spacing.Medium),
         ) {
-            Image(
-                painter = painterResource(R.drawable.ic_griff_emblem),
-                contentDescription = stringResource(R.string.about_emblem_description),
-                modifier = Modifier.height(EmblemHeight),
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(EmblemTileCorner))
+                    .background(GriffGradients.OnAccent.copy(alpha = 0.94f))
+                    .padding(Spacing.Medium),
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_griff_emblem_on_navy),
+                    contentDescription = stringResource(R.string.about_emblem_description),
+                    modifier = Modifier.height(EmblemHeight),
+                )
+            }
             Text(
                 text = stringResource(R.string.app_display_name),
                 style = MaterialTheme.typography.headlineSmall,
+                color = GriffGradients.OnAccent,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = stringResource(R.string.about_intro),
+                style = MaterialTheme.typography.bodyMedium,
+                color = GriffGradients.OnAccent.copy(alpha = 0.88f),
                 textAlign = TextAlign.Center,
             )
         }
-        Text(
-            text = stringResource(R.string.about_intro),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
-            text = stringResource(R.string.about_intro_secondary),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }
 
@@ -241,8 +259,8 @@ private fun AboutHeader() {
  * user can take in at a glance.
  */
 @Composable
-private fun FeaturesSection() {
-    AboutSection(title = stringResource(R.string.about_features_title)) {
+private fun FeaturesSection(modifier: Modifier = Modifier) {
+    AboutSection(title = stringResource(R.string.about_features_title), modifier = modifier) {
         AboutFeature.entries.forEach { feature ->
             Row(
                 modifier = Modifier
@@ -251,12 +269,20 @@ private fun FeaturesSection() {
                 horizontalArrangement = Arrangement.spacedBy(Spacing.Medium),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    imageVector = feature.icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(FeatureIconSize),
-                )
+                Box(
+                    modifier = Modifier
+                        .size(FeatureTileSize)
+                        .clip(RoundedCornerShape(FeatureTileCorner))
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = feature.icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(FeatureIconSize),
+                    )
+                }
                 Text(
                     text = stringResource(feature.labelRes),
                     style = MaterialTheme.typography.bodyMedium,
@@ -273,18 +299,9 @@ private fun FeaturesSection() {
  * is - that would be marketing dressed up as a guarantee.
  */
 @Composable
-private fun PrivacyCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-        ),
-        border = GriffTheme.containerBorder,
-    ) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+private fun PrivacyCard(modifier: Modifier = Modifier) {
+    GriffCard(modifier = modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
@@ -320,10 +337,11 @@ private fun PrivacyCard() {
 private fun ContactSection(
     onEmailClick: () -> Unit,
     onCopyEmail: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val address = stringResource(R.string.about_contact_email)
 
-    AboutSection(title = stringResource(R.string.about_contact_title)) {
+    AboutSection(title = stringResource(R.string.about_contact_title), modifier = modifier) {
         Text(
             text = stringResource(R.string.about_contact_description),
             style = MaterialTheme.typography.bodyMedium,
@@ -374,9 +392,9 @@ private fun ContactSection(
 
 /** The real build, the same numbers the drawer shows, plus who made it. */
 @Composable
-private fun VersionFooter(appVersion: AppVersion) {
+private fun VersionFooter(appVersion: AppVersion, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
     ) {
@@ -402,13 +420,11 @@ private fun VersionFooter(appVersion: AppVersion) {
 @Composable
 private fun AboutSection(
     title: String,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+    GriffCard(modifier = modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
@@ -464,9 +480,12 @@ private fun Context.startSupportEmail(
 }
 
 /** Large enough to be the app's face on the screen, small enough to leave the text room. */
-private val EmblemHeight = 96.dp
+private val EmblemHeight = 72.dp
+private val EmblemTileCorner = 11.dp
 
-private val FeatureIconSize = 24.dp
+private val FeatureIconSize = 18.dp
+private val FeatureTileSize = 30.dp
+private val FeatureTileCorner = 5.dp
 private val BannerIconSize = 18.dp
 
 /** Keeps the feature lines evenly spaced whatever the font scale does to their height. */

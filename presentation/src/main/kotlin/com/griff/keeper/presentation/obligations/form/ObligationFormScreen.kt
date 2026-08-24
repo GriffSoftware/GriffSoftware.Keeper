@@ -1,5 +1,6 @@
 package com.griff.keeper.presentation.obligations.form
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,19 +14,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +33,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,14 +51,17 @@ import com.griff.keeper.presentation.common.UiMessage
 import com.griff.keeper.presentation.common.component.CategoryOption
 import com.griff.keeper.presentation.common.component.CategorySelector
 import com.griff.keeper.presentation.common.component.DateField
+import com.griff.keeper.presentation.common.component.GriffSegmentedControl
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.ObligationGlyph
 import com.griff.keeper.presentation.common.component.RemindersToggleField
-import com.griff.keeper.presentation.common.component.accentSegmentedButtonColors
+import com.griff.keeper.presentation.common.component.SegmentOption
+import com.griff.keeper.presentation.common.component.griffFilledTextFieldColors
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.currentLocale
 import com.griff.keeper.presentation.common.format.symbol
 import com.griff.keeper.presentation.common.resolve
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -206,7 +211,7 @@ private fun ObligationFormContent(
         verticalArrangement = Arrangement.spacedBy(Spacing.Large),
     ) {
         val nameError = state.errorFor(ObligationField.NAME)
-        OutlinedTextField(
+        TextField(
             value = state.name,
             onValueChange = onNameChange,
             modifier = Modifier.fillMaxWidth(),
@@ -217,7 +222,9 @@ private fun ObligationFormContent(
                 Text(nameError ?: stringResource(R.string.obligation_form_name_hint))
             },
             label = { Text(stringResource(R.string.obligation_form_name_label)) },
+            shape = GriffShapes.Interactive,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            colors = griffFilledTextFieldColors(),
         )
 
         CategorySelector(
@@ -238,7 +245,7 @@ private fun ObligationFormContent(
         )
 
         val amountError = state.errorFor(ObligationField.AMOUNT)
-        OutlinedTextField(
+        TextField(
             value = state.amount,
             onValueChange = onAmountChange,
             modifier = Modifier.fillMaxWidth(),
@@ -248,10 +255,12 @@ private fun ObligationFormContent(
             supportingText = amountError?.let { { Text(it) } },
             label = { Text(stringResource(R.string.obligation_form_amount_label)) },
             suffix = { Text(Currency.Default.symbol(currentLocale())) },
+            shape = GriffShapes.Interactive,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
                 imeAction = ImeAction.Next,
             ),
+            colors = griffFilledTextFieldColors(),
         )
 
         PaymentStatusSelector(
@@ -297,7 +306,7 @@ private fun ObligationFormContent(
         ordered.forEach { field -> field() }
 
         val notesError = state.errorFor(ObligationField.NOTES)
-        OutlinedTextField(
+        TextField(
             value = state.notes,
             onValueChange = onNotesChange,
             modifier = Modifier.fillMaxWidth(),
@@ -308,46 +317,72 @@ private fun ObligationFormContent(
                 Text(notesError ?: stringResource(R.string.obligation_form_notes_hint))
             },
             label = { Text(stringResource(R.string.obligation_form_notes_label)) },
+            shape = GriffShapes.Interactive,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
+            colors = griffFilledTextFieldColors(),
         )
 
         // The hint states the schedule the chosen category will actually use, which is the only
         // reminder detail worth carrying in a form about the record itself.
-        RemindersToggleField(
-            enabled = state.remindersEnabled,
-            hint = stringResource(
-                if (state.category?.expires == true) {
-                    R.string.form_reminders_hint_insurance
-                } else {
-                    R.string.form_reminders_hint_payment
-                },
-            ),
-            isEditable = state.isEditable,
-            onEnabledChange = onRemindersEnabledChange,
-        )
-
-        Button(
-            onClick = onSave,
-            enabled = state.isSaveEnabled && !state.isSaving,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Spacing.Small),
+                .background(MaterialTheme.colorScheme.surfaceContainer, GriffShapes.Interactive)
+                .padding(horizontal = Spacing.Large, vertical = Spacing.Medium),
+        ) {
+            RemindersToggleField(
+                enabled = state.remindersEnabled,
+                hint = stringResource(
+                    if (state.category?.expires == true) {
+                        R.string.form_reminders_hint_insurance
+                    } else {
+                        R.string.form_reminders_hint_payment
+                    },
+                ),
+                isEditable = state.isEditable,
+                onEnabledChange = onRemindersEnabledChange,
+            )
+        }
+
+        val saveEnabled = state.isSaveEnabled && !state.isSaving
+        Button(
+            onClick = onSave,
+            enabled = saveEnabled,
             shape = GriffShapes.Interactive,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = GriffGradients.OnAccent,
+                disabledContainerColor = Color.Transparent,
+                disabledContentColor = GriffGradients.OnAccent,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Spacing.Small)
+                .alpha(if (saveEnabled) 1f else 0.38f)
+                .background(brush = GriffGradients.accent(), shape = GriffShapes.Interactive),
         ) {
             if (state.isSaving) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(SaveIndicatorSize),
                     strokeWidth = 2.dp,
+                    color = GriffGradients.OnAccent,
                 )
             } else {
-                Text(stringResource(R.string.obligation_form_save))
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(SaveIndicatorSize),
+                )
+                Text(
+                    text = stringResource(R.string.obligation_form_save),
+                    modifier = Modifier.padding(start = Spacing.Small),
+                )
             }
         }
     }
 }
 
-/** Two option selector; a segmented button reads better than radio buttons for a binary choice. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** Two option selector; a segmented control reads better than radio buttons for a binary choice. */
 @Composable
 private fun PaymentStatusSelector(
     selected: PaymentStatus,
@@ -361,22 +396,14 @@ private fun PaymentStatusSelector(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = Spacing.Small),
         )
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            PaymentStatus.entries.forEachIndexed { index, status ->
-                SegmentedButton(
-                    selected = status == selected,
-                    onClick = { onSelect(status) },
-                    enabled = enabled,
-                    shape = SegmentedButtonDefaults.itemShape(
-                        index = index,
-                        count = PaymentStatus.entries.size,
-                    ),
-                    colors = accentSegmentedButtonColors(),
-                ) {
-                    Text(stringResource(Labels.paymentStatus(status)))
-                }
-            }
-        }
+        GriffSegmentedControl(
+            options = PaymentStatus.entries.map {
+                SegmentOption(value = it, label = stringResource(Labels.paymentStatus(it)))
+            },
+            selected = selected,
+            onSelect = onSelect,
+            enabled = enabled,
+        )
     }
 }
 

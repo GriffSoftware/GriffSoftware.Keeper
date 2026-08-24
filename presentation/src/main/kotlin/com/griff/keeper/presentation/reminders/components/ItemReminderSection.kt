@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,11 +18,15 @@ import androidx.compose.ui.semantics.semantics
 import com.griff.keeper.application.reminder.ItemReminderState
 import com.griff.keeper.application.reminder.ReminderItemStatus
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.component.CountdownRing
 import com.griff.keeper.presentation.common.component.DetailsInfoRow
+import com.griff.keeper.presentation.common.component.GriffCard
 import com.griff.keeper.presentation.common.format.DateFormatter
 import com.griff.keeper.presentation.reminders.ReminderPhrases
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.Spacing
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 /**
  * The reminder block shown on a details screen.
@@ -48,11 +51,8 @@ internal fun ItemReminderSection(
 ) {
     val switchDescription = stringResource(R.string.reminder_section_switch_description)
 
-    OutlinedCard(modifier = modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+    GriffCard(modifier = modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -125,19 +125,52 @@ internal fun ItemReminderSection(
 
 @Composable
 private fun ScheduledReminder(state: ItemReminderState) {
-    TargetRow(state)
+    val target = state.targetDate
+    val next = state.nextReminder
 
-    val next = state.nextReminder ?: return
-    HorizontalDivider()
-    DetailsInfoRow(
-        label = stringResource(R.string.reminder_section_next_label),
-        value = DateFormatter.formatFullDate(next.fireDate),
-    )
-    Text(
-        text = ReminderPhrases.offsetExplanation(next.kind, next.daysBefore),
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+    if (target != null && next != null) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(Spacing.Medium),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val daysUntilTarget = ChronoUnit.DAYS.between(LocalDate.now(), target)
+            CountdownRing(
+                daysRemaining = daysUntilTarget.coerceAtLeast(0L).toInt(),
+                progress = 1f - (daysUntilTarget.toFloat() / 365f).coerceIn(0f, 1f),
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall / 2)) {
+                Text(
+                    text = stringResource(R.string.reminder_section_next_label),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = DateFormatter.formatFullDate(next.fireDate),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Text(
+                    text = ReminderPhrases.offsetExplanation(next.kind, next.daysBefore),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        return
+    }
+
+    TargetRow(state)
+    if (next != null) {
+        HorizontalDivider()
+        DetailsInfoRow(
+            label = stringResource(R.string.reminder_section_next_label),
+            value = DateFormatter.formatFullDate(next.fireDate),
+        )
+        Text(
+            text = ReminderPhrases.offsetExplanation(next.kind, next.daysBefore),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
 }
 
 @Composable

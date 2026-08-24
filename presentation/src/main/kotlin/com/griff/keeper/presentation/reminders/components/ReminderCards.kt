@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.reminders.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,27 +9,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.domain.reminder.ReminderDefaults
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffHeroCard
 import com.griff.keeper.presentation.reminders.ReminderPhrases
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
+import com.griff.keeper.presentation.theme.HairlineWidth
 import com.griff.keeper.presentation.theme.Spacing
 
 /** The master switch, and the one sentence that says what it does. */
@@ -39,19 +50,17 @@ internal fun GlobalRemindersCard(
 ) {
     val switchDescription = stringResource(R.string.reminders_global_switch_description)
 
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-        border = GriffTheme.containerBorder,
-    ) {
+    GriffHeroCard(modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.Large),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.Medium),
         ) {
+            Icon(
+                imageVector = Icons.Default.NotificationsActive,
+                contentDescription = null,
+                tint = GriffGradients.OnAccent,
+            )
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
@@ -59,19 +68,26 @@ internal fun GlobalRemindersCard(
                 Text(
                     text = stringResource(R.string.reminders_global_title),
                     style = MaterialTheme.typography.titleMedium,
+                    color = GriffGradients.OnAccent,
                 )
                 Text(
                     text = stringResource(R.string.reminders_global_description),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = GriffGradients.OnAccent.copy(alpha = 0.85f),
                 )
             }
             Switch(
                 checked = enabled,
                 onCheckedChange = onEnabledChange,
-                modifier = Modifier
-                    .padding(start = Spacing.Medium)
-                    .semantics { contentDescription = switchDescription },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = GriffGradients.OnAccent,
+                    checkedTrackColor = GriffGradients.OnAccent.copy(alpha = 0.35f),
+                    checkedBorderColor = Color.Transparent,
+                    uncheckedThumbColor = GriffGradients.OnAccent.copy(alpha = 0.85f),
+                    uncheckedTrackColor = GriffGradients.OnAccent.copy(alpha = 0.2f),
+                    uncheckedBorderColor = Color.Transparent,
+                ),
+                modifier = Modifier.semantics { contentDescription = switchDescription },
             )
         }
     }
@@ -92,10 +108,14 @@ internal fun SystemNotificationsBlockedCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
+        shape = GriffShapes.Container,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            containerColor = GriffTheme.colors.warning.copy(alpha = WarningWashAlpha),
         ),
-        border = GriffTheme.containerBorder,
+        border = BorderStroke(
+            width = HairlineWidth,
+            color = GriffTheme.colors.warning.copy(alpha = WarningBorderAlpha),
+        ),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.Large),
@@ -122,22 +142,43 @@ internal fun SystemNotificationsBlockedCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.Small)) {
+            Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
                 if (canRequestPermission) {
-                    OutlinedButton(
+                    Button(
                         onClick = onRequestPermission,
                         shape = GriffShapes.Interactive,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.White,
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(WarningGradient, GriffShapes.Interactive),
                     ) {
                         Text(stringResource(R.string.reminders_permission_grant))
                     }
                 }
-                TextButton(onClick = onOpenSettings) {
+                OutlinedButton(
+                    onClick = onOpenSettings,
+                    shape = GriffShapes.Interactive,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = GriffTheme.colors.warning,
+                    ),
+                    border = BorderStroke(
+                        width = HairlineWidth,
+                        color = GriffTheme.colors.warning.copy(alpha = WarningBorderAlpha * 1.5f),
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
                     Text(stringResource(R.string.reminders_permission_settings))
                 }
             }
         }
     }
 }
+
+/** The warning-family gradient reserved for this one call-to-action, distinct from the brand navy. */
+private val WarningGradient = Brush.linearGradient(listOf(Color(0xFF92400E), Color(0xFFD97706)))
 
 /**
  * Shown instead of the switch's silence when reminders are off.
@@ -150,17 +191,8 @@ internal fun RemindersDisabledCard(
     onEnable: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ),
-        border = GriffTheme.containerBorder,
-    ) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+    GriffCard(modifier = modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Text(
                 text = stringResource(R.string.reminders_off_title),
                 style = MaterialTheme.typography.titleSmall,
@@ -231,3 +263,5 @@ private fun DefaultRow(label: String, value: String) {
 }
 
 private val BannerIconSize = 18.dp
+private const val WarningWashAlpha = 0.1f
+private const val WarningBorderAlpha = 0.3f

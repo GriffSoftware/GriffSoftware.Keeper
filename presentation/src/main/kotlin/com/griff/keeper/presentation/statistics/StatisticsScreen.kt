@@ -3,6 +3,7 @@ package com.griff.keeper.presentation.statistics
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,15 +16,10 @@ import androidx.compose.material.icons.filled.InsertChartOutlined
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,9 +45,13 @@ import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.Labels
 import com.griff.keeper.presentation.common.component.EmptyState
 import com.griff.keeper.presentation.common.component.FullScreenLoading
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffHeroCard
+import com.griff.keeper.presentation.common.component.GriffSegmentedControl
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
+import com.griff.keeper.presentation.common.component.HeroStatTile
+import com.griff.keeper.presentation.common.component.SegmentOption
 import com.griff.keeper.presentation.common.component.TagStyle
-import com.griff.keeper.presentation.common.component.accentSegmentedButtonColors
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.DateFormatter
 import com.griff.keeper.presentation.common.format.MoneyFormatter
@@ -67,6 +67,7 @@ import com.griff.keeper.presentation.statistics.components.SpendingBreakdown
 import com.griff.keeper.presentation.statistics.components.SubscriptionSummaryCards
 import com.griff.keeper.presentation.statistics.components.SummaryCard
 import com.griff.keeper.presentation.statistics.components.UpcomingChargeRow
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -170,46 +171,34 @@ private fun StatisticsContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScopeSelector(
     selected: StatisticsScope,
     onSelect: (StatisticsScope) -> Unit,
 ) {
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-        val scopes = StatisticsScope.entries
-        scopes.forEachIndexed { index, scope ->
-            SegmentedButton(
-                selected = scope == selected,
-                onClick = { onSelect(scope) },
-                shape = SegmentedButtonDefaults.itemShape(index = index, count = scopes.size),
-                colors = accentSegmentedButtonColors(),
-            ) {
-                Text(stringResource(Labels.statisticsScope(scope)))
-            }
-        }
-    }
+    GriffSegmentedControl(
+        options = StatisticsScope.entries.map {
+            SegmentOption(value = it, label = stringResource(Labels.statisticsScope(it)))
+        },
+        selected = selected,
+        onSelect = onSelect,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PeriodSelector(
     selected: StatisticsPeriod,
     onSelect: (StatisticsPeriod) -> Unit,
 ) {
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-        val periods = StatisticsPeriod.entries
-        periods.forEachIndexed { index, period ->
-            SegmentedButton(
-                selected = period == selected,
-                onClick = { onSelect(period) },
-                shape = SegmentedButtonDefaults.itemShape(index = index, count = periods.size),
-                colors = accentSegmentedButtonColors(),
-            ) {
-                Text(stringResource(Labels.statisticsPeriod(period)))
-            }
-        }
-    }
+    GriffSegmentedControl(
+        options = StatisticsPeriod.entries.map {
+            SegmentOption(value = it, label = stringResource(Labels.statisticsPeriod(it)))
+        },
+        selected = selected,
+        onSelect = onSelect,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 /**
@@ -224,41 +213,57 @@ private fun CombinedSections(
     combined: CombinedStatisticsUi,
     window: ExpensePeriod?,
 ) {
-    StatisticsSection(
-        title = stringResource(R.string.statistics_combined_title) +
-            (window?.let { " · ${PeriodFormatter.format(it)}" } ?: ""),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Spacing.Medium),
-        ) {
-            SummaryCard(
-                label = stringResource(R.string.statistics_combined_subscriptions_label),
-                value = MoneyFormatter.format(combined.estimatedSubscriptions),
-                note = stringResource(R.string.statistics_combined_subscriptions_note),
-                modifier = Modifier.weight(1f),
+    GriffHeroCard(modifier = Modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall / 2)) {
+            Text(
+                text = stringResource(R.string.statistics_combined_title) +
+                    (window?.let { " · ${PeriodFormatter.format(it)}" } ?: ""),
+                style = MaterialTheme.typography.labelMedium,
+                color = GriffGradients.OnAccent.copy(alpha = 0.82f),
             )
-            SummaryCard(
-                label = stringResource(R.string.statistics_combined_obligations_label),
-                value = MoneyFormatter.format(combined.paidObligations),
-                note = stringResource(R.string.statistics_combined_obligations_note),
-                modifier = Modifier.weight(1f),
+            Text(
+                text = MoneyFormatter.format(combined.total),
+                style = MaterialTheme.typography.displaySmall,
+                color = GriffGradients.OnAccent,
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Spacing.Medium),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
+            ) {
+                HeroStatTile(
+                    label = stringResource(R.string.statistics_combined_subscriptions_label),
+                    value = MoneyFormatter.format(combined.estimatedSubscriptions),
+                    note = stringResource(R.string.statistics_combined_subscriptions_note),
+                    modifier = Modifier.weight(1f),
+                )
+                HeroStatTile(
+                    label = stringResource(R.string.statistics_combined_obligations_label),
+                    value = MoneyFormatter.format(combined.paidObligations),
+                    note = stringResource(R.string.statistics_combined_obligations_note),
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(top = Spacing.Medium),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = GriffGradients.OnAccent.copy(alpha = 0.85f),
+                    modifier = Modifier.size(NoteIconSize),
+                )
+                Text(
+                    text = stringResource(R.string.statistics_combined_total_note),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = GriffGradients.OnAccent.copy(alpha = 0.85f),
+                )
+            }
         }
-
-        HorizontalDivider(modifier = Modifier.padding(vertical = Spacing.Small))
-
-        Text(
-            text = stringResource(R.string.statistics_combined_total_label),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
-            text = MoneyFormatter.format(combined.total),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Note(text = stringResource(R.string.statistics_combined_total_note))
     }
 
     if (combined.hasChartData) {
@@ -275,7 +280,10 @@ private fun CombinedSections(
 
     if (combined.topExpenses.isNotEmpty()) {
         StatisticsSection(title = stringResource(R.string.statistics_top_title)) {
-            combined.topExpenses.forEach { expense -> RankedExpenseRow(expense = expense) }
+            val maxAmount = combined.topExpenses.maxOf { it.amount.minorUnits }
+            combined.topExpenses.forEach { expense ->
+                RankedExpenseRow(expense = expense, shareOfMax = expense.amount.shareOf(Money.ofMinorUnits(maxAmount)))
+            }
         }
     }
 }
@@ -380,8 +388,12 @@ private fun SubscriptionSections(
             title = stringResource(R.string.statistics_top_title),
             description = stringResource(R.string.statistics_top_description),
         ) {
+            val maxAmount = subscriptions.topSubscriptions.maxOf { it.monthlyEquivalent.minorUnits }
             subscriptions.topSubscriptions.forEach { subscription ->
-                RankedSubscriptionRow(subscription = subscription)
+                RankedSubscriptionRow(
+                    subscription = subscription,
+                    shareOfMax = subscription.monthlyEquivalent.shareOf(Money.ofMinorUnits(maxAmount)),
+                )
             }
         }
     }
@@ -430,7 +442,10 @@ private fun ObligationSections(
             title = stringResource(R.string.statistics_obligations_top_title),
             description = stringResource(R.string.statistics_obligations_top_description),
         ) {
-            obligations.topObligations.forEach { expense -> RankedExpenseRow(expense = expense) }
+            val maxAmount = obligations.topObligations.maxOf { it.amount.minorUnits }
+            obligations.topObligations.forEach { expense ->
+                RankedExpenseRow(expense = expense, shareOfMax = expense.amount.shareOf(Money.ofMinorUnits(maxAmount)))
+            }
         }
     }
 }
@@ -441,11 +456,11 @@ private fun StatisticsSection(
     description: String? = null,
     content: @Composable () -> Unit,
 ) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+    GriffCard(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(Spacing.Large),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,

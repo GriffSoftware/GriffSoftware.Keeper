@@ -11,6 +11,7 @@
     <string name="search_clear">Wyczyść wyszukiwanie</string>
     <string name="no_results_title">Brak wyników</string>
     <string name="filter_tag_all">Wszystkie</string>
+    <string name="countdown_ring_days_unit">dni</string>
 
     <!-- Message severity, spoken by screen readers so status is not carried by color alone -->
     <string name="severity_info">Informacja</string>
@@ -37,6 +38,8 @@
     <string name="subscriptions_add">Dodaj subskrypcję</string>
     <string name="subscriptions_totals_title">Łącznie</string>
     <string name="subscriptions_totals_filtered_title">Łącznie (widoczne pozycje)</string>
+    <string name="subscriptions_totals_active_label">Aktywne</string>
+    <string name="subscriptions_next_renewal_label">Najbliższe odnowienie</string>
     <string name="subscriptions_item_description">%1$s, %2$s, %3$s, %4$s</string>
 
     <!-- Subscription details -->
@@ -105,6 +108,9 @@
     <string name="drawer_about">About</string>
     <string name="drawer_version">Wersja %1$s</string>
     <string name="drawer_build">Build %1$d</string>
+    <string name="drawer_monthly_label">Miesięcznie</string>
+    <string name="drawer_yearly_label">Rocznie</string>
+    <string name="drawer_local_data">Dane lokalne</string>
 
     <!-- Language. The language names themselves are self-names and live in values/ only. -->
     <string name="drawer_language">Język</string>
@@ -436,7 +442,7 @@
     <string name="data_transfer_title">Import / Export</string>
 
     <string name="data_transfer_intro_title">Twoje dane</string>
-    <string name="data_transfer_intro_description">Wszystkie dane aplikacji są przechowywane lokalnie na tym urządzeniu.\n\nUtwórz szyfrowaną kopię zapasową, aby móc przenieść je na inne urządzenie.</string>
+    <string name="data_transfer_intro_description">Wszystkie dane aplikacji są przechowywane lokalnie na tym urządzeniu. Utwórz szyfrowaną kopię zapasową, aby móc przenieść je na inne urządzenie.</string>
 
     <string name="data_transfer_export_title">Eksportuj kopię</string>
     <string name="data_transfer_export_description">Zapisz zaszyfrowany backup do wybranego pliku.</string>
@@ -631,4 +637,11 @@
 
     <string name="about_version">Wersja %1$s • Build %2$d</string>
     <string name="about_copyright">Griff Software</string>
+
+    <!-- Splash -->
+    <string name="splash_tagline">Subskrypcje, opłaty i przypomnienia\nw jednym miejscu</string>
+    <string name="splash_brand_tagline">Clean architecture straight from Pomerania</string>
+    <string name="splash_brand_name_griff">GRIFF</string>
+    <string name="splash_brand_name_software">SOFTWARE</string>
+    <string name="splash_local_data">Dane wyłącznie na tym urządzeniu</string>
 </resources>

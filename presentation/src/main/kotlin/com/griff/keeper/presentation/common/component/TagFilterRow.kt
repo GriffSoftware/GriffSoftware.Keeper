@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -46,35 +43,21 @@ fun <T> TagFilterRow(
         horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
     ) {
         item(key = "all") {
-            FilterChip(
+            GriffFilterChip(
                 selected = selected == null,
                 onClick = { onSelect(null) },
                 label = { Text(stringResource(R.string.filter_tag_all)) },
-                colors = accentFilterChipColors(),
             )
         }
         items(items = options, key = { it.style.labelRes }) { option ->
-            FilterChip(
+            GriffFilterChip(
                 selected = option.value == selected,
                 onClick = { onSelect(if (option.value == selected) null else option.value) },
                 label = { Text(stringResource(option.style.labelRes)) },
-                colors = accentFilterChipColors(),
             )
         }
     }
 }
-
-/**
- * Selection colors for filter chips.
- *
- * Material would use the neutral secondary container; an active filter is one of the few states the
- * brand accent is reserved for, matching the segmented buttons elsewhere in the app.
- */
-@Composable
-private fun accentFilterChipColors() = FilterChipDefaults.filterChipColors(
-    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-)
 
 @ThemePreviews
 @Composable

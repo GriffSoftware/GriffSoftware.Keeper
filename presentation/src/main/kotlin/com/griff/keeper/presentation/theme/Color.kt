@@ -6,10 +6,10 @@ import androidx.compose.ui.graphics.Color
 /**
  * Griff brand palette, following the "Graphite Precision" design system.
  *
- * The accent pivots with the interface mode instead of being inverted: light is a warm off-white
- * surface set driven by blue, dark is a neutral graphite set driven by cyan. Pivoting rather than
- * inverting is what keeps the accent readable at both ends - the blue that carries actions on
- * near-white would sit too dark on graphite, and the cyan that reads on graphite glares on white.
+ * The accent is navy, taken straight from the logo lockup, and pivots with the interface mode
+ * instead of being inverted: light uses the lockup's navy directly, dark lightens it several steps
+ * so it still passes 4.5:1 as text and icon color against graphite - the same navy that anchors the
+ * light gradient would sit unreadably dark on a near-black surface.
  *
  * Dark surfaces are tiered graphite rather than pure black, so nested containers can appear closer
  * to the user and OLED panels do not smear on scroll.
@@ -20,12 +20,12 @@ import androidx.compose.ui.graphics.Color
  */
 internal object BrandColors {
 
-    // --- Light: warm off-white + Griff Blue ---
-    val PrimaryLight = Color(0xFF004AC6)
+    // --- Light: warm off-white + navy (logo) ---
+    val PrimaryLight = Color(0xFF24384A)
     val OnPrimaryLight = Color(0xFFFFFFFF)
-    val PrimaryContainerLight = Color(0xFF2563EB)
-    val OnPrimaryContainerLight = Color(0xFFEEEFFF)
-    val InversePrimaryLight = Color(0xFFB4C5FF)
+    val PrimaryContainerLight = Color(0xFF4E7291)
+    val OnPrimaryContainerLight = Color(0xFFF3F6F9)
+    val InversePrimaryLight = Color(0xFF6E93B4)
     val SecondaryLight = Color(0xFF006877)
     val OnSecondaryLight = Color(0xFFFFFFFF)
     val SecondaryContainerLight = Color(0xFF3FE1FD)
@@ -49,7 +49,7 @@ internal object BrandColors {
     val OutlineLight = Color(0xFF737686)
     val OutlineVariantLight = Color(0xFFC3C6D7)
     val ScrimLight = Color(0xFF000000)
-    val SurfaceTintLight = Color(0xFF0053DB)
+    val SurfaceTintLight = Color(0xFF24384A)
 
     // Neutral surface ramp, from the brightest card to the dimmest backdrop.
     val SurfaceContainerLowestLight = Color(0xFFFFFFFF)
@@ -60,12 +60,12 @@ internal object BrandColors {
     val SurfaceBrightLight = Color(0xFFFCF9F8)
     val SurfaceDimLight = Color(0xFFDCD9D9)
 
-    // --- Dark: graphite + Griff Cyan ---
-    val PrimaryDark = Color(0xFF22D3EE)
-    val OnPrimaryDark = Color(0xFF00363F)
-    val PrimaryContainerDark = Color(0xFF0E7490)
-    val OnPrimaryContainerDark = Color(0xFFCFFAFE)
-    val InversePrimaryDark = Color(0xFF004AC6)
+    // --- Dark: graphite + lightened navy ---
+    val PrimaryDark = Color(0xFF6E93B4)
+    val OnPrimaryDark = Color(0xFF0F1C28)
+    val PrimaryContainerDark = Color(0xFF2A4459)
+    val OnPrimaryContainerDark = Color(0xFFD9E4EC)
+    val InversePrimaryDark = Color(0xFF24384A)
 
     // Secondary stays neutral slate in dark instead of mirroring the light teal: with cyan on
     // primary, a teal secondary would read as a slightly-off copy of the accent rather than as a
@@ -96,7 +96,7 @@ internal object BrandColors {
     // Dividers and hairlines on graphite: the design system's `graphite-muted`.
     val OutlineVariantDark = Color(0xFF2D2D2D)
     val ScrimDark = Color(0xFF000000)
-    val SurfaceTintDark = Color(0xFF22D3EE)
+    val SurfaceTintDark = Color(0xFF6E93B4)
 
     val SurfaceContainerLowestDark = Color(0xFF141414)
     val SurfaceContainerLowDark = Color(0xFF1E1E1E)
@@ -289,9 +289,9 @@ internal object TagPalette {
 /**
  * Colors of the two series on the combined statistics chart.
  *
- * Subscriptions take the brand accent (blue in light, cyan in dark) because they are the app's
- * primary subject; obligations get the chart palette's emerald, which stays clearly distinguishable
- * from the accent in both themes without competing with it.
+ * Subscriptions take the brand accent (navy) because they are the app's primary subject;
+ * obligations get the chart palette's emerald, which stays clearly distinguishable from the accent
+ * in both themes without competing with it.
  */
 internal object SeriesColors {
     val ObligationLight = Color(0xFF047857)

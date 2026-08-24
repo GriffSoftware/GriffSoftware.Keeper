@@ -264,7 +264,7 @@ private fun DataTransferContent(
         item(key = "intro") {
             Column(
                 modifier = Modifier.padding(horizontal = Spacing.Large),
-                verticalArrangement = Arrangement.spacedBy(Spacing.Small),
+                verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall / 2),
             ) {
                 Text(
                     text = stringResource(R.string.data_transfer_intro_title),

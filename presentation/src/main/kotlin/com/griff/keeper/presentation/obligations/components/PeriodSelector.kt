@@ -8,13 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.griff.keeper.domain.model.ExpensePeriod
 import com.griff.keeper.presentation.R
-import com.griff.keeper.presentation.common.component.accentSegmentedButtonColors
+import com.griff.keeper.presentation.common.component.GriffSegmentedControl
+import com.griff.keeper.presentation.common.component.SegmentOption
 import com.griff.keeper.presentation.common.format.PeriodFormatter
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -42,7 +39,6 @@ enum class PeriodMode { MONTH, YEAR }
  * mode keeps the user where they are in time: the month view opens on a month of the year they were
  * looking at.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PeriodSelector(
     period: ExpensePeriod,
@@ -54,28 +50,21 @@ internal fun PeriodSelector(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Spacing.Small),
     ) {
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            PeriodMode.entries.forEachIndexed { index, mode ->
-                SegmentedButton(
-                    selected = period.mode() == mode,
-                    onClick = { onPeriodChange(period.switchedTo(mode, today)) },
-                    shape = SegmentedButtonDefaults.itemShape(
-                        index = index,
-                        count = PeriodMode.entries.size,
+        GriffSegmentedControl(
+            options = PeriodMode.entries.map { mode ->
+                SegmentOption(
+                    value = mode,
+                    label = stringResource(
+                        when (mode) {
+                            PeriodMode.MONTH -> R.string.period_mode_month
+                            PeriodMode.YEAR -> R.string.period_mode_year
+                        },
                     ),
-                    colors = accentSegmentedButtonColors(),
-                ) {
-                    Text(
-                        stringResource(
-                            when (mode) {
-                                PeriodMode.MONTH -> R.string.period_mode_month
-                                PeriodMode.YEAR -> R.string.period_mode_year
-                            },
-                        ),
-                    )
-                }
-            }
-        }
+                )
+            },
+            selected = period.mode(),
+            onSelect = { mode -> onPeriodChange(period.switchedTo(mode, today)) },
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),

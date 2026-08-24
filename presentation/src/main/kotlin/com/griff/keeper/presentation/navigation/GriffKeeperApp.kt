@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
@@ -34,6 +35,7 @@ import com.griff.keeper.presentation.obligations.ObligationsRoute
 import com.griff.keeper.presentation.obligations.details.ObligationDetailsRoute
 import com.griff.keeper.presentation.obligations.form.ObligationFormRoute
 import com.griff.keeper.presentation.reminders.RemindersRoute
+import com.griff.keeper.presentation.splash.SplashRoute
 import com.griff.keeper.presentation.statistics.StatisticsRoute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -73,6 +75,9 @@ fun GriffKeeperApp(
     val openDrawer: () -> Unit = { scope.launch { drawerState.open() } }
     val closeDrawer: () -> Unit = { scope.launch { drawerState.close() } }
 
+    val drawerTotals by drawerViewModel.totals.collectAsStateWithLifecycle()
+    val upcomingReminderCount by drawerViewModel.upcomingReminderCount.collectAsStateWithLifecycle()
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = currentDestination.isDrawerDestination(),
@@ -80,6 +85,8 @@ fun GriffKeeperApp(
             AppDrawerContent(
                 selected = currentDestination.toDrawerDestination(),
                 appVersion = drawerViewModel.appVersion,
+                totals = drawerTotals,
+                upcomingReminderCount = upcomingReminderCount,
                 language = language,
                 onSelect = { destination ->
                     closeDrawer()
@@ -94,8 +101,18 @@ fun GriffKeeperApp(
     ) {
         NavHost(
             navController = navController,
-            startDestination = SubscriptionRoute,
+            startDestination = SplashRoute,
         ) {
+            composable<SplashRoute> {
+                SplashRoute(
+                    onFinished = {
+                        navController.navigate(SubscriptionRoute) {
+                            popUpTo(SplashRoute) { inclusive = true }
+                        }
+                    },
+                )
+            }
+
             composable<SubscriptionRoute> {
                 SubscriptionRoute(
                     onOpenDrawer = openDrawer,

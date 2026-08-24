@@ -2,11 +2,11 @@ package com.griff.keeper.presentation.statistics.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +17,7 @@ import com.griff.keeper.domain.model.Money
 import com.griff.keeper.domain.model.ObligationTotals
 import com.griff.keeper.domain.model.SubscriptionTotals
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.component.GriffCard
 import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -99,11 +100,8 @@ internal fun SummaryCard(
     note: String? = null,
     valueColor: Color = Color.Unspecified,
 ) {
-    OutlinedCard(modifier = modifier) {
-        Column(
-            modifier = Modifier.padding(Spacing.Medium),
-            verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
-        ) {
+    GriffCard(modifier = modifier, contentPadding = PaddingValues(Spacing.Medium)) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall)) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,

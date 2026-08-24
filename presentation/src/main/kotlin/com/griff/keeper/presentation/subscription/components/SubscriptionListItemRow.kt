@@ -19,11 +19,14 @@ import com.griff.keeper.presentation.common.component.EntryRow
 import com.griff.keeper.presentation.common.component.ProviderLogo
 import com.griff.keeper.presentation.common.component.TagChip
 import com.griff.keeper.presentation.common.format.MoneyFormatter
+import com.griff.keeper.presentation.reminders.ReminderPhrases
 import com.griff.keeper.presentation.subscription.SubscriptionListItem
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.ThemePreviews
 import com.griff.keeper.domain.model.ProviderCategory
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 /**
  * A single subscription row: logo, name, category tag, billing period and price.
@@ -60,6 +63,15 @@ internal fun SubscriptionListItemRow(
                 TagChip(style = tag)
                 Text(
                     text = periodText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+        amountSupporting = item.nextBillingDate?.let { date ->
+            {
+                Text(
+                    text = ReminderPhrases.relativeDays(ChronoUnit.DAYS.between(LocalDate.now(), date)),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

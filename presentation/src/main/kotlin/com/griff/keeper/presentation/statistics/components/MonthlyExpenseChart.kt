@@ -20,7 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -32,6 +34,7 @@ import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.format.DateFormatter
 import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.statistics.ExpenseBar
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -65,6 +68,8 @@ internal fun MonthlyExpenseChart(
     val subscriptionColor = GriffTheme.colors.subscriptionSeries
     val obligationColor = GriffTheme.colors.obligationSeries
     val emptyColor = MaterialTheme.colorScheme.surfaceVariant
+    val accentBrush = GriffGradients.accentVertical()
+    val obligationBrush = GriffGradients.obligationBarVertical()
 
     val values = bars.map { bar ->
         series.map { entry ->
@@ -79,6 +84,12 @@ internal fun MonthlyExpenseChart(
         when (it) {
             ExpenseSeries.SUBSCRIPTIONS -> subscriptionColor
             ExpenseSeries.OBLIGATIONS -> obligationColor
+        }
+    }
+    val brushes = series.map {
+        when (it) {
+            ExpenseSeries.SUBSCRIPTIONS -> accentBrush
+            ExpenseSeries.OBLIGATIONS -> obligationBrush
         }
     }
 
@@ -109,7 +120,7 @@ internal fun MonthlyExpenseChart(
             drawGroupedBars(
                 groups = values.map { group -> group.map { it.minorUnits } },
                 maxValue = maxValue,
-                colors = colors,
+                brushes = brushes,
                 emptyColor = emptyColor,
             )
         }
@@ -182,10 +193,10 @@ private fun ChartLegend(
 private fun DrawScope.drawGroupedBars(
     groups: List<List<Long>>,
     maxValue: Long,
-    colors: List<Color>,
+    brushes: List<Brush>,
     emptyColor: Color,
 ) {
-    val seriesCount = colors.size
+    val seriesCount = brushes.size
     val groupSpacing = GroupSpacing.toPx()
     val barSpacing = if (seriesCount > 1) BarSpacing.toPx() else 0f
     val groupWidth =
@@ -193,6 +204,7 @@ private fun DrawScope.drawGroupedBars(
     val barWidth =
         ((groupWidth - barSpacing * (seriesCount - 1)) / seriesCount).coerceAtLeast(1f)
     val cornerRadius = CornerRadius(BarCornerRadius.toPx(), BarCornerRadius.toPx())
+    val emptyBrush = SolidColor(emptyColor)
 
     groups.forEachIndexed { groupIndex, group ->
         val groupLeft = groupIndex * (groupWidth + groupSpacing)
@@ -200,7 +212,7 @@ private fun DrawScope.drawGroupedBars(
             val ratio = value.toFloat() / maxValue.toFloat()
             val barHeight = (size.height * ratio).coerceAtLeast(MinimumBarHeightPx)
             drawRoundRect(
-                color = if (value == 0L) emptyColor else colors[seriesIndex],
+                brush = if (value == 0L) emptyBrush else brushes[seriesIndex],
                 topLeft = Offset(
                     x = groupLeft + seriesIndex * (barWidth + barSpacing),
                     y = size.height - barHeight,

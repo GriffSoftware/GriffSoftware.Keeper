@@ -1,8 +1,11 @@
 package com.griff.keeper.presentation.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,23 +20,23 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,6 +51,8 @@ import com.griff.keeper.presentation.common.Tags
 import com.griff.keeper.presentation.common.MessageSeverity
 import com.griff.keeper.application.reminder.ItemReminderState
 import com.griff.keeper.presentation.common.UiMessage
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffHeroCard
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.ProviderLogo
 import com.griff.keeper.presentation.common.component.ProviderLogoDefaults
@@ -61,6 +66,7 @@ import com.griff.keeper.presentation.common.component.DetailsInfoRow
 import com.griff.keeper.presentation.common.component.TagChip
 import com.griff.keeper.presentation.reminders.components.ItemReminderSection
 import com.griff.keeper.presentation.reminders.rememberSystemNotificationsEnabled
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -110,7 +116,6 @@ fun SubscriptionDetailsRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SubscriptionDetailsScreen(
     state: SubscriptionDetailsUiState,
@@ -146,30 +151,6 @@ internal fun SubscriptionDetailsScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.details_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateUp) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_back),
-                        )
-                    }
-                },
-                actions = {
-                    val details = state.details
-                    if (details != null) {
-                        IconButton(onClick = { onEdit(details.id) }) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.details_edit),
-                            )
-                        }
-                    }
-                },
-            )
-        },
         snackbarHost = { GriffSnackbarHost(snackbarHostState) },
     ) { contentPadding ->
         Box(
@@ -193,6 +174,8 @@ internal fun SubscriptionDetailsScreen(
                     details = state.details,
                     reminders = state.reminders,
                     isDeleting = state.isDeleting,
+                    onNavigateUp = onNavigateUp,
+                    onEdit = onEdit,
                     onDeleteRequest = onDeleteRequest,
                     onManagementUrlOpenFailed = onManagementUrlOpenFailed,
                     onRemindersEnabledChange = onRemindersEnabledChange,
@@ -217,6 +200,8 @@ private fun SubscriptionDetailsContent(
     details: SubscriptionDetails,
     reminders: ItemReminderState?,
     isDeleting: Boolean,
+    onNavigateUp: () -> Unit,
+    onEdit: (String) -> Unit,
     onDeleteRequest: () -> Unit,
     onManagementUrlOpenFailed: () -> Unit,
     onRemindersEnabledChange: (Boolean) -> Unit,
@@ -227,39 +212,66 @@ private fun SubscriptionDetailsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = Spacing.Large, vertical = Spacing.Large),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Spacing.Medium),
+            .verticalScroll(rememberScrollState()),
     ) {
-        ProviderLogo(
-            logoKey = details.logoKey,
-            name = details.name,
-            size = ProviderLogoDefaults.LargeSize,
-        )
+        GriffHeroCard(
+            shape = GriffShapes.HeroTopAttached,
+            contentPadding = PaddingValues(horizontal = Spacing.Large, vertical = Spacing.Medium),
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Spacing.Small),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    IconButton(onClick = onNavigateUp, colors = onGradientIconButtonColors()) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.action_back),
+                        )
+                    }
+                    IconButton(onClick = { onEdit(details.id) }, colors = onGradientIconButtonColors()) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.details_edit),
+                        )
+                    }
+                }
 
-        Text(
-            text = details.name,
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-        )
+                ProviderLogo(
+                    logoKey = details.logoKey,
+                    name = details.name,
+                    size = ProviderLogoDefaults.LargeSize,
+                )
 
-        // The tag is a visual accent for the category, not a second headline: it sits between the
-        // name and the amount, where it reads as a label on the record rather than as data.
-        TagChip(style = Tags.of(details.category))
+                Text(
+                    text = details.name,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = GriffGradients.OnAccent,
+                    textAlign = TextAlign.Center,
+                )
 
-        Text(
-            text = MoneyFormatter.format(details.price),
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.primary,
-        )
+                TagChip(style = Tags.of(details.category))
 
-        OutlinedCard(
+                Text(
+                    text = MoneyFormatter.format(details.price),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = GriffGradients.OnAccent,
+                )
+            }
+        }
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Spacing.Small),
+                .padding(horizontal = Spacing.Large, vertical = Spacing.Large),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Spacing.Medium),
         ) {
-            Column(modifier = Modifier.padding(Spacing.Large)) {
+            GriffCard(modifier = Modifier.fillMaxWidth()) {
                 DetailsInfoRow(
                     label = stringResource(R.string.details_billing_label),
                     value = stringResource(Labels.billingPeriodRecurrence(details.billingPeriod)),
@@ -288,83 +300,96 @@ private fun SubscriptionDetailsContent(
                     ),
                 )
             }
-        }
 
-        if (reminders != null) {
-            ItemReminderSection(
-                state = reminders,
-                systemNotificationsEnabled = systemNotificationsEnabled,
-                disabledText = stringResource(R.string.reminder_section_off_subscription),
-                noDateText = stringResource(R.string.reminder_section_no_billing_date),
-                noDateHint = stringResource(R.string.reminder_section_no_billing_date_hint),
-                onEnabledChange = onRemindersEnabledChange,
-                isEditable = !isDeleting,
-                modifier = Modifier.padding(top = Spacing.Small),
-            )
-        }
-
-        val managementUrl = details.managementUrl
-        Button(
-            onClick = {
-                if (managementUrl != null && !openUrl(managementUrl)) onManagementUrlOpenFailed()
-            },
-            enabled = managementUrl != null && !isDeleting,
-            shape = GriffShapes.Interactive,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Spacing.Small),
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                contentDescription = null,
-                modifier = Modifier.size(ButtonIconSize),
-            )
-            Text(
-                text = stringResource(R.string.details_manage),
-                modifier = Modifier.padding(start = Spacing.Small),
-            )
-        }
-
-        if (managementUrl == null) {
-            Text(
-                text = stringResource(R.string.details_manage_missing_url),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
-        }
-
-        OutlinedButton(
-            onClick = onDeleteRequest,
-            enabled = !isDeleting,
-            modifier = Modifier.fillMaxWidth(),
-            shape = GriffShapes.Interactive,
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colorScheme.error,
-            ),
-        ) {
-            if (isDeleting) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(ButtonIconSize),
-                    strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.error,
+            if (reminders != null) {
+                ItemReminderSection(
+                    state = reminders,
+                    systemNotificationsEnabled = systemNotificationsEnabled,
+                    disabledText = stringResource(R.string.reminder_section_off_subscription),
+                    noDateText = stringResource(R.string.reminder_section_no_billing_date),
+                    noDateHint = stringResource(R.string.reminder_section_no_billing_date_hint),
+                    onEnabledChange = onRemindersEnabledChange,
+                    isEditable = !isDeleting,
                 )
-            } else {
+            }
+
+            val managementUrl = details.managementUrl
+            val manageEnabled = managementUrl != null && !isDeleting
+            Button(
+                onClick = {
+                    if (managementUrl != null && !openUrl(managementUrl)) onManagementUrlOpenFailed()
+                },
+                enabled = manageEnabled,
+                shape = GriffShapes.Interactive,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = GriffGradients.OnAccent,
+                    disabledContainerColor = Color.Transparent,
+                    disabledContentColor = GriffGradients.OnAccent,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .alpha(if (manageEnabled) 1f else DisabledAlpha)
+                    .background(brush = GriffGradients.accent(), shape = GriffShapes.Interactive),
+            ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                     contentDescription = null,
                     modifier = Modifier.size(ButtonIconSize),
                 )
+                Text(
+                    text = stringResource(R.string.details_manage),
+                    modifier = Modifier.padding(start = Spacing.Small),
+                )
             }
-            Text(
-                text = stringResource(R.string.details_delete),
-                modifier = Modifier.padding(start = Spacing.Small),
-            )
+
+            if (managementUrl == null) {
+                Text(
+                    text = stringResource(R.string.details_manage_missing_url),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            OutlinedButton(
+                onClick = onDeleteRequest,
+                enabled = !isDeleting,
+                modifier = Modifier.fillMaxWidth(),
+                shape = GriffShapes.Interactive,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error,
+                ),
+            ) {
+                if (isDeleting) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(ButtonIconSize),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
+                        modifier = Modifier.size(ButtonIconSize),
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.details_delete),
+                    modifier = Modifier.padding(start = Spacing.Small),
+                )
+            }
         }
     }
 }
 
+@Composable
+private fun onGradientIconButtonColors() = IconButtonDefaults.iconButtonColors(
+    contentColor = GriffGradients.OnAccent,
+)
+
 private val ButtonIconSize = 18.dp
+private const val DisabledAlpha = 0.38f
 
 @ThemePreviews
 @Composable

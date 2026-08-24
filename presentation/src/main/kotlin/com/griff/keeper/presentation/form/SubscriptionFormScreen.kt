@@ -1,8 +1,10 @@
 package com.griff.keeper.presentation.form
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -13,15 +15,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +34,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,12 +55,14 @@ import com.griff.keeper.presentation.common.component.CategorySelector
 import com.griff.keeper.presentation.common.component.DateField
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.RemindersToggleField
+import com.griff.keeper.presentation.common.component.griffFilledTextFieldColors
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.currentLocale
 import com.griff.keeper.presentation.common.format.symbol
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.form.components.BillingPeriodSelector
 import com.griff.keeper.presentation.form.components.ProviderPicker
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
@@ -210,7 +219,7 @@ private fun SubscriptionFormContent(
 
         if (state.isNameFieldVisible) {
             val nameError = state.errorFor(SubscriptionField.NAME)
-            OutlinedTextField(
+            TextField(
                 value = state.name,
                 onValueChange = onNameChange,
                 modifier = Modifier.fillMaxWidth(),
@@ -219,7 +228,9 @@ private fun SubscriptionFormContent(
                 isError = nameError != null,
                 supportingText = nameError?.let { { Text(it) } },
                 label = { Text(stringResource(R.string.form_name_label)) },
+                shape = GriffShapes.Interactive,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                colors = griffFilledTextFieldColors(),
             )
         }
 
@@ -233,28 +244,36 @@ private fun SubscriptionFormContent(
             )
         }
 
-        val priceError = state.errorFor(SubscriptionField.PRICE)
-        OutlinedTextField(
-            value = state.price,
-            onValueChange = onPriceChange,
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            enabled = state.isEditable,
-            singleLine = true,
-            isError = priceError != null,
-            supportingText = priceError?.let { { Text(it) } },
-            label = { Text(stringResource(R.string.form_price_label)) },
-            suffix = { Text(Currency.Default.symbol(currentLocale())) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next,
-            ),
-        )
+            horizontalArrangement = Arrangement.spacedBy(Spacing.Medium),
+        ) {
+            val priceError = state.errorFor(SubscriptionField.PRICE)
+            TextField(
+                value = state.price,
+                onValueChange = onPriceChange,
+                modifier = Modifier.weight(1.2f),
+                enabled = state.isEditable,
+                singleLine = true,
+                isError = priceError != null,
+                supportingText = priceError?.let { { Text(it) } },
+                label = { Text(stringResource(R.string.form_price_label)) },
+                suffix = { Text(Currency.Default.symbol(currentLocale())) },
+                shape = GriffShapes.Interactive,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next,
+                ),
+                colors = griffFilledTextFieldColors(),
+            )
 
-        BillingPeriodSelector(
-            selected = state.billingPeriod,
-            enabled = state.isEditable,
-            onSelect = onBillingPeriodChange,
-        )
+            BillingPeriodSelector(
+                selected = state.billingPeriod,
+                enabled = state.isEditable,
+                onSelect = onBillingPeriodChange,
+                modifier = Modifier.weight(1f),
+            )
+        }
 
         DateField(
             date = state.nextBillingDate,
@@ -265,7 +284,7 @@ private fun SubscriptionFormContent(
         )
 
         val urlError = state.errorFor(SubscriptionField.MANAGEMENT_URL)
-        OutlinedTextField(
+        TextField(
             value = state.managementUrl,
             onValueChange = onManagementUrlChange,
             modifier = Modifier.fillMaxWidth(),
@@ -274,34 +293,61 @@ private fun SubscriptionFormContent(
             isError = urlError != null,
             supportingText = { Text(urlError ?: stringResource(R.string.form_management_url_hint)) },
             label = { Text(stringResource(R.string.form_management_url_label)) },
+            shape = GriffShapes.Interactive,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Uri,
                 imeAction = ImeAction.Done,
             ),
+            colors = griffFilledTextFieldColors(),
         )
 
-        RemindersToggleField(
-            enabled = state.remindersEnabled,
-            hint = stringResource(R.string.form_reminders_hint_subscription),
-            isEditable = state.isEditable,
-            onEnabledChange = onRemindersEnabledChange,
-        )
-
-        Button(
-            onClick = onSave,
-            enabled = state.isSaveEnabled && !state.isSaving,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Spacing.Small),
+                .background(MaterialTheme.colorScheme.surfaceContainer, GriffShapes.Interactive)
+                .padding(horizontal = Spacing.Large, vertical = Spacing.Medium),
+        ) {
+            RemindersToggleField(
+                enabled = state.remindersEnabled,
+                hint = stringResource(R.string.form_reminders_hint_subscription),
+                isEditable = state.isEditable,
+                onEnabledChange = onRemindersEnabledChange,
+            )
+        }
+
+        val saveEnabled = state.isSaveEnabled && !state.isSaving
+        Button(
+            onClick = onSave,
+            enabled = saveEnabled,
             shape = GriffShapes.Interactive,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = GriffGradients.OnAccent,
+                disabledContainerColor = Color.Transparent,
+                disabledContentColor = GriffGradients.OnAccent,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Spacing.Small)
+                .alpha(if (saveEnabled) 1f else 0.38f)
+                .background(brush = GriffGradients.accent(), shape = GriffShapes.Interactive),
         ) {
             if (state.isSaving) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(SaveIndicatorSize),
                     strokeWidth = 2.dp,
+                    color = GriffGradients.OnAccent,
                 )
             } else {
-                Text(stringResource(R.string.form_save))
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(SaveIndicatorSize),
+                )
+                Text(
+                    text = stringResource(R.string.form_save),
+                    modifier = Modifier.padding(start = Spacing.Small),
+                )
             }
         }
     }

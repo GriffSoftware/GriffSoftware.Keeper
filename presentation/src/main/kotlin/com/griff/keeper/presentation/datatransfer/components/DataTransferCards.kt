@@ -1,6 +1,9 @@
 package com.griff.keeper.presentation.datatransfer.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +16,6 @@ import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.HomeWork
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.SearchOff
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -23,10 +24,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
 import com.griff.keeper.presentation.theme.GriffThemePreview
@@ -55,27 +60,17 @@ internal fun DataTransferActionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-        border = GriffTheme.containerBorder,
+    GriffCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .alpha(if (enabled) 1f else DisabledAlpha)
+            .clickable(enabled = enabled, onClick = onClick),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.Large),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Spacing.Large),
         ) {
-            Icon(
-                imageVector = action.icon(),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(ActionIconSize),
-            )
+            ActionIconTile(action = action)
             Column(verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall)) {
                 Text(
                     text = stringResource(action.titleRes()),
@@ -88,6 +83,36 @@ internal fun DataTransferActionCard(
                 )
             }
         }
+    }
+}
+
+/**
+ * The export action is the one the app most wants used - a working backup is what makes every other
+ * data-transfer feature safe to rely on - so its tile carries the brand gradient. The other two get a
+ * quieter tonal tile, matching the accent without competing with it.
+ */
+@Composable
+private fun ActionIconTile(action: DataTransferAction) {
+    val isPrimary = action == DataTransferAction.EXPORT
+    Box(
+        modifier = Modifier
+            .size(ActionTileSize)
+            .clip(GriffShapes.Interactive)
+            .then(
+                if (isPrimary) {
+                    Modifier.background(GriffGradients.accent())
+                } else {
+                    Modifier.background(MaterialTheme.colorScheme.primaryContainer)
+                },
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = action.icon(),
+            contentDescription = null,
+            tint = if (isPrimary) GriffGradients.OnAccent else MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.size(ActionIconSize),
+        )
     }
 }
 
@@ -131,17 +156,8 @@ internal fun ShareUnavailableCard(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ),
-        border = GriffTheme.containerBorder,
-    ) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+    GriffCard(modifier = modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
@@ -182,17 +198,8 @@ private fun InformationCard(
     description: String,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-        ),
-        border = GriffTheme.containerBorder,
-    ) {
-        Column(
-            modifier = Modifier.padding(Spacing.Large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.Small),
-        ) {
+    GriffCard(modifier = modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.Small)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
@@ -232,8 +239,10 @@ private fun DataTransferAction.descriptionRes(): Int = when (this) {
     DataTransferAction.IMPORT -> R.string.data_transfer_import_description
 }
 
-private val ActionIconSize = 24.dp
+private val ActionIconSize = 22.dp
+private val ActionTileSize = 44.dp
 private val BannerIconSize = 18.dp
+private const val DisabledAlpha = 0.5f
 
 @ThemePreviews
 @Composable

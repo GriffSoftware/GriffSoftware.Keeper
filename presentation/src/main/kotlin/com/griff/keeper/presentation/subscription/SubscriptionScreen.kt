@@ -1,22 +1,22 @@
 package com.griff.keeper.presentation.subscription
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,8 @@ import com.griff.keeper.presentation.common.Tags
 import com.griff.keeper.presentation.common.UiMessage
 import com.griff.keeper.presentation.common.component.EmptyState
 import com.griff.keeper.presentation.common.component.FullScreenLoading
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffFab
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.SearchField
 import com.griff.keeper.presentation.common.component.TagFilterOption
@@ -102,50 +105,47 @@ internal fun SubscriptionScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.subscriptions_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = stringResource(R.string.open_menu),
-                        )
-                    }
-                },
-            )
-        },
-        bottomBar = {
-            if (state.items.isNotEmpty()) {
-                SubscriptionTotalsBar(
-                    totals = state.totals,
-                    isFiltered = state.isFiltered,
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.subscriptions_title)) },
+                    navigationIcon = {
+                        IconButton(onClick = onOpenDrawer) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = stringResource(R.string.open_menu),
+                            )
+                        }
+                    },
                 )
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddSubscription,
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
+            },
+            floatingActionButton = {
+                GriffFab(
+                    onClick = onAddSubscription,
                     contentDescription = stringResource(R.string.subscriptions_add),
                 )
-            }
-        },
-        snackbarHost = { GriffSnackbarHost(snackbarHostState) },
-    ) { contentPadding ->
-        SubscriptionContent(
-            state = state,
-            onQueryChange = onQueryChange,
-            onCategoryChange = onCategoryChange,
-            onSubscriptionClick = onSubscriptionClick,
+            },
+        ) { contentPadding ->
+            SubscriptionContent(
+                state = state,
+                onQueryChange = onQueryChange,
+                onCategoryChange = onCategoryChange,
+                onSubscriptionClick = onSubscriptionClick,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+            )
+        }
+
+        // Anchored to the screen's own bottom edge rather than through Scaffold's snackbarHost
+        // slot, which leaves a gap above the FAB - the message is allowed to sit over the FAB
+        // for its brief few seconds on screen instead.
+        GriffSnackbarHost(
+            hostState = snackbarHostState,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
         )
     }
 }
@@ -159,6 +159,16 @@ internal fun SubscriptionContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
+        if (state.items.isNotEmpty()) {
+            SubscriptionTotalsBar(
+                totals = state.totals,
+                isFiltered = state.isFiltered,
+                totalSubscriptionCount = state.totalSubscriptionCount,
+                items = state.items,
+                modifier = Modifier.padding(horizontal = Spacing.Large, vertical = Spacing.Small),
+            )
+        }
+
         SearchField(
             query = state.query,
             placeholder = stringResource(R.string.subscriptions_search_placeholder),
@@ -173,7 +183,7 @@ internal fun SubscriptionContent(
                 },
                 selected = state.selectedCategory,
                 onSelect = onCategoryChange,
-                modifier = Modifier.padding(bottom = Spacing.Small),
+                modifier = Modifier.padding(top = Spacing.Small, bottom = Spacing.Small),
             )
         }
 
@@ -226,19 +236,27 @@ private fun SubscriptionList(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        // Room for the floating action button, which hovers above the totals bar.
-        contentPadding = PaddingValues(bottom = FabClearance),
+        contentPadding = PaddingValues(
+            start = Spacing.Large,
+            top = Spacing.Small,
+            end = Spacing.Large,
+            bottom = FabClearance,
+        ),
+        verticalArrangement = Arrangement.spacedBy(Spacing.Small),
     ) {
         items(items = state.items, key = { it.id }) { item ->
-            SubscriptionListItemRow(
-                item = item,
+            GriffCard(
                 modifier = Modifier.clickable { onSubscriptionClick(item.id) },
-            )
+                contentPadding = PaddingValues(0.dp),
+            ) {
+                SubscriptionListItemRow(item = item)
+            }
         }
     }
 }
 
-private val FabClearance = 88.dp
+/** Room for the floating action button, which hovers above the list. */
+private val FabClearance = 76.dp
 
 @ThemePreviews
 @Composable

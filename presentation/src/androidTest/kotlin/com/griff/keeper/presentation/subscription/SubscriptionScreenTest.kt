@@ -113,7 +113,8 @@ class SubscriptionScreenTest {
             ),
         )
 
-        // The summary is a bottom bar, so it is on screen even though most rows are not.
+        // The summary is a fixed hero card above the list, so it is on screen even though most rows
+        // scroll out of view below it.
         composeRule.onNodeWithText(perMonth(Money.ofUnits(400))).assertIsDisplayed()
         composeRule.onNodeWithText(perYear(Money.ofUnits(4_800))).assertIsDisplayed()
     }

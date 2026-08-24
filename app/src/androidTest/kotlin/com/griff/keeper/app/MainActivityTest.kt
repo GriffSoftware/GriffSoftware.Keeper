@@ -5,6 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollToNodeAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -14,6 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.griff.keeper.BuildConfig
 import com.griff.keeper.presentation.R
 import kotlin.test.Test
+import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
 
@@ -28,6 +30,18 @@ class MainActivityTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
+
+    /**
+     * The app opens on the splash screen for a fixed beat before navigating to Subscriptions - every
+     * test needs the real destination on screen before it can find anything in it.
+     */
+    @Before
+    fun waitForSplashToFinish() {
+        val placeholder = context.getString(R.string.subscriptions_search_placeholder)
+        composeRule.waitUntil(timeoutMillis = SplashTimeoutMillis) {
+            composeRule.onAllNodesWithText(placeholder).fetchSemanticsNodes().isNotEmpty()
+        }
+    }
 
     @Test
     fun startsOnTheSubscriptionsScreen() {
@@ -73,3 +87,5 @@ class MainActivityTest {
         composeRule.onNodeWithText(version).assertIsDisplayed()
     }
 }
+
+private const val SplashTimeoutMillis = 5_000L

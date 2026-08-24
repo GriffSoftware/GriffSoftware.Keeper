@@ -187,9 +187,9 @@ internal object GriffTheme {
 /**
  * Application theme.
  *
- * Dynamic color is off by default: the brand accent (blue in light, cyan in dark) is the point of
- * the palette, and letting the system wallpaper replace it would make the app look like any other
- * Material sample. The parameter stays so the choice can be exposed as a user setting later.
+ * Dynamic color is off by default: the brand accent (navy) is the point of the palette, and letting
+ * the system wallpaper replace it would make the app look like any other Material sample. The
+ * parameter stays so the choice can be exposed as a user setting later.
  */
 @Composable
 fun GriffKeeperTheme(

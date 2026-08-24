@@ -8,6 +8,9 @@ import kotlinx.serialization.Serializable
  * Only identifiers travel between destinations; every screen loads its own data through use cases.
  */
 @Serializable
+data object SplashRoute
+
+@Serializable
 data object SubscriptionRoute
 
 @Serializable

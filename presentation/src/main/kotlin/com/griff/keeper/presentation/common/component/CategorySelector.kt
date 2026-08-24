@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,17 +60,12 @@ fun <T> CategorySelector(
             verticalArrangement = Arrangement.spacedBy(Spacing.Small),
         ) {
             options.forEach { option ->
-                FilterChip(
+                GriffFilterChip(
                     selected = option.value == selected,
                     onClick = { onSelect(option.value) },
                     enabled = enabled,
-                    label = { Text(stringResource(option.labelRes)) },
                     leadingIcon = leadingIcon?.let { icon -> { icon(option.value) } },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ),
+                    label = { Text(stringResource(option.labelRes)) },
                 )
             }
         }

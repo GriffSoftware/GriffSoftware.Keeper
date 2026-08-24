@@ -15,11 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +33,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.component.GriffCard
 import com.griff.keeper.presentation.common.component.ProviderLogo
+import com.griff.keeper.presentation.common.component.griffTextFieldColors
 import com.griff.keeper.presentation.form.ProviderOption
 import com.griff.keeper.presentation.theme.MinTouchTarget
 import com.griff.keeper.presentation.theme.Spacing
@@ -90,6 +92,7 @@ internal fun ProviderPicker(
                 supportingText = errorMessage?.let { { Text(it) } },
                 placeholder = { Text(stringResource(R.string.form_provider_placeholder)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                colors = griffTextFieldColors(),
             )
 
             if (options.isEmpty()) {
@@ -100,10 +103,11 @@ internal fun ProviderPicker(
                     modifier = Modifier.padding(top = Spacing.Small),
                 )
             } else {
-                OutlinedCard(
+                GriffCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = Spacing.Small),
+                    contentPadding = PaddingValues(0.dp),
                 ) {
                     LazyColumn(modifier = Modifier.heightIn(max = SuggestionsMaxHeight)) {
                         items(items = options, key = { it.id }) { option ->
@@ -126,18 +130,23 @@ private fun SelectedProviderCard(
     enabled: Boolean,
     onClear: () -> Unit,
 ) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    GriffCard(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = Spacing.Medium, vertical = Spacing.Small),
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Spacing.Large, vertical = Spacing.Medium),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProviderLogo(logoKey = option.logoKey, name = option.displayLabel())
-            Spacer(Modifier.width(Spacing.Large))
+            ProviderLogo(
+                logoKey = option.logoKey,
+                name = option.displayLabel(),
+                size = ProviderRowLogoSize,
+            )
+            Spacer(Modifier.width(Spacing.Medium))
             Text(
                 text = option.displayLabel(),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = onClear, enabled = enabled) {

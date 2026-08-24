@@ -5,6 +5,7 @@ import com.griff.keeper.domain.model.Money
 import com.griff.keeper.domain.model.ProviderCategory
 import com.griff.keeper.domain.model.SubscriptionTotals
 import com.griff.keeper.presentation.common.UiMessage
+import java.time.LocalDate
 
 /** One row of the subscription list. */
 data class SubscriptionListItem(
@@ -14,6 +15,7 @@ data class SubscriptionListItem(
     val category: ProviderCategory,
     val billingPeriod: BillingPeriod,
     val price: Money,
+    val nextBillingDate: LocalDate? = null,
 )
 
 /** Immutable state rendered by the subscriptions screen. */

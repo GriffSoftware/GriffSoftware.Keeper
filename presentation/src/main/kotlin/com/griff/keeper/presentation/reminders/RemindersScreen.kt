@@ -13,10 +13,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NotificationsNone
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -44,6 +44,8 @@ import com.griff.keeper.presentation.BuildConfig
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.EmptyState
 import com.griff.keeper.presentation.common.component.FullScreenLoading
+import com.griff.keeper.presentation.common.component.GriffCard
+import com.griff.keeper.presentation.common.component.GriffFilterChip
 import com.griff.keeper.presentation.common.component.GriffSnackbarHost
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.resolve
@@ -267,12 +269,17 @@ private fun RemindersContent(
                         SectionHeader(stringResource(R.string.reminders_upcoming_title))
                     }
                     items(items = state.upcoming, key = { "u-${it.sourceType}-${it.id}" }) { row ->
-                        ReminderRow(
-                            row = row,
-                            // Global off keeps the list readable but honest: nothing here is armed.
-                            enabled = state.remindersActive,
-                            onClick = { onItemClick(row) },
-                        )
+                        GriffCard(
+                            modifier = Modifier.padding(horizontal = Spacing.Large),
+                            contentPadding = PaddingValues(0.dp),
+                        ) {
+                            ReminderRow(
+                                row = row,
+                                // Global off keeps the list readable but honest: nothing here is armed.
+                                enabled = state.remindersActive,
+                                onClick = { onItemClick(row) },
+                            )
+                        }
                     }
                 }
 
@@ -281,7 +288,12 @@ private fun RemindersContent(
                         SectionHeader(stringResource(R.string.reminders_inactive_title))
                     }
                     items(items = state.inactive, key = { "i-${it.sourceType}-${it.id}" }) { row ->
-                        ReminderRow(row = row, enabled = false, onClick = { onItemClick(row) })
+                        GriffCard(
+                            modifier = Modifier.padding(horizontal = Spacing.Large),
+                            contentPadding = PaddingValues(0.dp),
+                        ) {
+                            ReminderRow(row = row, enabled = false, onClick = { onItemClick(row) })
+                        }
                     }
                 }
             }
@@ -327,20 +339,16 @@ private fun ReminderFilterRow(
     selected: ReminderFilter,
     onSelect: (ReminderFilter) -> Unit,
 ) {
-    androidx.compose.foundation.lazy.LazyRow(
+    LazyRow(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = Spacing.Large),
         horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
     ) {
         items(items = ReminderFilter.entries.toList(), key = { it.name }) { filter ->
-            FilterChip(
+            GriffFilterChip(
                 selected = filter == selected,
                 onClick = { onSelect(filter) },
                 label = { Text(stringResource(filter.labelRes())) },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
             )
         }
     }
