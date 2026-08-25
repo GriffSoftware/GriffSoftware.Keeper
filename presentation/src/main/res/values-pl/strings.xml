@@ -110,7 +110,7 @@
     <string name="drawer_monthly_label">Miesięcznie</string>
     <string name="drawer_yearly_label">Rocznie</string>
     <string name="drawer_privacy_policy">Polityka prywatności</string>
-    <string name="drawer_local_data">🔒 Dane przechowywane lokalnie</string>
+    <string name="drawer_local_data">🔒 Dane lokalne</string>
 
     <!-- Language. The language names themselves are self-names and live in values/ only. -->
     <string name="drawer_language">Język</string>
