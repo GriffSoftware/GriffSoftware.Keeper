@@ -41,7 +41,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.griff.keeper.domain.model.Currency
+import com.griff.keeper.presentation.common.currency.LocalAppCurrency
 import com.griff.keeper.domain.model.ObligationCategory
 import com.griff.keeper.domain.model.PaymentStatus
 import com.griff.keeper.domain.validation.ObligationField
@@ -254,7 +254,7 @@ private fun ObligationFormContent(
             isError = amountError != null,
             supportingText = amountError?.let { { Text(it) } },
             label = { Text(stringResource(R.string.obligation_form_amount_label)) },
-            suffix = { Text(Currency.Default.symbol(currentLocale())) },
+            suffix = { Text(LocalAppCurrency.current.symbol(currentLocale())) },
             shape = GriffShapes.Interactive,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,

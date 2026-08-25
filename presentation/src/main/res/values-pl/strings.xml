@@ -118,6 +118,46 @@
     <!-- Spoken as one row: "Język, Polski" -->
     <string name="language_item_description">%1$s, %2$s</string>
 
+    <!-- Currency -->
+    <string name="drawer_currency">Waluta</string>
+    <string name="currency_pln_name">Polski złoty</string>
+    <string name="currency_eur_name">Euro</string>
+    <string name="currency_dialog_title">Wybierz walutę</string>
+    <!-- Spoken as one row: "Waluta, PLN" -->
+    <string name="currency_item_description">%1$s, %2$s</string>
+
+    <!-- Currency change: rate entry -->
+    <string name="currency_rate_dialog_title">Zmienić walutę aplikacji?</string>
+    <string name="currency_rate_dialog_message">Masz już zapisane kwoty w %1$s.\n\nAby przejść na %2$s, istniejące kwoty muszą zostać przeliczone.\n\nPodaj kurs wymiany używany do konwersji.</string>
+    <string name="currency_rate_dialog_hint">Wszystkie kwoty w aplikacji zostaną przeliczone według tego kursu.</string>
+    <string name="currency_rate_error_empty">Podaj kurs wymiany</string>
+    <string name="currency_rate_error_malformed">Podaj poprawną liczbę, np. 4,25</string>
+    <string name="currency_rate_error_negative">Kurs nie może być ujemny</string>
+    <string name="currency_rate_error_zero">Kurs nie może wynosić zero</string>
+    <string name="currency_rate_error_too_many_decimals">Użyj maksymalnie sześciu miejsc po przecinku</string>
+    <string name="currency_rate_error_too_large">Kurs jest zbyt duży</string>
+    <string name="action_continue">Dalej</string>
+
+    <!-- Currency change: preview -->
+    <string name="currency_preview_title">Zmiana waluty</string>
+    <string name="currency_preview_direction">%1$s → %2$s</string>
+    <string name="currency_preview_rate_label">Kurs wymiany</string>
+    <string name="currency_preview_sample_label">Przykładowe przeliczenie</string>
+    <string name="currency_preview_sample_row">%1$s\n%2$s → %3$s</string>
+    <string name="currency_preview_affected_label">Dotyczy</string>
+
+    <!-- Currency change: final confirmation -->
+    <string name="currency_confirm_title">Przeliczyć wszystkie kwoty?</string>
+    <string name="currency_confirm_message">Wszystkie kwoty w Griff Keeper zostaną przeliczone z %1$s na %2$s według kursu:\n\n1 EUR = %3$s PLN\n\nZe względu na zaokrąglenia ponowna zmiana waluty może nie odtworzyć dokładnie pierwotnych kwot.\n\nZalecamy utworzenie kopii zapasowej przed zmianą waluty.</string>
+    <string name="currency_confirm_backup_action">Utwórz kopię zapasową</string>
+    <string name="currency_confirm_action">Przelicz</string>
+
+    <!-- Currency change: progress and feedback -->
+    <string name="currency_progress_message">Przeliczanie kwot…</string>
+    <string name="currency_change_success">Waluta została zmieniona na %1$s.</string>
+    <string name="currency_change_error">Nie udało się zmienić waluty. Twoje dane nie zostały zmodyfikowane.</string>
+    <string name="currency_change_error_preference_not_saved">Kwoty zostały przeliczone, ale aplikacji nie udało się zapamiętać nowej waluty. Uruchom aplikację ponownie.</string>
+
     <!-- Obligations list -->
     <string name="obligations_title">Ubezpieczenia i opłaty</string>
     <string name="obligations_search_placeholder">Szukaj opłaty</string>
@@ -485,9 +525,11 @@
     <string name="data_transfer_preview_title">Kopia zapasowa</string>
     <string name="data_transfer_preview_created_label">Utworzona</string>
     <string name="data_transfer_preview_app_version_label">Wersja aplikacji</string>
+    <string name="data_transfer_preview_currency_label">Waluta</string>
     <string name="data_transfer_preview_contents_label">Zawartość</string>
     <string name="data_transfer_preview_settings">ustawienia przypomnień i aplikacji</string>
     <string name="data_transfer_preview_local_data">Na tym urządzeniu istnieją już dane. Jak chcesz zaimportować kopię?</string>
+    <string name="data_transfer_preview_currency_mismatch">Ta kopia zapasowa używa innej waluty niż to urządzenie. Aby scalić dane, najpierw zmień walutę aplikacji, aby była zgodna, albo użyj kopii zapisanej w obecnej walucie. Zastąpienie wszystkich danych jest nadal dostępne.</string>
     <string name="data_transfer_preview_merge">Scal dane</string>
     <string name="data_transfer_preview_replace">Zastąp obecne dane</string>
     <string name="data_transfer_preview_restore">Odtwórz dane</string>
@@ -531,6 +573,7 @@
     <string name="data_transfer_error_newer_version">Ta kopia została utworzona przez nowszą wersję Griff. Zaktualizuj aplikację i spróbuj ponownie.</string>
     <string name="data_transfer_error_no_space_export">Brak wystarczającej ilości miejsca, aby utworzyć kopię zapasową.</string>
     <string name="data_transfer_error_no_space_import">Brak miejsca potrzebnego do odtworzenia kopii.</string>
+    <string name="data_transfer_error_currency_mismatch">Scalanie jest niedostępne: kopia zapasowa używa innej waluty niż to urządzenie. Zmień walutę aplikacji, aby była zgodna, albo wybierz zastąpienie danych.</string>
 
     <!-- History -->
     <string name="data_transfer_history_title">Ostatnie operacje</string>
@@ -548,6 +591,7 @@
     <string name="data_transfer_history_error_unsupported_version">Nieobsługiwana wersja kopii</string>
     <string name="data_transfer_history_error_validation">Kopia zawiera nieprawidłowe dane</string>
     <string name="data_transfer_history_error_no_space">Brak miejsca na urządzeniu</string>
+    <string name="data_transfer_history_error_currency_mismatch">Niezgodność walut</string>
     <string name="data_transfer_history_error_io">Błąd odczytu lub zapisu pliku</string>
     <string name="data_transfer_history_error_unknown">Operacja nie została ukończona</string>
 
@@ -619,6 +663,7 @@
     <string name="about_feature_statistics">Statystyki miesięcznych i rocznych wydatków</string>
     <string name="about_feature_tags">Kategorie i tagi do filtrowania danych</string>
     <string name="about_feature_backup">Szyfrowany import i eksport danych</string>
+    <string name="about_feature_currency">Obsługa PLN i EUR</string>
 
     <string name="about_privacy_title">Prywatność</string>
     <string name="about_privacy_description">Twoje dane są przechowywane lokalnie na tym urządzeniu. Griff Keeper nie wymaga konta ani własnego serwera i nie synchronizuje danych z chmurą.</string>

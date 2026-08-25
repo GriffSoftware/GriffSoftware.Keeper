@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.statistics.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +20,6 @@ import com.griff.keeper.domain.model.ObligationTotals
 import com.griff.keeper.domain.model.SubscriptionTotals
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.GriffCard
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.theme.GriffThemePreview
 import com.griff.keeper.presentation.theme.Spacing
 import com.griff.keeper.presentation.theme.ThemePreviews
@@ -41,13 +42,13 @@ internal fun SubscriptionSummaryCards(
     ) {
         SummaryCard(
             label = stringResource(R.string.statistics_monthly_label),
-            value = MoneyFormatter.format(totals.monthly),
+            value = totals.monthly.formatted(),
             valueColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.weight(1.2f),
         )
         SummaryCard(
             label = stringResource(R.string.statistics_yearly_label),
-            value = MoneyFormatter.format(totals.yearly),
+            value = totals.yearly.formatted(),
             modifier = Modifier.weight(1.2f),
         )
         SummaryCard(
@@ -75,7 +76,7 @@ internal fun ObligationSummaryCards(
     ) {
         SummaryCard(
             label = stringResource(R.string.statistics_obligations_paid_label),
-            value = MoneyFormatter.format(totals.paid),
+            value = totals.paid.formatted(),
             valueColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.weight(1.3f),
         )
@@ -86,7 +87,7 @@ internal fun ObligationSummaryCards(
         )
         SummaryCard(
             label = stringResource(R.string.statistics_obligations_outstanding_label),
-            value = MoneyFormatter.format(totals.outstanding),
+            value = totals.outstanding.formatted(),
             modifier = Modifier.weight(1.3f),
         )
     }

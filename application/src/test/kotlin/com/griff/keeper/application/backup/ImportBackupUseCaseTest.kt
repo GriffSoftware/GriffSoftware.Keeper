@@ -7,6 +7,7 @@ import com.griff.keeper.domain.backup.BackupOperationType
 import com.griff.keeper.domain.backup.ImportMode
 import com.griff.keeper.domain.backup.PortableSettings
 import com.griff.keeper.domain.backup.backupErrorType
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.testing.testObligation
 import com.griff.keeper.domain.testing.testSubscription
 import java.time.Instant
@@ -219,6 +220,80 @@ class ImportBackupUseCaseTest {
         )
 
         assertEquals(0, fixture.scheduler.scheduleCount)
+    }
+
+    @Test
+    fun `merge is blocked when the backup and the device disagree on currency`() = runTest {
+        val fixture = BackupUseCaseFixture(
+            localSubscriptions = listOf(testSubscription(id = "A", name = "Spotify")),
+            localAppCurrency = Currency.PLN,
+        )
+        val payload = fixture.payload(
+            subscriptions = listOf(testSubscription(id = "B", name = "Netflix")),
+            settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+        )
+
+        val result = fixture.importBackup(payload, ImportMode.MERGE, FILE_NAME)
+
+        assertEquals(BackupErrorType.CURRENCY_MISMATCH, result.exceptionOrNull()?.backupErrorType)
+        // Blocked before anything is written or attempted against the import repository.
+        assertEquals(listOf("Spotify"), fixture.subscriptions.stored.map { it.name.value })
+        assertEquals(0, fixture.importRepository.appliedPlans)
+        assertTrue(fixture.settings.writes.isEmpty())
+    }
+
+    @Test
+    fun `merge is blocked with nothing written when the device has no local data either`() = runTest {
+        // Nothing to merge means nothing to conflict with, but the guard is still exercised so it is
+        // pinned that an empty device never trips the mismatch check.
+        val fixture = BackupUseCaseFixture(localAppCurrency = Currency.PLN)
+        val payload = fixture.payload(
+            subscriptions = listOf(testSubscription()),
+            settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+        )
+
+        val result = fixture.importBackup(payload, ImportMode.MERGE, FILE_NAME)
+
+        assertTrue(result.isSuccess)
+        assertEquals(Currency.EUR, fixture.settings.stored.appCurrency)
+    }
+
+    @Test
+    fun `replace adopts the backup's currency even when it disagrees with the device`() = runTest {
+        val fixture = BackupUseCaseFixture(
+            localSubscriptions = listOf(testSubscription(id = "A", name = "Spotify")),
+            localAppCurrency = Currency.PLN,
+        )
+        val payload = fixture.payload(
+            subscriptions = listOf(testSubscription(id = "B", name = "Netflix")),
+            settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+        )
+
+        val result = fixture.importBackup(payload, ImportMode.REPLACE, FILE_NAME)
+
+        assertTrue(result.isSuccess)
+        assertEquals(Currency.EUR, fixture.settings.stored.appCurrency)
+        assertEquals(listOf("Netflix"), fixture.subscriptions.stored.map { it.name.value })
+    }
+
+    @Test
+    fun `merge with the same currency on both sides is not blocked`() = runTest {
+        val fixture = BackupUseCaseFixture(
+            localSubscriptions = listOf(testSubscription(id = "A", name = "Spotify")),
+            localAppCurrency = Currency.EUR,
+        )
+        val payload = fixture.payload(
+            subscriptions = listOf(testSubscription(id = "B", name = "Netflix")),
+            settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+        )
+
+        val result = fixture.importBackup(payload, ImportMode.MERGE, FILE_NAME)
+
+        assertTrue(result.isSuccess)
+        assertEquals(
+            listOf("Netflix", "Spotify").sorted(),
+            fixture.subscriptions.stored.map { it.name.value }.sorted(),
+        )
     }
 
     private companion object {

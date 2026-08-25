@@ -19,6 +19,7 @@ import com.griff.keeper.domain.backup.BackupFormat
 import com.griff.keeper.domain.backup.BackupOperationStatus
 import com.griff.keeper.domain.backup.BackupPayload
 import com.griff.keeper.domain.backup.PortableSettings
+import com.griff.keeper.domain.testing.FakeAppCurrencyRepository
 import com.griff.keeper.domain.testing.FakeBackupCodec
 import com.griff.keeper.domain.testing.FakeBackupFileReader
 import com.griff.keeper.domain.testing.FakeBackupFileSharing
@@ -490,6 +491,7 @@ class DataTransferViewModelTest {
         val subscriptions = FakeSubscriptionRepository(localSubscriptions)
         val obligations = FakeObligationRepository(localObligations)
         val settings = FakePortableSettingsRepository()
+        val appCurrency = FakeAppCurrencyRepository()
         val history = FakeBackupOperationRepository()
         val codec = FakeBackupCodec()
         val reader = FakeBackupFileReader()
@@ -539,12 +541,14 @@ class DataTransferViewModelTest {
                 codec = codec,
                 subscriptions = subscriptions,
                 obligations = obligations,
+                appCurrency = appCurrency,
                 recorder = recorder,
                 clock = clock,
             ),
             importBackup = ImportBackupUseCase(
                 subscriptions = subscriptions,
                 obligations = obligations,
+                appCurrency = appCurrency,
                 importRepository = importRepository,
                 portableSettings = settings,
                 recorder = recorder,

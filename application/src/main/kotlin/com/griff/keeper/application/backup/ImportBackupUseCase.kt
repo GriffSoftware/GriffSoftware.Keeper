@@ -1,6 +1,8 @@
 package com.griff.keeper.application.backup
 
 import com.griff.keeper.application.reminder.EnsureRemindersScheduledUseCase
+import com.griff.keeper.domain.backup.BackupErrorType
+import com.griff.keeper.domain.backup.BackupFailureException
 import com.griff.keeper.domain.backup.BackupImportRepository
 import com.griff.keeper.domain.backup.BackupMerger
 import com.griff.keeper.domain.backup.BackupOperationType
@@ -10,6 +12,7 @@ import com.griff.keeper.domain.backup.ImportPlan
 import com.griff.keeper.domain.backup.LocalDataSnapshot
 import com.griff.keeper.domain.backup.PortableSettingsRepository
 import com.griff.keeper.domain.backup.backupErrorType
+import com.griff.keeper.domain.repository.AppCurrencyRepository
 import com.griff.keeper.domain.repository.ObligationRepository
 import com.griff.keeper.domain.repository.SubscriptionRepository
 import com.griff.keeper.domain.time.ClockProvider
@@ -47,6 +50,7 @@ import kotlinx.coroutines.flow.first
 class ImportBackupUseCase @Inject constructor(
     private val subscriptions: SubscriptionRepository,
     private val obligations: ObligationRepository,
+    private val appCurrency: AppCurrencyRepository,
     private val importRepository: BackupImportRepository,
     private val portableSettings: PortableSettingsRepository,
     private val recorder: BackupOperationRecorder,
@@ -63,7 +67,17 @@ class ImportBackupUseCase @Inject constructor(
             val local = LocalDataSnapshot(
                 subscriptions = subscriptions.observeAll().first(),
                 obligations = obligations.observeAll().first(),
+                appCurrency = appCurrency.current(),
             )
+
+            // Merging amounts held in two different currencies would either mix them silently or
+            // require a conversion the user never asked for here, so the import is refused before
+            // anything is written. REPLACE has no such restriction: it adopts the backup's currency
+            // outright instead of reconciling it with what is already on the device.
+            if (mode == ImportMode.MERGE && !local.isEmpty && local.appCurrency != payload.settings.appCurrency) {
+                throw BackupFailureException(BackupErrorType.CURRENCY_MISMATCH)
+            }
+
             val plan = BackupMerger.plan(mode, local, payload)
 
             val previousSettings = portableSettings.current()

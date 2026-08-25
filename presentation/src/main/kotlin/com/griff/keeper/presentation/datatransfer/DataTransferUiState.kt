@@ -4,6 +4,7 @@ import com.griff.keeper.domain.backup.BackupErrorType
 import com.griff.keeper.domain.backup.BackupOperationStatus
 import com.griff.keeper.domain.backup.BackupOperationType
 import com.griff.keeper.domain.backup.ImportMode
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.presentation.common.UiMessage
 import java.time.Instant
 
@@ -76,6 +77,9 @@ data class ImportPreviewUi(
     val hasSettings: Boolean,
     val hasLocalData: Boolean,
     val possibleDuplicates: Int,
+    val appCurrency: Currency,
+    /** True when [ImportMode.MERGE] would mix two different currencies and is therefore refused. */
+    val currencyMismatch: Boolean,
 ) {
     val recordCount: Int get() = subscriptionCount + obligationCount
 }

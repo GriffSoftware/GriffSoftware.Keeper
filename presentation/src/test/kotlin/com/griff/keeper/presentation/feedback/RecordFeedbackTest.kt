@@ -1,6 +1,7 @@
 package com.griff.keeper.presentation.feedback
 
 import androidx.lifecycle.SavedStateHandle
+import com.griff.keeper.application.currency.ObserveAppCurrencyUseCase
 import com.griff.keeper.application.obligation.AddObligationUseCase
 import com.griff.keeper.application.obligation.GetObligationUseCase
 import com.griff.keeper.application.obligation.UpdateObligationUseCase
@@ -15,6 +16,7 @@ import com.griff.keeper.application.subscription.ValidateSubscriptionInputUseCas
 import com.griff.keeper.domain.model.ObligationCategory
 import com.griff.keeper.domain.model.PaymentStatus
 import com.griff.keeper.domain.model.ProviderId
+import com.griff.keeper.domain.testing.FakeAppCurrencyRepository
 import com.griff.keeper.domain.testing.FakeObligationRepository
 import com.griff.keeper.domain.testing.FakeProviderCatalog
 import com.griff.keeper.domain.testing.FakeSubscriptionRepository
@@ -201,6 +203,7 @@ class RecordFeedbackTest {
             ),
             updateSubscription = UpdateSubscriptionUseCase(repository = repository, clock = clock),
             validateInput = ValidateSubscriptionInputUseCase(),
+            observeAppCurrency = ObserveAppCurrencyUseCase(FakeAppCurrencyRepository()),
         )
     }
 
@@ -221,6 +224,7 @@ class RecordFeedbackTest {
             ),
             updateObligation = UpdateObligationUseCase(repository = repository, clock = clock),
             validateInput = ValidateObligationInputUseCase(),
+            observeAppCurrency = ObserveAppCurrencyUseCase(FakeAppCurrencyRepository()),
             clock = clock,
         )
     }

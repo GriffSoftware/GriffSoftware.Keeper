@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.griff.keeper.application.provider.GetProviderUseCase
 import com.griff.keeper.application.provider.GetProvidersUseCase
 import com.griff.keeper.application.provider.SearchProvidersUseCase
+import com.griff.keeper.application.currency.ObserveAppCurrencyUseCase
 import com.griff.keeper.application.subscription.AddSubscriptionUseCase
 import com.griff.keeper.application.subscription.GetSubscriptionUseCase
 import com.griff.keeper.application.subscription.UpdateSubscriptionUseCase
 import com.griff.keeper.application.subscription.ValidateSubscriptionInputUseCase
 import com.griff.keeper.domain.model.BillingPeriod
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.Provider
 import com.griff.keeper.domain.model.ProviderCategory
 import com.griff.keeper.domain.model.ProviderId
@@ -33,9 +35,11 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -69,10 +73,19 @@ class SubscriptionFormViewModel @Inject constructor(
     private val addSubscription: AddSubscriptionUseCase,
     private val updateSubscription: UpdateSubscriptionUseCase,
     private val validateInput: ValidateSubscriptionInputUseCase,
+    observeAppCurrency: ObserveAppCurrencyUseCase,
 ) : ViewModel() {
 
     private val editedId: SubscriptionId? =
         savedStateHandle.get<String>(SUBSCRIPTION_ID_ARG)?.let(::SubscriptionId)
+
+    /**
+     * The currency a *new* record is saved in. Read reactively rather than fetched once at save
+     * time: [onSave] and [revalidate] are both synchronous, so the value has to already be here when
+     * they run, the same way every other piece of form state is.
+     */
+    private val appCurrency: StateFlow<Currency> = observeAppCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), Currency.Default)
 
     private val _uiState = MutableStateFlow(
         SubscriptionFormUiState(
@@ -174,7 +187,7 @@ class SubscriptionFormViewModel @Inject constructor(
 
     fun onSave() {
         saveAttempted = true
-        val validation = validateInput(currentInput())
+        val validation = validateInput(currentInput(), appCurrency.value)
         if (validation !is SubscriptionInputValidation.Valid) {
             revalidate()
             return
@@ -288,7 +301,7 @@ class SubscriptionFormViewModel @Inject constructor(
 
     private fun revalidate() {
         val state = _uiState.value
-        val validation = validateInput(currentInput())
+        val validation = validateInput(currentInput(), appCurrency.value)
         val errors = when (validation) {
             is SubscriptionInputValidation.Valid -> emptyMap()
             is SubscriptionInputValidation.Invalid -> validation.errors
@@ -311,6 +324,10 @@ class SubscriptionFormViewModel @Inject constructor(
             SubscriptionField.MANAGEMENT_URL -> managementUrl.isNotBlank()
             SubscriptionField.PROVIDER, SubscriptionField.NAME -> false
         }
+
+    private companion object {
+        const val STOP_TIMEOUT_MILLIS = 5_000L
+    }
 }
 
 private fun Provider.toOption() = ProviderOption(

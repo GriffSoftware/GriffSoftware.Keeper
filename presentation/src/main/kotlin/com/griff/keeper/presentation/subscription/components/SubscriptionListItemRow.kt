@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.subscription.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +20,6 @@ import com.griff.keeper.presentation.common.Tags
 import com.griff.keeper.presentation.common.component.EntryRow
 import com.griff.keeper.presentation.common.component.ProviderLogo
 import com.griff.keeper.presentation.common.component.TagChip
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.reminders.ReminderPhrases
 import com.griff.keeper.presentation.subscription.SubscriptionListItem
 import com.griff.keeper.presentation.theme.GriffThemePreview
@@ -39,7 +40,7 @@ internal fun SubscriptionListItemRow(
     item: SubscriptionListItem,
     modifier: Modifier = Modifier,
 ) {
-    val priceText = MoneyFormatter.format(item.price)
+    val priceText = item.price.formatted()
     val periodText = stringResource(Labels.billingPeriodShort(item.billingPeriod))
     val tag = Tags.of(item.category)
     val description = stringResource(

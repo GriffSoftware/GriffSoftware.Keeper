@@ -1,14 +1,20 @@
 package com.griff.keeper.presentation.navigation
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,6 +29,10 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.griff.keeper.presentation.about.AboutRoute
 import com.griff.keeper.presentation.common.TransientMessages
+import com.griff.keeper.presentation.common.component.GriffSnackbarHost
+import com.griff.keeper.presentation.common.component.showMessage
+import com.griff.keeper.presentation.common.currency.LocalAppCurrency
+import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.common.locale.AppLanguages
 import com.griff.keeper.presentation.datatransfer.DataTransferRoute
 import com.griff.keeper.presentation.details.SubscriptionDetailsRoute
@@ -77,32 +87,53 @@ fun GriffKeeperApp(
 
     val drawerTotals by drawerViewModel.totals.collectAsStateWithLifecycle()
     val upcomingReminderCount by drawerViewModel.upcomingReminderCount.collectAsStateWithLifecycle()
+    val appCurrency by drawerViewModel.appCurrency.collectAsStateWithLifecycle()
+    val currencyChangeStep by drawerViewModel.currencyChangeStep.collectAsStateWithLifecycle()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = currentDestination.isDrawerDestination(),
-        drawerContent = {
-            AppDrawerContent(
-                selected = currentDestination.toDrawerDestination(),
-                appVersion = drawerViewModel.appVersion,
-                totals = drawerTotals,
-                upcomingReminderCount = upcomingReminderCount,
-                language = language,
-                onSelect = { destination ->
-                    closeDrawer()
-                    navController.navigateToDrawerDestination(destination)
+    val currencySnackbarHostState = remember { SnackbarHostState() }
+    val currencyMessage = drawerViewModel.currencyMessage.collectAsStateWithLifecycle().value?.resolve()
+    LaunchedEffect(currencyMessage) {
+        if (currencyMessage != null) {
+            currencySnackbarHostState.showMessage(currencyMessage)
+            drawerViewModel.onCurrencyMessageShown()
+        }
+    }
+
+    CompositionLocalProvider(LocalAppCurrency provides appCurrency) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                gesturesEnabled = currentDestination.isDrawerDestination(),
+                drawerContent = {
+                    AppDrawerContent(
+                        selected = currentDestination.toDrawerDestination(),
+                        appVersion = drawerViewModel.appVersion,
+                        totals = drawerTotals,
+                        upcomingReminderCount = upcomingReminderCount,
+                        language = language,
+                        currency = appCurrency,
+                        currencyChangeStep = currencyChangeStep,
+                        onSelect = { destination ->
+                            closeDrawer()
+                            navController.navigateToDrawerDestination(destination)
+                        },
+                        // The navigation state is left exactly as it is: Android recreates the
+                        // activity, the back stack is restored with it, and the user stays on the
+                        // destination they were reading - About stays About.
+                        onLanguageSelected = AppLanguages::apply,
+                        onCurrencySelected = drawerViewModel::onCurrencySelected,
+                        onRateInputChanged = drawerViewModel::onRateInputChanged,
+                        onRateConfirmed = drawerViewModel::onRateConfirmed,
+                        onPreviewConfirmed = drawerViewModel::onPreviewConfirmed,
+                        onConversionConfirmed = drawerViewModel::onConversionConfirmed,
+                        onCurrencyChangeCancelled = drawerViewModel::onCurrencyChangeCancelled,
+                    )
                 },
-                // The navigation state is left exactly as it is: Android recreates the activity, the
-                // back stack is restored with it, and the user stays on the destination they were
-                // reading - About stays About.
-                onLanguageSelected = AppLanguages::apply,
-            )
-        },
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = SplashRoute,
-        ) {
+            ) {
+                NavHost(
+                    navController = navController,
+                    startDestination = SplashRoute,
+                ) {
             composable<SplashRoute> {
                 SplashRoute(
                     onFinished = {
@@ -238,6 +269,15 @@ fun GriffKeeperApp(
                     },
                 )
             }
+                }
+            }
+
+            // The currency flow is reachable from every screen through the drawer, so its feedback
+            // gets its own snackbar host here rather than living inside any one screen's Scaffold.
+            GriffSnackbarHost(
+                hostState = currencySnackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
         }
     }
 }

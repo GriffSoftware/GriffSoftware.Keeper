@@ -1,5 +1,6 @@
 package com.griff.keeper.infrastructure.database.mapper
 
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.ObligationCategory
 import com.griff.keeper.domain.model.PaymentState
 import com.griff.keeper.domain.testing.testObligation
@@ -72,5 +73,15 @@ class ObligationMapperTest {
 
         // Cannot happen through the mapper, but a single bad row must not make the list unopenable.
         assertEquals(PaymentState.Unpaid, ObligationMapper.toDomain(inconsistent).payment)
+    }
+
+    @Test
+    fun `a EUR obligation round trips with its own currency code`() {
+        val eurObligation = obligation.copy(currency = Currency.EUR)
+
+        val entity = ObligationMapper.toEntity(eurObligation)
+
+        assertEquals("EUR", entity.currencyCode)
+        assertEquals(eurObligation, ObligationMapper.toDomain(entity))
     }
 }

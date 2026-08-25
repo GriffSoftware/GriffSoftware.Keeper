@@ -3,6 +3,7 @@ package com.griff.keeper.infrastructure.settings
 import com.griff.keeper.domain.backup.PortableSettings
 import com.griff.keeper.domain.backup.PortableSettingsRepository
 import com.griff.keeper.domain.reminder.ReminderDefaults
+import com.griff.keeper.domain.repository.AppCurrencyRepository
 import com.griff.keeper.domain.repository.ReminderSettingsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +19,9 @@ import javax.inject.Singleton
  *
  * Portable, and therefore exported:
  * - the app-wide reminder switch, from the `reminder_settings` preferences;
- * - each record's own reminder flag, which travels inside the record itself.
+ * - each record's own reminder flag, which travels inside the record itself;
+ * - the active app currency, from the `app_currency` preference - it is a decision about how to read
+ *   the very amounts in this file, not device-bound state.
  *
  * Not portable, and therefore never exported:
  * - the Android notification permission and the notification channel - granted by the system to this
@@ -30,10 +33,16 @@ import javax.inject.Singleton
  * [ReminderDefaults] is included in the payload for forward compatibility but cannot be applied:
  * the schedules are constants in this build, with nowhere to store an override. A later version that
  * lets the user edit them will be able to read today's files unchanged.
+ *
+ * Applying [appCurrency] here only ever happens as part of an already decided import (see
+ * `ImportBackupUseCase`): it is a plain preference write, never the transactional record conversion a
+ * user-initiated currency *switch* requires - that is `ChangeAppCurrencyUseCase`'s job, not this
+ * class's.
  */
 @Singleton
 class PortableSettingsDataStore @Inject constructor(
     private val reminderSettings: ReminderSettingsRepository,
+    private val appCurrency: AppCurrencyRepository,
 ) : PortableSettingsRepository {
 
     override suspend fun current(): PortableSettings {
@@ -41,16 +50,18 @@ class PortableSettingsDataStore @Inject constructor(
         return PortableSettings(
             globalRemindersEnabled = settings.globalEnabled,
             reminderDefaults = settings.defaults,
+            appCurrency = appCurrency.current(),
         )
     }
 
     /**
      * Writes the portable preferences.
      *
-     * One preference, one atomic edit - which is what lets the import use case treat this as a step
+     * Two preferences, two atomic edits - which is what lets the import use case treat this as a step
      * it can reverse if the database write that follows it fails.
      */
     override suspend fun apply(settings: PortableSettings) {
         reminderSettings.setGlobalEnabled(settings.globalRemindersEnabled)
+        appCurrency.set(settings.appCurrency)
     }
 }

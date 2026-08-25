@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.statistics.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.griff.keeper.domain.model.Money
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.TagStyle
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.statistics.SpendingShare
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
@@ -66,9 +67,9 @@ private fun SpendingRow(entry: SpendingShare, amountStyle: BreakdownAmount) {
     val label = stringResource(entry.style.labelRes)
     val amount = when (amountStyle) {
         BreakdownAmount.PER_MONTH ->
-            stringResource(R.string.amount_per_month, MoneyFormatter.format(entry.amount))
+            stringResource(R.string.amount_per_month, entry.amount.formatted())
 
-        BreakdownAmount.ABSOLUTE -> MoneyFormatter.format(entry.amount)
+        BreakdownAmount.ABSOLUTE -> entry.amount.formatted()
     }
     val percent = (entry.share * PERCENT).roundToInt()
     // Resolved before the semantics lambda, which cannot call a composable.

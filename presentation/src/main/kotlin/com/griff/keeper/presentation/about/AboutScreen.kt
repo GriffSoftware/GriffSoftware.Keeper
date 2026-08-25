@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.InsertChartOutlined
 import androidx.compose.material.icons.filled.Label
@@ -445,6 +446,7 @@ private enum class AboutFeature(
     STATISTICS(Icons.Default.InsertChartOutlined, R.string.about_feature_statistics),
     TAGS(Icons.Default.Label, R.string.about_feature_tags),
     BACKUP(Icons.Default.ImportExport, R.string.about_feature_backup),
+    CURRENCY(Icons.Default.CurrencyExchange, R.string.about_feature_currency),
 }
 
 /**

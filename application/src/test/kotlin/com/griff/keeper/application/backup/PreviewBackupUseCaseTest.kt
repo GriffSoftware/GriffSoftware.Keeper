@@ -2,7 +2,9 @@ package com.griff.keeper.application.backup
 
 import com.griff.keeper.domain.backup.BackupErrorType
 import com.griff.keeper.domain.backup.BackupOperationStatus
+import com.griff.keeper.domain.backup.PortableSettings
 import com.griff.keeper.domain.backup.backupErrorType
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.testing.InMemoryBackupSource
 import com.griff.keeper.domain.testing.testObligation
 import com.griff.keeper.domain.testing.testSubscription
@@ -152,6 +154,77 @@ class PreviewBackupUseCaseTest {
         assertEquals(BackupErrorType.FILE_TOO_LARGE, result.exceptionOrNull()?.backupErrorType)
         // The level-one check does not write to the history: the import proper has not started.
         assertTrue(fixture.history.recorded.isEmpty())
+    }
+
+    @Test
+    fun `a currency mismatch is reported when the device already holds data`() = runTest {
+        val fixture = BackupUseCaseFixture(
+            localSubscriptions = listOf(testSubscription()),
+            localAppCurrency = Currency.PLN,
+        )
+        val source = InMemoryBackupSource(
+            fixture.codec.register(
+                fixture.payload(
+                    subscriptions = listOf(testSubscription()),
+                    settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+                ),
+                BackupUseCaseFixture.PASSWORD,
+            ),
+        )
+
+        val preview = fixture.previewBackup(
+            source,
+            BackupUseCaseFixture.PASSWORD.toCharArray(),
+        ).getOrThrow()
+
+        assertTrue(preview.currencyMismatch)
+        assertEquals(Currency.EUR, preview.summary.appCurrency)
+    }
+
+    @Test
+    fun `a currency mismatch on an empty device is not reported`() = runTest {
+        val fixture = BackupUseCaseFixture(localAppCurrency = Currency.PLN)
+        val source = InMemoryBackupSource(
+            fixture.codec.register(
+                fixture.payload(
+                    subscriptions = listOf(testSubscription()),
+                    settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+                ),
+                BackupUseCaseFixture.PASSWORD,
+            ),
+        )
+
+        val preview = fixture.previewBackup(
+            source,
+            BackupUseCaseFixture.PASSWORD.toCharArray(),
+        ).getOrThrow()
+
+        // Nothing local to conflict with, so REPLACE-shaped adoption is unambiguous either way.
+        assertFalse(preview.currencyMismatch)
+    }
+
+    @Test
+    fun `the same currency on both sides is not reported as a mismatch`() = runTest {
+        val fixture = BackupUseCaseFixture(
+            localSubscriptions = listOf(testSubscription()),
+            localAppCurrency = Currency.EUR,
+        )
+        val source = InMemoryBackupSource(
+            fixture.codec.register(
+                fixture.payload(
+                    subscriptions = listOf(testSubscription()),
+                    settings = PortableSettings.Default.copy(appCurrency = Currency.EUR),
+                ),
+                BackupUseCaseFixture.PASSWORD,
+            ),
+        )
+
+        val preview = fixture.previewBackup(
+            source,
+            BackupUseCaseFixture.PASSWORD.toCharArray(),
+        ).getOrThrow()
+
+        assertFalse(preview.currencyMismatch)
     }
 
     @Test

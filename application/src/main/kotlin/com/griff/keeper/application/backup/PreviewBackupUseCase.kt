@@ -11,6 +11,7 @@ import com.griff.keeper.domain.backup.ImportMode
 import com.griff.keeper.domain.backup.LocalDataSnapshot
 import com.griff.keeper.domain.backup.BackupMerger
 import com.griff.keeper.domain.backup.backupErrorType
+import com.griff.keeper.domain.repository.AppCurrencyRepository
 import com.griff.keeper.domain.repository.ObligationRepository
 import com.griff.keeper.domain.repository.SubscriptionRepository
 import com.griff.keeper.domain.time.ClockProvider
@@ -34,6 +35,13 @@ data class BackupPreview(
     val localRecordCount: Int,
     /** Records that share a name with a local one but not an id. Informational only. */
     val possibleDuplicates: Int,
+    /**
+     * Whether [ImportMode.MERGE] is refused because the device and the backup carry different app
+     * currencies. Only meaningful when [hasLocalData] is true - an empty device has no currency of
+     * its own to conflict with. [ImportMode.REPLACE] is never affected: it adopts the backup's
+     * currency outright instead of reconciling it with anything local.
+     */
+    val currencyMismatch: Boolean,
 )
 
 /**
@@ -54,6 +62,7 @@ class PreviewBackupUseCase @Inject constructor(
     private val codec: BackupCodec,
     private val subscriptions: SubscriptionRepository,
     private val obligations: ObligationRepository,
+    private val appCurrency: AppCurrencyRepository,
     private val recorder: BackupOperationRecorder,
     private val clock: ClockProvider,
 ) {
@@ -69,6 +78,7 @@ class PreviewBackupUseCase @Inject constructor(
             val local = LocalDataSnapshot(
                 subscriptions = subscriptions.observeAll().first(),
                 obligations = obligations.observeAll().first(),
+                appCurrency = appCurrency.current(),
             )
 
             BackupPreview(
@@ -82,6 +92,7 @@ class PreviewBackupUseCase @Inject constructor(
                 possibleDuplicates = BackupMerger
                     .plan(ImportMode.MERGE, local, payload)
                     .possibleDuplicates,
+                currencyMismatch = !local.isEmpty && local.appCurrency != payload.settings.appCurrency,
             )
         }.onFailure { throwable ->
             if (throwable is CancellationException) throw throwable

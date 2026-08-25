@@ -15,6 +15,10 @@ interface SubscriptionDao {
     @Query("SELECT * FROM subscriptions ORDER BY name COLLATE NOCASE ASC")
     fun observeAll(): Flow<List<SubscriptionEntity>>
 
+    /** One-shot read used by a global currency conversion, always inside a transaction. */
+    @Query("SELECT * FROM subscriptions")
+    suspend fun getAll(): List<SubscriptionEntity>
+
     @Query("SELECT * FROM subscriptions WHERE id = :id")
     fun observeById(id: String): Flow<SubscriptionEntity?>
 

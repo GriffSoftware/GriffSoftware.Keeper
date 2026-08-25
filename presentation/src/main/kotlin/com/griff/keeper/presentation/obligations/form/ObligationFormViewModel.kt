@@ -3,10 +3,12 @@ package com.griff.keeper.presentation.obligations.form
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.griff.keeper.application.currency.ObserveAppCurrencyUseCase
 import com.griff.keeper.application.obligation.AddObligationUseCase
 import com.griff.keeper.application.obligation.GetObligationUseCase
 import com.griff.keeper.application.obligation.UpdateObligationUseCase
 import com.griff.keeper.application.obligation.ValidateObligationInputUseCase
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.Obligation
 import com.griff.keeper.domain.model.ObligationCategory
 import com.griff.keeper.domain.model.ObligationId
@@ -29,9 +31,11 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -62,11 +66,16 @@ class ObligationFormViewModel @Inject constructor(
     private val addObligation: AddObligationUseCase,
     private val updateObligation: UpdateObligationUseCase,
     private val validateInput: ValidateObligationInputUseCase,
+    observeAppCurrency: ObserveAppCurrencyUseCase,
     clock: ClockProvider,
 ) : ViewModel() {
 
     private val editedId: ObligationId? =
         savedStateHandle.get<String>(OBLIGATION_ID_ARG)?.let(::ObligationId)
+
+    /** See the equivalent field on `SubscriptionFormViewModel`: read reactively, not fetched once. */
+    private val appCurrency: StateFlow<Currency> = observeAppCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), Currency.Default)
 
     private val _uiState = MutableStateFlow(
         ObligationFormUiState(
@@ -114,7 +123,7 @@ class ObligationFormViewModel @Inject constructor(
 
     fun onSave() {
         saveAttempted = true
-        val validation = validateInput(currentInput())
+        val validation = validateInput(currentInput(), appCurrency.value)
         if (validation !is ObligationInputValidation.Valid) {
             revalidate()
             return
@@ -219,7 +228,7 @@ class ObligationFormViewModel @Inject constructor(
 
     private fun revalidate() {
         val state = _uiState.value
-        val validation = validateInput(currentInput())
+        val validation = validateInput(currentInput(), appCurrency.value)
         val errors = when (validation) {
             is ObligationInputValidation.Valid -> emptyMap()
             is ObligationInputValidation.Invalid -> validation.errors
@@ -242,4 +251,8 @@ class ObligationFormViewModel @Inject constructor(
             ObligationField.NOTES -> notes.isNotBlank()
             ObligationField.NAME, ObligationField.CATEGORY, ObligationField.PAYMENT_DATE -> false
         }
+
+    private companion object {
+        const val STOP_TIMEOUT_MILLIS = 5_000L
+    }
 }

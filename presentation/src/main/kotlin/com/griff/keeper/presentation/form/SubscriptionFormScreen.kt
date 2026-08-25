@@ -44,7 +44,7 @@ import java.time.LocalDate
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.griff.keeper.domain.model.BillingPeriod
-import com.griff.keeper.domain.model.Currency
+import com.griff.keeper.presentation.common.currency.LocalAppCurrency
 import com.griff.keeper.domain.model.ProviderCategory
 import com.griff.keeper.domain.validation.SubscriptionField
 import com.griff.keeper.presentation.R
@@ -258,7 +258,7 @@ private fun SubscriptionFormContent(
                 isError = priceError != null,
                 supportingText = priceError?.let { { Text(it) } },
                 label = { Text(stringResource(R.string.form_price_label)) },
-                suffix = { Text(Currency.Default.symbol(currentLocale())) },
+                suffix = { Text(LocalAppCurrency.current.symbol(currentLocale())) },
                 shape = GriffShapes.Interactive,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,

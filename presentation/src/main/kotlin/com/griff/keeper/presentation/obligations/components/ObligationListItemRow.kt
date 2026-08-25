@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.obligations.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +30,6 @@ import com.griff.keeper.presentation.common.component.EntryRow
 import com.griff.keeper.presentation.common.component.ObligationIcon
 import com.griff.keeper.presentation.common.component.TagChip
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.obligations.DeadlineStatus
 import com.griff.keeper.presentation.obligations.DeadlineUrgency
 import com.griff.keeper.presentation.obligations.ObligationListItem
@@ -50,7 +51,7 @@ internal fun ObligationListItemRow(
     item: ObligationListItem,
     modifier: Modifier = Modifier,
 ) {
-    val amountText = MoneyFormatter.format(item.amount)
+    val amountText = item.amount.formatted()
     val tag = Tags.of(item.category)
     val dateText = item.dateText()
     val description = stringResource(

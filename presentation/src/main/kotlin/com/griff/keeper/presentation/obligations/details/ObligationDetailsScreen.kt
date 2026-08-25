@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.obligations.details
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,7 +62,6 @@ import com.griff.keeper.presentation.reminders.components.ItemReminderSection
 import com.griff.keeper.presentation.reminders.rememberSystemNotificationsEnabled
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.obligations.DeadlineStatus
 import com.griff.keeper.presentation.obligations.DeadlineUrgency
@@ -254,7 +255,7 @@ private fun ObligationDetailsContent(
         TagChip(style = Tags.of(details.category))
 
         Text(
-            text = MoneyFormatter.format(details.amount),
+            text = details.amount.formatted(),
             style = MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.primary,
         )

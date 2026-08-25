@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.subscription.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +21,6 @@ import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.GriffHeroCard
 import com.griff.keeper.presentation.common.component.HeroStatTile
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.subscription.SubscriptionListItem
 import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffThemePreview
@@ -59,12 +60,12 @@ fun SubscriptionTotalsBar(
                 color = GriffGradients.OnAccent.copy(alpha = 0.82f),
             )
             Text(
-                text = MoneyFormatter.format(totals.monthly),
+                text = totals.monthly.formatted(),
                 style = MaterialTheme.typography.displaySmall,
                 color = GriffGradients.OnAccent,
             )
             Text(
-                text = stringResource(R.string.amount_per_year, MoneyFormatter.format(totals.yearly)),
+                text = stringResource(R.string.amount_per_year, totals.yearly.formatted()),
                 style = MaterialTheme.typography.bodyMedium,
                 color = GriffGradients.OnAccent.copy(alpha = 0.85f),
             )

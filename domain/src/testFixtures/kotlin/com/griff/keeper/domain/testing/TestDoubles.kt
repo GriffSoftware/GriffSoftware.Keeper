@@ -1,9 +1,12 @@
 package com.griff.keeper.domain.testing
 
+import com.griff.keeper.domain.calculation.MoneyConverter
+import com.griff.keeper.domain.currency.CurrencyConversionRepository
 import com.griff.keeper.domain.id.ObligationIdGenerator
 import com.griff.keeper.domain.id.SubscriptionIdGenerator
 import com.griff.keeper.domain.model.BillingPeriod
 import com.griff.keeper.domain.model.Currency
+import com.griff.keeper.domain.model.ExchangeRate
 import com.griff.keeper.domain.model.ManagementUrl
 import com.griff.keeper.domain.model.Money
 import com.griff.keeper.domain.model.Obligation
@@ -23,6 +26,7 @@ import com.griff.keeper.domain.reminder.ReminderNotification
 import com.griff.keeper.domain.reminder.ReminderPublisher
 import com.griff.keeper.domain.reminder.ReminderScheduler
 import com.griff.keeper.domain.reminder.ReminderSettings
+import com.griff.keeper.domain.repository.AppCurrencyRepository
 import com.griff.keeper.domain.repository.ObligationRepository
 import com.griff.keeper.domain.repository.ProviderCatalog
 import com.griff.keeper.domain.repository.ReminderSettingsRepository
@@ -199,6 +203,7 @@ fun testSubscription(
     name: String = "Spotify",
     categoryOverride: ProviderCategory? = null,
     priceMinorUnits: Long = 3499,
+    currency: Currency = Currency.PLN,
     billingPeriod: BillingPeriod = BillingPeriod.MONTHLY,
     nextBillingDate: LocalDate? = null,
     managementUrl: String? = null,
@@ -210,7 +215,7 @@ fun testSubscription(
     name = SubscriptionName.of(name),
     categoryOverride = categoryOverride,
     price = Money.ofMinorUnits(priceMinorUnits),
-    currency = Currency.PLN,
+    currency = currency,
     billingPeriod = billingPeriod,
     managementUrl = managementUrl?.let(ManagementUrl::ofOrNull),
     nextBillingDate = nextBillingDate,
@@ -224,6 +229,7 @@ fun testObligation(
     name: String = "OC Ford",
     category: ObligationCategory = ObligationCategory.VEHICLE_INSURANCE,
     amountMinorUnits: Long = 124_000,
+    currency: Currency = Currency.PLN,
     payment: PaymentState = PaymentState.Paid(LocalDate.of(2026, 3, 12)),
     dueDate: LocalDate? = null,
     validUntil: LocalDate? = LocalDate.of(2027, 3, 11),
@@ -235,7 +241,7 @@ fun testObligation(
     name = ObligationName.of(name),
     category = category,
     amount = Money.ofMinorUnits(amountMinorUnits),
-    currency = Currency.PLN,
+    currency = currency,
     payment = payment,
     dueDate = dueDate,
     validUntil = validUntil,
@@ -309,5 +315,67 @@ class RecordingReminderScheduler : ReminderScheduler {
 
     override fun ensureScheduled() {
         scheduleCount++
+    }
+}
+
+/** In-memory [AppCurrencyRepository]; the single active currency is the only stored preference. */
+class FakeAppCurrencyRepository(
+    initial: Currency = Currency.Default,
+) : AppCurrencyRepository {
+
+    private val state = MutableStateFlow(initial)
+
+    /** Simulates the one failure `ChangeAppCurrencyUseCase` is written to retry and recover from. */
+    var failOnSet: Boolean = false
+
+    override fun observe(): Flow<Currency> = state
+
+    override suspend fun current(): Currency = state.value
+
+    override suspend fun set(currency: Currency) {
+        if (failOnSet) error("Simulated preference write failure")
+        state.value = currency
+    }
+}
+
+/**
+ * In-memory [CurrencyConversionRepository] that rewrites the records held by [subscriptions] and
+ * [obligations] the same way the real Room transaction rewrites rows, so a test can assert on those
+ * fakes' contents afterwards exactly as it would against the database.
+ *
+ * [failOnConvert] fails before touching either fake, which is enough to test that
+ * `ChangeAppCurrencyUseCase` never persists the new currency when the conversion itself fails - the
+ * genuine partial-write rollback guarantee is Room's `withTransaction`, exercised by
+ * `RoomCurrencyConversionRepositoryTest` instead.
+ */
+class FakeCurrencyConversionRepository(
+    private val subscriptions: FakeSubscriptionRepository,
+    private val obligations: FakeObligationRepository,
+) : CurrencyConversionRepository {
+
+    var failOnConvert: Boolean = false
+    var convertCallCount: Int = 0
+        private set
+
+    override suspend fun convertAll(from: Currency, to: Currency, rate: ExchangeRate) {
+        convertCallCount++
+        if (failOnConvert) error("Simulated conversion failure")
+
+        subscriptions.stored.forEach { subscription ->
+            subscriptions.update(
+                subscription.copy(
+                    price = MoneyConverter.convert(subscription.price, from, to, rate),
+                    currency = to,
+                ),
+            )
+        }
+        obligations.stored.forEach { obligation ->
+            obligations.update(
+                obligation.copy(
+                    amount = MoneyConverter.convert(obligation.amount, from, to, rate),
+                    currency = to,
+                ),
+            )
+        }
     }
 }

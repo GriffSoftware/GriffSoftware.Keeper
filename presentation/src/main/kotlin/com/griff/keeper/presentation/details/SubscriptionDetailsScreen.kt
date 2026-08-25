@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.details
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +60,6 @@ import com.griff.keeper.presentation.common.component.ProviderLogo
 import com.griff.keeper.presentation.common.component.ProviderLogoDefaults
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.common.rememberUrlOpener
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.common.component.DeleteConfirmationDialog
@@ -257,7 +258,7 @@ private fun SubscriptionDetailsContent(
                 TagChip(style = Tags.of(details.category))
 
                 Text(
-                    text = MoneyFormatter.format(details.price),
+                    text = details.price.formatted(),
                     style = MaterialTheme.typography.displaySmall,
                     color = GriffGradients.OnAccent,
                 )
@@ -288,7 +289,7 @@ private fun SubscriptionDetailsContent(
                     label = stringResource(R.string.details_monthly_equivalent_label),
                     value = stringResource(
                         R.string.amount_per_month,
-                        MoneyFormatter.format(details.monthlyEquivalent),
+                        details.monthlyEquivalent.formatted(),
                     ),
                 )
                 HorizontalDivider()
@@ -296,7 +297,7 @@ private fun SubscriptionDetailsContent(
                     label = stringResource(R.string.details_yearly_equivalent_label),
                     value = stringResource(
                         R.string.amount_per_year,
-                        MoneyFormatter.format(details.yearlyEquivalent),
+                        details.yearlyEquivalent.formatted(),
                     ),
                 )
             }

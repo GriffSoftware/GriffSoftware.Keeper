@@ -57,6 +57,16 @@ enum class BackupErrorType {
     /** Not enough free space to create or to restore the backup. */
     INSUFFICIENT_STORAGE,
 
+    /**
+     * The backup was written in a different app currency than the device currently holds, and the
+     * requested mode is [ImportMode.MERGE].
+     *
+     * Merging amounts in two currencies would either mix them silently or require a conversion the
+     * user never asked for, so the import is refused before anything is written. [ImportMode.REPLACE]
+     * has no such restriction: it discards the local data and adopts the backup's currency outright.
+     */
+    CURRENCY_MISMATCH,
+
     UNKNOWN,
 }
 

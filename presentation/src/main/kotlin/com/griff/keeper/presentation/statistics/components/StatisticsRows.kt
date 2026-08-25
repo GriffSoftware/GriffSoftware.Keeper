@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.statistics.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +33,6 @@ import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.EntryRow
 import com.griff.keeper.presentation.common.component.ProviderLogo
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.statistics.RankedExpenseItem
 import com.griff.keeper.presentation.statistics.RankedSubscription
 import com.griff.keeper.presentation.statistics.UpcomingCharge
@@ -65,7 +66,7 @@ internal fun RankedSubscriptionRow(
             title = subscription.name,
             amount = stringResource(
                 R.string.amount_per_month,
-                MoneyFormatter.format(subscription.monthlyEquivalent),
+                subscription.monthlyEquivalent.formatted(),
             ),
             verticalPadding = Spacing.ExtraSmall,
             leading = {
@@ -105,10 +106,10 @@ internal fun RankedExpenseRow(
             amount = when (expense.source) {
                 ExpenseSource.SUBSCRIPTION -> stringResource(
                     R.string.amount_per_month,
-                    MoneyFormatter.format(expense.amount),
+                    expense.amount.formatted(),
                 )
 
-                ExpenseSource.OBLIGATION -> MoneyFormatter.format(expense.amount)
+                ExpenseSource.OBLIGATION -> expense.amount.formatted()
             },
             verticalPadding = Spacing.ExtraSmall,
             leading = { SourceIconTile(source = expense.source) },
@@ -199,7 +200,7 @@ internal fun UpcomingChargeRow(
 ) {
     EntryRow(
         title = charge.name,
-        amount = MoneyFormatter.format(charge.amount),
+        amount = charge.amount.formatted(),
         modifier = modifier,
         verticalPadding = Spacing.Small,
         leading = {

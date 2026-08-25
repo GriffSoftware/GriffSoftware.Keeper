@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.obligations.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +23,6 @@ import com.griff.keeper.domain.model.Money
 import com.griff.keeper.domain.model.ObligationTotals
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.GriffHeroCard
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.common.format.PeriodFormatter
 import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
@@ -75,7 +76,7 @@ internal fun ObligationTotalsBar(
                         color = GriffGradients.OnAccent.copy(alpha = 0.82f),
                     )
                     Text(
-                        text = MoneyFormatter.format(totals.paid),
+                        text = totals.paid.formatted(),
                         style = MaterialTheme.typography.displaySmall,
                         color = GriffGradients.OnAccent,
                     )
@@ -92,7 +93,7 @@ internal fun ObligationTotalsBar(
                             color = GriffGradients.OnAccent.copy(alpha = 0.8f),
                         )
                         Text(
-                            text = MoneyFormatter.format(totals.outstanding),
+                            text = totals.outstanding.formatted(),
                             style = MaterialTheme.typography.titleMedium,
                             color = GriffGradients.OnAccent,
                         )

@@ -232,6 +232,33 @@ layer — so an obligation badge and a subscription badge look like members of t
   and not a single stored record.
 - Backups are language independent — see *Backup & data portability*.
 
+### Currency support
+
+- **Global application currency: PLN or EUR.** Every subscription, obligation and statistic uses the
+  one currency the app is currently set to. Per-item mixed currencies are not supported yet — see
+  *Possible future work*.
+- **Currency can be changed directly from the navigation drawer**, next to the language switcher and
+  using the same two-option Material 3 dialog pattern. The drawer shows the active currency at all
+  times, the same way it shows the active language.
+- **Language and currency are independent settings.** Polish + PLN, Polish + EUR, English + PLN and
+  English + EUR are all valid combinations; switching one never changes the other.
+- **Switching currency with no stored data is immediate** — there is nothing to convert, so the app
+  does not ask for an exchange rate.
+- **Existing monetary values are converted, never just relabeled**, using an exchange rate the user
+  types in (always shown as "1 EUR = X PLN", regardless of which way the switch runs). The user
+  previews a couple of real before/after amounts and confirms explicitly before anything is written.
+- **Conversion works fully offline and does not require a remote exchange-rate service.** Griff Keeper
+  does not call the NBP, the ECB or any other currency API; the user supplies the rate from whatever
+  source they trust.
+- The conversion rewrites every stored subscription and obligation inside a single database
+  transaction — either every record ends up in the new currency, or (if something fails) none of them
+  do. Because of rounding, converting back later may not reproduce the original amounts exactly, which
+  the confirmation dialog says explicitly.
+- A backup carries the currency it was written in. Restoring into an empty app adopts the backup's
+  currency; merging a backup written in a different currency than the device is refused with an
+  explanation, since merging would otherwise mix two currencies silently — see *Backup & data
+  portability*.
+
 ### Material 3 experience
 
 - Jetpack Compose and Material 3 throughout. **The UI is implemented entirely with Jetpack
@@ -301,10 +328,10 @@ builds.)
 
 | Module | Type | Contains | May depend on |
 | --- | --- | --- | --- |
-| `:domain` | Kotlin JVM | `Subscription`, `Obligation`, `Money`, `Currency`, `ExpensePeriod`, `PaymentState`, categories and tags, validation, cost normalization, reminder rules and planner, statistics calculators, backup payload/merge/validation models, repository and platform ports | coroutines only |
-| `:application` | Kotlin JVM | subscription, obligation, provider, reminder, statistics and backup use cases; `AppVersionProvider` port | `:domain` |
-| `:infrastructure` | Android library | Room database, DAOs, entities and mappers; Room repositories; DataStore preferences; backup serialization, compression and encryption; WorkManager scheduler and worker; Android notifications and deep links; provider catalog; system clock; Hilt modules | `:domain`, `:application` |
-| `:presentation` | Android library | Compose screens, ViewModels, UI state, type-safe navigation graph, Material 3 theme, locale-aware formatters, the language picker, shared components | `:domain`, `:application` |
+| `:domain` | Kotlin JVM | `Subscription`, `Obligation`, `Money`, `Currency`, `ExchangeRate`, `MoneyConverter`, `CurrencyConversionPlanner`, `ExpensePeriod`, `PaymentState`, categories and tags, validation, cost normalization, reminder rules and planner, statistics calculators, backup payload/merge/validation models, repository and platform ports | coroutines only |
+| `:application` | Kotlin JVM | subscription, obligation, provider, reminder, statistics, currency and backup use cases; `AppVersionProvider` port | `:domain` |
+| `:infrastructure` | Android library | Room database, DAOs, entities and mappers; Room repositories; DataStore preferences (reminders, app currency); backup serialization, compression and encryption; WorkManager scheduler and worker; Android notifications and deep links; provider catalog; system clock; Hilt modules | `:domain`, `:application` |
+| `:presentation` | Android library | Compose screens, ViewModels, UI state, type-safe navigation graph, Material 3 theme, locale-aware formatters, the language and currency pickers, shared components | `:domain`, `:application` |
 | `:app` | Android application | `GriffKeeperApplication`, `MainActivity`, composition root, `BuildConfig` bridge | all of the above |
 
 Data flows one way:
@@ -379,14 +406,18 @@ desugaring.
   delivery ledger, 3→4 the import/export log) are purely additive and each is covered by an
   instrumented migration test.
 - Entities store primitives only: amounts as `Long` minor units, dates as epoch day / epoch millis,
-  enums as their names, plus a `currency_code` column so multi-currency support will not need a
-  breaking change. Mappers translate to and from the domain model, so the schema can evolve
-  independently.
+  enums as their names, plus a `currency_code` column - already there before PLN/EUR support was
+  added, and now populated with the record's real currency instead of always `PLN`. Mappers translate
+  to and from the domain model, so the schema can evolve independently.
 - All DAO functions are `suspend` or return `Flow`; `allowMainThreadQueries()` is never used and the
   repositories map entities on the IO dispatcher.
+- A global currency switch rewrites every subscription and obligation's `price_minor_units` /
+  `amount_minor_units` and `currency_code` inside one `database.withTransaction { }` block —
+  see *Currency support* — rather than as separate per-row writes that could partially fail.
 - **DataStore Preferences** holds configuration rather than data: the `reminder_settings` store
-  keeps the app-wide reminder switch. A corrupt preferences file falls back to the defaults instead
-  of taking the reminders screen down.
+  keeps the app-wide reminder switch, and a separate `app_currency` store keeps the single active
+  currency. A corrupt preferences file falls back to the defaults instead of taking the relevant
+  screen down.
 
 ## Backup & data portability
 
@@ -402,10 +433,17 @@ JSON  →  GZIP  →  AES-256-GCM
 encrypted .griffbackup
 ```
 
-What travels: subscriptions, obligations and the portable preferences (the app-wide reminder switch;
-each record's own reminder flag travels inside the record). What never travels, because it is
-device-bound and meaningless elsewhere: the Android notification permission and channel, the
-reminder delivery ledger, the import/export history, and anything in a cache.
+What travels: subscriptions, obligations and the portable preferences (the app-wide reminder switch
+and the active app currency; each record's own reminder flag travels inside the record). What never
+travels, because it is device-bound and meaningless elsewhere: the Android notification permission
+and channel, the reminder delivery ledger, the import/export history, and anything in a cache.
+
+**A backup written before PLN/EUR support carries no currency field**, and is read as `PLN` — the
+only currency such a file could ever have held. Restoring into an empty device adopts the backup's
+currency outright, and `REPLACE` always does, since it discards the local data entirely. `MERGE` is
+refused when the backup and the device disagree on currency, with an explanation rather than a silent
+mix of two currencies; switching the device to the backup's currency (or using a backup saved in the
+device's current one) unblocks it.
 
 **The format does not depend on the interface language.** Categories, tags, payment states, billing
 periods and currencies are written as stable identifiers (`MUSIC`, `VEHICLE_INSURANCE`, `PLN`), dates
@@ -494,10 +532,12 @@ Note what is absent, and stays absent:
 ## Key decisions
 
 - **Money is never a floating point number.** `Money` is a value class over `Long` minor units
-  (grosze) with `plus`, `times` and `dividedBy` (rounded half up) and a non-negative invariant. It
-  is formatted for display only, in whatever language the app is in — `34,99 zł` and `1 299,00 zł`
-  for a Polish reader, `34.99 PLN` and `1,299.00 PLN` for an English one. The separators and the
-  symbol come from CLDR through the active locale; the stored amount and the currency never change.
+  (grosze/cents) with `plus`, `times` and `dividedBy` (rounded half up) and a non-negative invariant.
+  It is formatted for display only, in whatever language the app is in — `34,99 zł` and `1 299,00 zł`
+  for a Polish reader, `34.99 PLN` and `1,299.00 PLN` for an English one, or `34,99 €` / `€34.99` once
+  the app's currency is EUR. The separators and the symbol come from CLDR through the active locale;
+  the stored amount never changes on its own — only a deliberate, user confirmed currency conversion
+  (see "Currency support" below) rewrites it.
 - **Cost normalization lives in the domain.** `monthlyEquivalent` divides a yearly price by 12 (half
   up), `yearlyEquivalent` multiplies a monthly price by 12, and the totals sum the right one — the
   yearly total is never `monthlyTotal * 12`.
@@ -590,7 +630,10 @@ work. A real signing config is not committed and has to be added before publishi
 `Money` and `PriceParser`; subscription and obligation validation; cost normalization for both
 modules; `ManagementUrl`; the `Obligation` date rules; `ExpensePeriod`; search matching and the
 obligation filter; billing schedules; the subscription statistics calculator; reminder candidate
-selection, the planner, and reminder availability; and the backup merge strategy. No Android
+selection, the planner, and reminder availability; and the backup merge strategy. `ExchangeRate` and
+`ExchangeRateParser` (both decimal separators, invalid and oversized rates); `MoneyConverter`
+(PLN↔EUR in both directions, `HALF_UP` rounding at the exact tie a rounding mode actually matters for,
+a currency converted to itself); and `CurrencyConversionPlanner`'s preview sampling. No Android
 dependencies anywhere, and a fixed clock wherever a date is involved.
 
 ### Application
@@ -598,23 +641,31 @@ dependencies anywhere, and a fixed clock wherever a date is involved.
 Use cases against in-memory fakes — shared test doubles live in the `testFixtures` source set of
 `:domain`, so every layer reuses them: subscription and obligation use cases, search, provider
 lookups, combined finance statistics, reminder delivery and the reminders dashboard, and the export,
-preview and import flows.
+preview and import flows. `BeginCurrencyChangeUseCase` (immediate switch with no data, requiring a
+rate once any record exists), `ChangeAppCurrencyUseCase` (every record converted together, a failed
+conversion leaving the original currency untouched, a preference-write failure after a successful
+conversion reported as its own distinct outcome) and the backup currency-mismatch guard (`MERGE`
+blocked across currencies, `REPLACE` adopting the backup's currency regardless).
 
 ### Infrastructure
 
-Mapper and catalog unit tests; the backup file codec and payload validation as unit tests; a check
-that the notification strings and their plural forms exist in both languages; instrumented tests that
-reminder copy — subtext, body, dates, amounts and the notification channel — is built in the app's
-own language rather than the phone's, including the Polish plural forms for one, two and five days;
-and instrumented tests on a real in-memory database for the subscription repository, the obligation
-repository, the transactional import repository, and each Room migration against a real database
-with rows in it — plus an assertion that the migration list covers every version bump up to the
-current one, so a bump without a migration fails the build rather than reaching a device.
+Mapper and catalog unit tests, including a EUR round trip for both the subscription and the
+obligation mapper; the backup file codec and payload validation as unit tests; a check that the
+notification strings and their plural forms exist in both languages; instrumented tests that reminder
+copy — subtext, body, dates, amounts and the notification channel — is built in the app's own
+language rather than the phone's, including the Polish plural forms for one, two and five days; and
+instrumented tests on a real in-memory database for the subscription repository, the obligation
+repository, the transactional import repository, the transactional currency conversion repository
+(every record converted together, an empty database left alone, a failure partway through leaving
+every record in its original currency), and each Room migration against a real database with rows in
+it — plus an assertion that the migration list covers every version bump up to the current one, so a
+bump without a migration fails the build rather than reaching a device.
 
 ### Presentation
 
-Formatter and provider-logo unit tests, including the same date and amount in both languages and
-that a formatter follows the active locale; the language fallback rules (an applied language wins
+Formatter and provider-logo unit tests, including the same date and amount in both languages, that a
+formatter follows the active locale, and that PLN and EUR format with different symbols in both
+languages while the amount itself never changes; the language fallback rules (an applied language wins
 over the system one, an unsupported system language falls back to English, a region-qualified tag
 still resolves); a translation-parity check that reads `values/strings.xml` and
 `values-pl/strings.xml` and fails on a missing or orphaned resource, a plural without the quantities
@@ -679,7 +730,7 @@ platform's own storage.
 | Backend / cloud synchronization | A second repository implementation, or a sync source behind the existing ports |
 | Automatic multi-device sync | Same, on top of the existing portable backup model |
 | Automatic or scheduled backups | A `WorkManager` job over `ExportBackupUseCase`, next to the reminder worker |
-| Multiple currencies | The `Currency` enum is PLN-only today, and the `currency_code` column is already there |
+| Per-item mixed currencies and automatic FX rates | PLN/EUR is a single *global* currency today; a mixed-currency mode and a remote exchange-rate service are both out of scope by design (see *Currency support*) |
 | Further languages | A new `values-<lang>/strings.xml`; AGP picks the locale up and `AppLanguage` gains an entry |
 | User-editable reminder schedules | `ReminderDefaults` is already a value object read from settings; it needs a store and a screen. Backups already carry the schedules, so old files stay readable |
 | Google Play subscription import | An infrastructure adapter mapping Play data to `ValidatedSubscriptionInput` |

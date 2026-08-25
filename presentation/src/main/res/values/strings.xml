@@ -128,6 +128,51 @@
     <!-- Spoken as one row: "Language, English" -->
     <string name="language_item_description">%1$s, %2$s</string>
 
+    <!-- Currency -->
+    <string name="drawer_currency">Currency</string>
+    <string name="currency_pln_name">Polish zloty</string>
+    <string name="currency_eur_name">Euro</string>
+    <string name="currency_dialog_title">Choose currency</string>
+    <!-- Spoken as one row: "Currency, PLN" -->
+    <string name="currency_item_description">%1$s, %2$s</string>
+
+    <!-- Currency change: rate entry -->
+    <string name="currency_rate_dialog_title">Change app currency?</string>
+    <string name="currency_rate_dialog_message">You already have amounts stored in %1$s.\n\nTo switch to %2$s, existing amounts must be converted.\n\nEnter the exchange rate used for the conversion.</string>
+    <!-- The rate is always shown as "1 EUR = ? PLN", independent of which way the switch runs and of
+         the active language: currency codes are not translated. -->
+    <string name="currency_rate_input_prefix" translatable="false">1 EUR =</string>
+    <string name="currency_rate_input_suffix" translatable="false">PLN</string>
+    <string name="currency_rate_dialog_hint">All amounts in the app will be converted using this rate.</string>
+    <string name="currency_rate_error_empty">Enter an exchange rate</string>
+    <string name="currency_rate_error_malformed">Enter a valid number, e.g. 4.25</string>
+    <string name="currency_rate_error_negative">Rate cannot be negative</string>
+    <string name="currency_rate_error_zero">Rate cannot be zero</string>
+    <string name="currency_rate_error_too_many_decimals">Use at most six decimal places</string>
+    <string name="currency_rate_error_too_large">Rate is too large</string>
+    <string name="action_continue">Continue</string>
+
+    <!-- Currency change: preview -->
+    <string name="currency_preview_title">Change currency</string>
+    <string name="currency_preview_direction">%1$s → %2$s</string>
+    <string name="currency_preview_rate_label">Exchange rate</string>
+    <string name="currency_preview_rate_value" translatable="false">1 EUR = %1$s PLN</string>
+    <string name="currency_preview_sample_label">Example conversion</string>
+    <string name="currency_preview_sample_row">%1$s\n%2$s → %3$s</string>
+    <string name="currency_preview_affected_label">Affects</string>
+
+    <!-- Currency change: final confirmation -->
+    <string name="currency_confirm_title">Convert all amounts?</string>
+    <string name="currency_confirm_message">All amounts in Griff Keeper will be converted from %1$s to %2$s using the rate:\n\n1 EUR = %3$s PLN\n\nBecause of rounding, switching back later may not exactly restore the original amounts.\n\nWe recommend creating a backup before converting.</string>
+    <string name="currency_confirm_backup_action">Create a backup</string>
+    <string name="currency_confirm_action">Convert</string>
+
+    <!-- Currency change: progress and feedback -->
+    <string name="currency_progress_message">Converting amounts…</string>
+    <string name="currency_change_success">Currency changed to %1$s.</string>
+    <string name="currency_change_error">Currency couldn\'t be changed. Your data was not modified.</string>
+    <string name="currency_change_error_preference_not_saved">Amounts were converted, but the app couldn\'t remember your new currency. Please reopen the app.</string>
+
     <!-- Obligations list -->
     <string name="obligations_title">Insurance &amp; obligations</string>
     <string name="obligations_search_placeholder">Search obligations</string>
@@ -479,9 +524,11 @@
     <string name="data_transfer_preview_title">Backup</string>
     <string name="data_transfer_preview_created_label">Created</string>
     <string name="data_transfer_preview_app_version_label">App version</string>
+    <string name="data_transfer_preview_currency_label">Currency</string>
     <string name="data_transfer_preview_contents_label">Contents</string>
     <string name="data_transfer_preview_settings">reminder and app settings</string>
     <string name="data_transfer_preview_local_data">This device already holds data. How do you want to import the backup?</string>
+    <string name="data_transfer_preview_currency_mismatch">This backup uses a different currency than this device. To merge, first change the app currency to match, or use a backup saved in the current currency. Replacing all data is still available.</string>
     <string name="data_transfer_preview_merge">Merge data</string>
     <string name="data_transfer_preview_replace">Replace current data</string>
     <string name="data_transfer_preview_restore">Restore data</string>
@@ -525,6 +572,7 @@
     <string name="data_transfer_error_newer_version">This backup was created by a newer version of Griff. Update the app and try again.</string>
     <string name="data_transfer_error_no_space_export">Not enough space to create the backup.</string>
     <string name="data_transfer_error_no_space_import">Not enough space to restore the backup.</string>
+    <string name="data_transfer_error_currency_mismatch">Merging is not available: the backup uses a different currency than this device. Change the app currency to match, or choose Replace instead.</string>
 
     <!-- History -->
     <string name="data_transfer_history_title">Recent operations</string>
@@ -542,6 +590,7 @@
     <string name="data_transfer_history_error_unsupported_version">Unsupported backup version</string>
     <string name="data_transfer_history_error_validation">The backup holds invalid data</string>
     <string name="data_transfer_history_error_no_space">No space left on the device</string>
+    <string name="data_transfer_history_error_currency_mismatch">Currency mismatch</string>
     <string name="data_transfer_history_error_io">File read or write error</string>
     <string name="data_transfer_history_error_unknown">The operation did not finish</string>
 
@@ -599,6 +648,7 @@
     <string name="about_feature_statistics">Monthly and yearly spending statistics</string>
     <string name="about_feature_tags">Categories and tags for filtering your data</string>
     <string name="about_feature_backup">Encrypted data import and export</string>
+    <string name="about_feature_currency">PLN and EUR support</string>
 
     <string name="about_privacy_title">Privacy</string>
     <string name="about_privacy_description">Your data stays on this device. Griff Keeper needs no account and no backend of its own, and it does not synchronize anything with the cloud.</string>

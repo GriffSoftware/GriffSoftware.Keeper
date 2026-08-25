@@ -526,6 +526,8 @@ class DataTransferViewModel @Inject constructor(
         hasSettings = summary.hasSettings,
         hasLocalData = hasLocalData,
         possibleDuplicates = possibleDuplicates,
+        appCurrency = summary.appCurrency,
+        currencyMismatch = currencyMismatch,
     )
 
     private fun BackupErrorType.exportMessage() = UiMessage(

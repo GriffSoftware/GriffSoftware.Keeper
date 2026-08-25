@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.drawer
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
+import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.InsertChartOutlined
 import androidx.compose.material.icons.filled.Language
@@ -46,11 +49,18 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.griff.keeper.application.appinfo.AppVersion
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.Money
 import com.griff.keeper.domain.model.SubscriptionTotals
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.component.HeroStatTile
-import com.griff.keeper.presentation.common.format.MoneyFormatter
+import com.griff.keeper.presentation.common.currency.CurrencyChangeStep
+import com.griff.keeper.presentation.common.currency.CurrencyConversionConfirmDialog
+import com.griff.keeper.presentation.common.currency.CurrencyConversionPreviewDialog
+import com.griff.keeper.presentation.common.currency.CurrencyConversionProgressDialog
+import com.griff.keeper.presentation.common.currency.CurrencyPickerDialog
+import com.griff.keeper.presentation.common.currency.ExchangeRateDialog
+import com.griff.keeper.presentation.common.currency.displayNameRes
 import com.griff.keeper.presentation.common.locale.AppLanguage
 import com.griff.keeper.presentation.common.locale.LanguagePickerDialog
 import com.griff.keeper.presentation.theme.GriffGradients
@@ -85,12 +95,25 @@ internal fun AppDrawerContent(
     totals: SubscriptionTotals,
     upcomingReminderCount: Int,
     language: AppLanguage,
+    currency: Currency,
+    currencyChangeStep: CurrencyChangeStep,
     onSelect: (DrawerDestination) -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
+    onCurrencySelected: (Currency) -> Unit,
+    onRateInputChanged: (String) -> Unit,
+    onRateConfirmed: () -> Unit,
+    onPreviewConfirmed: () -> Unit,
+    onConversionConfirmed: () -> Unit,
+    onCurrencyChangeCancelled: () -> Unit,
 ) {
     // Deliberately `remember` and not `rememberSaveable`: choosing a language recreates the
     // activity, and saved state would bring the dialog back up on top of the newly translated UI.
     var isPickingLanguage by remember { mutableStateOf(false) }
+
+    // Rotation-safe state (the conversion flow itself) lives in the ViewModel; only "is the picker
+    // open" is local, exactly like the language picker above - picking a currency never recreates the
+    // activity, so there is no reason for this flag to survive one.
+    var isPickingCurrency by remember { mutableStateOf(false) }
 
     ModalDrawerSheet {
         Column(modifier = Modifier.fillMaxHeight()) {
@@ -141,12 +164,12 @@ internal fun AppDrawerContent(
                 ) {
                     HeroStatTile(
                         label = stringResource(R.string.drawer_monthly_label),
-                        value = MoneyFormatter.format(totals.monthly),
+                        value = totals.monthly.formatted(),
                         modifier = Modifier.weight(1f),
                     )
                     HeroStatTile(
                         label = stringResource(R.string.drawer_yearly_label),
-                        value = MoneyFormatter.format(totals.yearly),
+                        value = totals.yearly.formatted(),
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -231,6 +254,34 @@ internal fun AppDrawerContent(
                 shape = itemShape,
             )
 
+            val currencyItemDescription = stringResource(
+                R.string.currency_item_description,
+                stringResource(R.string.drawer_currency),
+                currency.code,
+            )
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.drawer_currency)) },
+                icon = { Icon(Icons.Default.CurrencyExchange, contentDescription = null) },
+                // The code, not the display name, sits in the badge: "PLN" and "EUR" are what the
+                // rest of the app shows next to an amount, so the drawer answers the same question the
+                // same way.
+                badge = {
+                    Text(
+                        text = currency.code,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                },
+                selected = false,
+                onClick = { isPickingCurrency = true },
+                modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
+                    .clearAndSetSemantics {
+                        contentDescription = currencyItemDescription
+                    },
+                shape = itemShape,
+            )
+
             // Last in the list: not a place the user works, but where the app explains itself.
             DrawerItem(
                 label = stringResource(R.string.drawer_about),
@@ -296,6 +347,51 @@ internal fun AppDrawerContent(
             },
             onDismiss = { isPickingLanguage = false },
         )
+    }
+
+    if (isPickingCurrency) {
+        CurrencyPickerDialog(
+            selected = currency,
+            onSelect = { picked ->
+                isPickingCurrency = false
+                // Re-picking the active currency would ask for a rate to convert it into itself.
+                if (picked != currency) onCurrencySelected(picked)
+            },
+            onDismiss = { isPickingCurrency = false },
+        )
+    }
+
+    val isCurrencyChangeBusy = currencyChangeStep is CurrencyChangeStep.Converting
+    when (val step = currencyChangeStep) {
+        CurrencyChangeStep.None -> Unit
+
+        is CurrencyChangeStep.EnteringRate -> ExchangeRateDialog(
+            fromName = stringResource(step.from.displayNameRes),
+            toName = stringResource(step.to.displayNameRes),
+            rateInput = step.rateInput,
+            error = step.error,
+            isBusy = isCurrencyChangeBusy,
+            onRateChange = onRateInputChanged,
+            onContinue = onRateConfirmed,
+            onDismiss = onCurrencyChangeCancelled,
+        )
+
+        is CurrencyChangeStep.Previewing -> CurrencyConversionPreviewDialog(
+            preview = step.preview,
+            isBusy = isCurrencyChangeBusy,
+            onContinue = onPreviewConfirmed,
+            onDismiss = onCurrencyChangeCancelled,
+        )
+
+        is CurrencyChangeStep.Confirming -> CurrencyConversionConfirmDialog(
+            preview = step.preview,
+            isBusy = isCurrencyChangeBusy,
+            onConfirm = onConversionConfirmed,
+            onCreateBackup = null,
+            onDismiss = onCurrencyChangeCancelled,
+        )
+
+        is CurrencyChangeStep.Converting -> CurrencyConversionProgressDialog()
     }
 }
 
@@ -406,8 +502,16 @@ private fun AppDrawerContentPreview() {
             totals = SubscriptionTotals(Money.ofUnits(65, 48), Money.ofUnits(785, 76), 2),
             upcomingReminderCount = 3,
             language = AppLanguage.ENGLISH,
+            currency = Currency.PLN,
+            currencyChangeStep = CurrencyChangeStep.None,
             onSelect = {},
             onLanguageSelected = {},
+            onCurrencySelected = {},
+            onRateInputChanged = {},
+            onRateConfirmed = {},
+            onPreviewConfirmed = {},
+            onConversionConfirmed = {},
+            onCurrencyChangeCancelled = {},
         )
     }
 }

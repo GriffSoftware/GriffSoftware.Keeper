@@ -65,4 +65,37 @@ class MoneyTest {
         assertTrue(Money.ofUnits(10) > Money.ofUnits(9, 99))
         assertEquals(Money.ZERO, Money.ofMinorUnits(0))
     }
+
+    @Test
+    fun `sums amounts of the same currency`() {
+        // Money itself carries no currency (see its class doc) - the same-currency invariant is a
+        // property of the app as a whole, kept true by ChangeAppCurrencyUseCase converting every
+        // record together. What this test asserts is only the arithmetic: two PLN amounts, or two
+        // EUR amounts, sum exactly like any other pair of Money values.
+        val plnTotal = listOf(Money.ofUnits(100), Money.ofUnits(50)).sum()
+        val eurTotal = listOf(Money.ofUnits(100), Money.ofUnits(50)).sum()
+
+        assertEquals(Money.ofUnits(150), plnTotal)
+        assertEquals(Money.ofUnits(150), eurTotal)
+    }
+
+    @Test
+    fun `PLN and EUR are the two known currencies`() {
+        assertEquals(listOf(Currency.PLN, Currency.EUR), Currency.entries)
+        assertEquals(Currency.PLN, Currency.Default)
+    }
+
+    @Test
+    fun `looks currencies up by their ISO code`() {
+        assertEquals(Currency.PLN, Currency.fromCode("PLN"))
+        assertEquals(Currency.EUR, Currency.fromCode("EUR"))
+        assertFailsWith<IllegalStateException> { Currency.fromCode("USD") }
+    }
+
+    @Test
+    fun `fromCodeOrNull returns null for an unknown or missing code`() {
+        assertEquals(Currency.EUR, Currency.fromCodeOrNull("EUR"))
+        assertEquals(null, Currency.fromCodeOrNull("USD"))
+        assertEquals(null, Currency.fromCodeOrNull(null))
+    }
 }

@@ -7,6 +7,7 @@ import com.griff.keeper.domain.model.PaymentStatus
 import com.griff.keeper.domain.model.ProviderCategory
 import com.griff.keeper.domain.statistics.StatisticsPeriod
 import com.griff.keeper.domain.statistics.StatisticsScope
+import com.griff.keeper.domain.validation.ExchangeRateError
 import com.griff.keeper.domain.validation.ObligationInputError
 import com.griff.keeper.domain.validation.PriceError
 import com.griff.keeper.domain.validation.SubscriptionInputError
@@ -107,5 +108,15 @@ internal object Labels {
         PriceError.ZERO -> R.string.form_error_price_zero
         PriceError.TOO_MANY_DECIMALS -> R.string.form_error_price_decimals
         PriceError.TOO_LARGE -> R.string.form_error_price_too_large
+    }
+
+    @StringRes
+    fun exchangeRateError(error: ExchangeRateError): Int = when (error) {
+        ExchangeRateError.EMPTY -> R.string.currency_rate_error_empty
+        ExchangeRateError.MALFORMED -> R.string.currency_rate_error_malformed
+        ExchangeRateError.NEGATIVE -> R.string.currency_rate_error_negative
+        ExchangeRateError.ZERO -> R.string.currency_rate_error_zero
+        ExchangeRateError.TOO_MANY_DECIMALS -> R.string.currency_rate_error_too_many_decimals
+        ExchangeRateError.TOO_LARGE -> R.string.currency_rate_error_too_large
     }
 }

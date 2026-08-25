@@ -1,5 +1,6 @@
 package com.griff.keeper.domain.backup
 
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.Obligation
 import com.griff.keeper.domain.model.Subscription
 
@@ -70,12 +71,13 @@ data class ImportPlan(
 data class LocalDataSnapshot(
     val subscriptions: List<Subscription>,
     val obligations: List<Obligation>,
+    val appCurrency: Currency = Currency.Default,
 ) {
     val isEmpty: Boolean get() = subscriptions.isEmpty() && obligations.isEmpty()
 
     val recordCount: Int get() = subscriptions.size + obligations.size
 
     companion object {
-        val Empty: LocalDataSnapshot = LocalDataSnapshot(emptyList(), emptyList())
+        val Empty: LocalDataSnapshot = LocalDataSnapshot(emptyList(), emptyList(), Currency.Default)
     }
 }

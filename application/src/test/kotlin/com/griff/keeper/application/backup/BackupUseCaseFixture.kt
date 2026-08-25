@@ -7,8 +7,10 @@ import com.griff.keeper.application.reminder.EnsureRemindersScheduledUseCase
 import com.griff.keeper.domain.backup.BackupFormat
 import com.griff.keeper.domain.backup.BackupPayload
 import com.griff.keeper.domain.backup.PortableSettings
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.Obligation
 import com.griff.keeper.domain.model.Subscription
+import com.griff.keeper.domain.testing.FakeAppCurrencyRepository
 import com.griff.keeper.domain.testing.FakeBackupCodec
 import com.griff.keeper.domain.testing.FakeBackupFileReader
 import com.griff.keeper.domain.testing.FakeBackupFileSharing
@@ -33,11 +35,13 @@ internal class BackupUseCaseFixture(
     localSubscriptions: List<Subscription> = emptyList(),
     localObligations: List<Obligation> = emptyList(),
     localSettings: PortableSettings = PortableSettings.Default,
+    localAppCurrency: Currency = Currency.Default,
 ) {
     val clock = FixedClockProvider(Instant.parse("2026-08-21T00:43:00Z"))
     val subscriptions = FakeSubscriptionRepository(localSubscriptions)
     val obligations = FakeObligationRepository(localObligations)
     val settings = FakePortableSettingsRepository(localSettings)
+    val appCurrency = FakeAppCurrencyRepository(localAppCurrency)
     val history = FakeBackupOperationRepository()
     val codec = FakeBackupCodec()
     val reader = FakeBackupFileReader()
@@ -85,6 +89,7 @@ internal class BackupUseCaseFixture(
         codec = codec,
         subscriptions = subscriptions,
         obligations = obligations,
+        appCurrency = appCurrency,
         recorder = recorder,
         clock = clock,
     )
@@ -92,6 +97,7 @@ internal class BackupUseCaseFixture(
     val importBackup = ImportBackupUseCase(
         subscriptions = subscriptions,
         obligations = obligations,
+        appCurrency = appCurrency,
         importRepository = importRepository,
         portableSettings = settings,
         recorder = recorder,

@@ -1,11 +1,12 @@
 package com.griff.keeper.domain.model
 
 /**
- * A non-negative amount of money stored in minor units (grosze) to avoid floating point errors.
+ * A non-negative amount of money stored in minor units (grosze/cents) to avoid floating point errors.
  *
- * The first version of the app supports a single currency ([Currency.PLN]) only, therefore the
- * currency is not part of the value. Persistence keeps a currency column so that multi-currency
- * support can be added later without a breaking schema change.
+ * The currency is not part of the value: it travels alongside it on [Subscription] and [Obligation]
+ * instead, because the app has exactly one active currency at a time and every stored [Money] is
+ * expected to share it (see [Currency]). Persistence keeps a currency column per record so a future
+ * per-item multi-currency mode would not need a breaking schema change.
  */
 @JvmInline
 value class Money private constructor(val minorUnits: Long) : Comparable<Money> {
@@ -56,9 +57,18 @@ value class Money private constructor(val minorUnits: Long) : Comparable<Money> 
 
 fun Iterable<Money>.sum(): Money = fold(Money.ZERO) { acc, money -> acc + money }
 
-/** Currencies known to the domain. The first version is PLN-only. */
+/**
+ * Currencies known to the domain.
+ *
+ * The app supports exactly one *global* currency at a time (see [ExchangeRate] and
+ * [com.griff.keeper.domain.calculation.MoneyConverter] for how a switch between them is carried
+ * out) - this is not yet per-item multi-currency support. [Default] exists only as a fallback for
+ * data that predates this feature (e.g. an old backup with no currency written), never as a design
+ * choice of its own.
+ */
 enum class Currency(val code: String) {
     PLN("PLN"),
+    EUR("EUR"),
     ;
 
     companion object {
@@ -66,5 +76,7 @@ enum class Currency(val code: String) {
 
         fun fromCode(code: String): Currency =
             entries.firstOrNull { it.code == code } ?: error("Unsupported currency code: $code")
+
+        fun fromCodeOrNull(code: String?): Currency? = entries.firstOrNull { it.code == code }
     }
 }

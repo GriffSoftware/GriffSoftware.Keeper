@@ -87,4 +87,14 @@ class SubscriptionMapperTest {
         assertNull(entity.nextBillingDateEpochDay)
         assertEquals(withoutOptionals, restored)
     }
+
+    @Test
+    fun `a EUR subscription round trips with its own currency code`() {
+        val eurSubscription = subscription.copy(currency = Currency.EUR)
+
+        val entity = SubscriptionMapper.toEntity(eurSubscription)
+
+        assertEquals("EUR", entity.currencyCode)
+        assertEquals(eurSubscription, SubscriptionMapper.toDomain(entity))
+    }
 }

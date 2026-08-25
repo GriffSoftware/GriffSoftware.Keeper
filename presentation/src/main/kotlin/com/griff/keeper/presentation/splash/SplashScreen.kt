@@ -88,7 +88,7 @@ internal fun SplashScreen() {
                         // Always the navy/gold mark, never the night variant: cyan does not read
                         // against this navy background. The icon-only crop, not the full lockup
                         // with the wordmark - a tile this size has no room for both.
-                        painter = painterResource(R.drawable.ic_griff_emblem_icon),
+                        painter = painterResource(R.drawable.ic_griff_emblem_on_navy),
                         contentDescription = null,
                         modifier = Modifier.height(EmblemHeight),
                     )

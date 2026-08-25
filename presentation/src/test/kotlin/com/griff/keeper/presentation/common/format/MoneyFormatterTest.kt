@@ -54,4 +54,28 @@ class MoneyFormatterTest {
         assertTrue(Currency.Default.symbol(polish).isNotBlank())
         assertEquals("PLN", Currency.PLN.code)
     }
+
+    @Test
+    fun `formats EUR with the euro sign in both languages`() {
+        assertEquals("34,99 €", MoneyFormatter.format(Money.ofUnits(34, 99), Currency.EUR, polish))
+        assertEquals("34.99 €", MoneyFormatter.format(Money.ofUnits(34, 99), Currency.EUR, english))
+    }
+
+    @Test
+    fun `PLN and EUR never share a symbol`() {
+        assertTrue(Currency.PLN.symbol(polish) != Currency.EUR.symbol(polish))
+        assertTrue(Currency.PLN.symbol(english) != Currency.EUR.symbol(english))
+    }
+
+    @Test
+    fun `switching currency changes the symbol but not the amount`() {
+        val amount = Money.ofUnits(59, 99)
+
+        val plnText = MoneyFormatter.format(amount, Currency.PLN, polish)
+        val eurText = MoneyFormatter.format(amount, Currency.EUR, polish)
+
+        assertEquals("5999", plnText.filter { it.isDigit() })
+        assertEquals("5999", eurText.filter { it.isDigit() })
+        assertTrue(plnText != eurText)
+    }
 }

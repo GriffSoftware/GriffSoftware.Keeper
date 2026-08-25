@@ -1,5 +1,6 @@
 package com.griff.keeper.domain.backup
 
+import com.griff.keeper.domain.model.Currency
 import com.griff.keeper.domain.model.Obligation
 import com.griff.keeper.domain.model.Subscription
 import com.griff.keeper.domain.reminder.ReminderDefaults
@@ -29,6 +30,7 @@ data class BackupPayload(
         subscriptionCount = subscriptions.size,
         obligationCount = obligations.size,
         hasSettings = true,
+        appCurrency = settings.appCurrency,
     )
 }
 
@@ -39,15 +41,22 @@ data class BackupPayload(
  * [reminderDefaults] is carried for completeness - the rules are constants in this build, so an
  * import cannot change them, but writing them into the file means a later version that *does* let
  * the user edit them can read old backups without a schema bump.
+ *
+ * [appCurrency] is portable for the same reason as the reminder switch: it is a decision about how to
+ * read the very amounts in this file, not device-bound state. A backup older than this feature has
+ * none written down; [com.griff.keeper.infrastructure.backup.serialization.BackupDtoMapper] maps that
+ * absence to [Currency.PLN], the only currency such a file could ever have held.
  */
 data class PortableSettings(
     val globalRemindersEnabled: Boolean,
     val reminderDefaults: ReminderDefaults,
+    val appCurrency: Currency,
 ) {
     companion object {
         val Default: PortableSettings = PortableSettings(
             globalRemindersEnabled = true,
             reminderDefaults = ReminderDefaults.Standard,
+            appCurrency = Currency.Default,
         )
     }
 }
@@ -65,6 +74,7 @@ data class BackupSummary(
     val subscriptionCount: Int,
     val obligationCount: Int,
     val hasSettings: Boolean,
+    val appCurrency: Currency,
 ) {
     val recordCount: Int get() = subscriptionCount + obligationCount
 }

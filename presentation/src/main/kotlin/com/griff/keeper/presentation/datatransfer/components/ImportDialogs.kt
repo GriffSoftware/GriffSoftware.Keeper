@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.griff.keeper.presentation.R
+import com.griff.keeper.presentation.common.currency.displayNameRes
 import com.griff.keeper.presentation.common.format.DateFormatter
 import com.griff.keeper.presentation.datatransfer.ImportPreviewUi
 import com.griff.keeper.presentation.theme.GriffTheme
@@ -64,6 +65,10 @@ internal fun ImportPreviewDialog(
                 PreviewRow(
                     label = stringResource(R.string.data_transfer_preview_app_version_label),
                     value = preview.appVersion,
+                )
+                PreviewRow(
+                    label = stringResource(R.string.data_transfer_preview_currency_label),
+                    value = stringResource(preview.appCurrency.displayNameRes),
                 )
 
                 Text(
@@ -131,20 +136,41 @@ internal fun ImportPreviewDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+
+                // Merging amounts held in two different currencies would either mix them silently or
+                // require a conversion nobody asked for here, so the option is explained and hidden
+                // rather than offered and then refused after the tap.
+                if (preview.hasLocalData && preview.currencyMismatch) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(Spacing.Small)) {
+                        Icon(
+                            imageVector = Icons.Default.WarningAmber,
+                            contentDescription = null,
+                            tint = GriffTheme.colors.warning,
+                        )
+                        Text(
+                            text = stringResource(R.string.data_transfer_preview_currency_mismatch),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
             }
         },
         confirmButton = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                TextButton(onClick = onMerge) {
-                    Text(
-                        stringResource(
-                            if (preview.hasLocalData) {
-                                R.string.data_transfer_preview_merge
-                            } else {
-                                R.string.data_transfer_preview_restore
-                            },
-                        ),
-                    )
+                val canMerge = !preview.hasLocalData || !preview.currencyMismatch
+                if (canMerge) {
+                    TextButton(onClick = onMerge) {
+                        Text(
+                            stringResource(
+                                if (preview.hasLocalData) {
+                                    R.string.data_transfer_preview_merge
+                                } else {
+                                    R.string.data_transfer_preview_restore
+                                },
+                            ),
+                        )
+                    }
                 }
                 if (preview.hasLocalData) {
                     TextButton(
@@ -272,6 +298,8 @@ private fun ImportPreviewDialogPreview() {
                 hasSettings = true,
                 hasLocalData = true,
                 possibleDuplicates = 2,
+                appCurrency = com.griff.keeper.domain.model.Currency.PLN,
+                currencyMismatch = false,
             ),
             zone = ZoneId.of("Europe/Warsaw"),
             onMerge = {},

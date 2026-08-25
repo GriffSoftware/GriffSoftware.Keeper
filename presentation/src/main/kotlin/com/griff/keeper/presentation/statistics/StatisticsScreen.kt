@@ -1,5 +1,7 @@
 package com.griff.keeper.presentation.statistics
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,7 +56,6 @@ import com.griff.keeper.presentation.common.component.SegmentOption
 import com.griff.keeper.presentation.common.component.TagStyle
 import com.griff.keeper.presentation.common.component.showMessage
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.common.format.PeriodFormatter
 import com.griff.keeper.presentation.common.resolve
 import com.griff.keeper.presentation.statistics.components.BreakdownAmount
@@ -222,7 +223,7 @@ private fun CombinedSections(
                 color = GriffGradients.OnAccent.copy(alpha = 0.82f),
             )
             Text(
-                text = MoneyFormatter.format(combined.total),
+                text = combined.total.formatted(),
                 style = MaterialTheme.typography.displaySmall,
                 color = GriffGradients.OnAccent,
             )
@@ -235,13 +236,13 @@ private fun CombinedSections(
             ) {
                 HeroStatTile(
                     label = stringResource(R.string.statistics_combined_subscriptions_label),
-                    value = MoneyFormatter.format(combined.estimatedSubscriptions),
+                    value = combined.estimatedSubscriptions.formatted(),
                     note = stringResource(R.string.statistics_combined_subscriptions_note),
                     modifier = Modifier.weight(1f),
                 )
                 HeroStatTile(
                     label = stringResource(R.string.statistics_combined_obligations_label),
-                    value = MoneyFormatter.format(combined.paidObligations),
+                    value = combined.paidObligations.formatted(),
                     note = stringResource(R.string.statistics_combined_obligations_note),
                     modifier = Modifier.weight(1f),
                 )
@@ -307,7 +308,7 @@ private fun SubscriptionSections(
                     text = stringResource(
                         R.string.statistics_forecast_month_total,
                         DateFormatter.formatMonthAndYear(singleMonth.month),
-                        MoneyFormatter.format(singleMonth.amount),
+                        singleMonth.amount.formatted(),
                     ),
                     style = MaterialTheme.typography.headlineSmall,
                 )
@@ -347,7 +348,7 @@ private fun SubscriptionSections(
                         R.plurals.statistics_without_date,
                         subscriptions.subscriptionsWithoutBillingDate,
                         subscriptions.subscriptionsWithoutBillingDate,
-                        MoneyFormatter.format(subscriptions.unscheduledMonthlyCost),
+                        subscriptions.unscheduledMonthlyCost.formatted(),
                     ),
                 )
             }
@@ -366,7 +367,7 @@ private fun SubscriptionSections(
             Text(
                 text = stringResource(
                     R.string.amount_per_month,
-                    MoneyFormatter.format(subscriptions.totals.monthly),
+                    subscriptions.totals.monthly.formatted(),
                 ),
                 style = MaterialTheme.typography.headlineSmall,
             )

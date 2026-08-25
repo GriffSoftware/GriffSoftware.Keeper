@@ -11,7 +11,7 @@ object ObligationInputValidator {
     /** Long enough for a policy number and a note about it, short enough to stay a note. */
     const val MAX_NOTES_LENGTH: Int = 280
 
-    fun validate(input: ObligationInput): ObligationInputValidation {
+    fun validate(input: ObligationInput, currency: Currency = Currency.Default): ObligationInputValidation {
         val errors = mutableListOf<ObligationInputError>()
 
         val trimmedName = input.name.trim()
@@ -57,7 +57,7 @@ object ObligationInputValidator {
                 name = name,
                 category = category,
                 amount = amount,
-                currency = Currency.Default,
+                currency = currency,
                 payment = payment,
                 // Both dates stay optional: a policy usually has an expiry, a tax a deadline, and
                 // nothing stops a record from having either, both or neither.

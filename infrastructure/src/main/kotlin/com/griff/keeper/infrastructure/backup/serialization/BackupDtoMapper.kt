@@ -135,6 +135,7 @@ internal object BackupDtoMapper {
             paymentDaysBefore = settings.reminderDefaults.payment.daysBefore,
             subscriptionDaysBefore = settings.reminderDefaults.subscription.daysBefore,
         ),
+        appCurrency = settings.appCurrency.code,
     )
 
     private fun toDomain(dto: SettingsDto) = PortableSettings(
@@ -144,6 +145,9 @@ internal object BackupDtoMapper {
             payment = schedule(dto.reminderDefaults.paymentDaysBefore),
             subscription = schedule(dto.reminderDefaults.subscriptionDaysBefore),
         ),
+        // Absent exactly for a backup written before this feature existed; such a file could only
+        // ever have held PLN, never the currency the importing device happens to be using now.
+        appCurrency = dto.appCurrency?.let { Currency.fromCodeOrNull(it) ?: fail() } ?: Currency.PLN,
     )
 
     private fun schedule(daysBefore: List<Int>): ReminderSchedule =

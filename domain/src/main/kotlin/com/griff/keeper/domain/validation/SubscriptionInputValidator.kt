@@ -8,7 +8,7 @@ import com.griff.keeper.domain.model.SubscriptionName
 /** Turns raw form values into a [ValidatedSubscriptionInput] or a list of field errors. */
 object SubscriptionInputValidator {
 
-    fun validate(input: SubscriptionInput): SubscriptionInputValidation {
+    fun validate(input: SubscriptionInput, currency: Currency = Currency.Default): SubscriptionInputValidation {
         val errors = mutableListOf<SubscriptionInputError>()
 
         val providerId = input.providerId
@@ -60,7 +60,7 @@ object SubscriptionInputValidator {
                     else -> input.category ?: ProviderCategory.OTHER
                 },
                 price = price,
-                currency = Currency.Default,
+                currency = currency,
                 billingPeriod = input.billingPeriod,
                 managementUrl = managementUrl,
                 nextBillingDate = input.nextBillingDate,

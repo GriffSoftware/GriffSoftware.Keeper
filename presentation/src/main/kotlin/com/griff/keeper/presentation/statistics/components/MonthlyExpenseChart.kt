@@ -1,6 +1,11 @@
 package com.griff.keeper.presentation.statistics.components
 
+import com.griff.keeper.presentation.common.format.formatted
+
 import androidx.compose.foundation.Canvas
+import com.griff.keeper.presentation.common.currency.LocalAppCurrency
+import com.griff.keeper.presentation.common.format.MoneyFormatter
+import com.griff.keeper.presentation.common.format.currentLocale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.griff.keeper.domain.model.Money
 import com.griff.keeper.presentation.R
 import com.griff.keeper.presentation.common.format.DateFormatter
-import com.griff.keeper.presentation.common.format.MoneyFormatter
 import com.griff.keeper.presentation.statistics.ExpenseBar
 import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffTheme
@@ -70,6 +74,8 @@ internal fun MonthlyExpenseChart(
     val emptyColor = MaterialTheme.colorScheme.surfaceVariant
     val accentBrush = GriffGradients.accentVertical()
     val obligationBrush = GriffGradients.obligationBarVertical()
+    val currency = LocalAppCurrency.current
+    val locale = currentLocale()
 
     val values = bars.map { bar ->
         series.map { entry ->
@@ -96,8 +102,8 @@ internal fun MonthlyExpenseChart(
     val description = bars.joinToString(separator = ", ") { bar ->
         val amounts = series.joinToString(separator = " / ") { entry ->
             when (entry) {
-                ExpenseSeries.SUBSCRIPTIONS -> MoneyFormatter.format(bar.subscriptions)
-                ExpenseSeries.OBLIGATIONS -> MoneyFormatter.format(bar.obligations)
+                ExpenseSeries.SUBSCRIPTIONS -> MoneyFormatter.format(bar.subscriptions, currency, locale)
+                ExpenseSeries.OBLIGATIONS -> MoneyFormatter.format(bar.obligations, currency, locale)
             }
         }
         "${DateFormatter.formatMonthAndYear(bar.month)}: $amounts"
@@ -105,7 +111,7 @@ internal fun MonthlyExpenseChart(
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = MoneyFormatter.format(Money.ofMinorUnits(maxValue)),
+            text = Money.ofMinorUnits(maxValue).formatted(),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

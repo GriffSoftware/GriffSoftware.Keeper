@@ -20,6 +20,10 @@ interface ObligationDao {
     @Query("SELECT * FROM obligations ORDER BY name COLLATE NOCASE ASC")
     fun observeAll(): Flow<List<ObligationEntity>>
 
+    /** One-shot read used by a global currency conversion, always inside a transaction. */
+    @Query("SELECT * FROM obligations")
+    suspend fun getAll(): List<ObligationEntity>
+
     @Query("SELECT * FROM obligations WHERE id = :id")
     fun observeById(id: String): Flow<ObligationEntity?>
 

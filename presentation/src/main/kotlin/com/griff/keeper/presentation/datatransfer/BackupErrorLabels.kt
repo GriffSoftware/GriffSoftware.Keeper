@@ -32,6 +32,8 @@ internal object BackupErrorLabels {
 
         BackupErrorType.INSUFFICIENT_STORAGE -> R.string.data_transfer_error_no_space_import
 
+        BackupErrorType.CURRENCY_MISMATCH -> R.string.data_transfer_error_currency_mismatch
+
         BackupErrorType.IO_ERROR,
         BackupErrorType.UNKNOWN,
         -> R.string.data_transfer_error_import_failed
@@ -53,6 +55,8 @@ internal object BackupErrorLabels {
         BackupErrorType.VALIDATION_ERROR -> R.string.data_transfer_history_error_validation
 
         BackupErrorType.INSUFFICIENT_STORAGE -> R.string.data_transfer_history_error_no_space
+
+        BackupErrorType.CURRENCY_MISMATCH -> R.string.data_transfer_history_error_currency_mismatch
 
         BackupErrorType.IO_ERROR -> R.string.data_transfer_history_error_io
 

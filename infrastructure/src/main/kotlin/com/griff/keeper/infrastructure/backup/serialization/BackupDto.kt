@@ -69,11 +69,16 @@ internal data class ObligationDto(
  * [reminderDefaults] is written for forward compatibility: the schedules are constants in this
  * build, so an import cannot change them, but a later version that lets the user edit them will be
  * able to read files written today without a schema bump.
+ *
+ * [appCurrency] is nullable for backward compatibility: a backup written before this feature never
+ * set it, and the only currency such a file could ever have held is PLN - [BackupDtoMapper] maps the
+ * absence to exactly that, never to whatever the *importing* device happens to be using.
  */
 @Serializable
 internal data class SettingsDto(
     @SerialName("globalRemindersEnabled") val globalRemindersEnabled: Boolean,
     @SerialName("reminderDefaults") val reminderDefaults: ReminderDefaultsDto,
+    @SerialName("appCurrency") val appCurrency: String? = null,
 )
 
 @Serializable
