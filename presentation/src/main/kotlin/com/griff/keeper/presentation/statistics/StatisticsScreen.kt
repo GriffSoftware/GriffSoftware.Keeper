@@ -5,10 +5,13 @@ import com.griff.keeper.presentation.common.format.formatted
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -231,6 +234,7 @@ private fun CombinedSections(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
                     .padding(top = Spacing.Medium),
                 horizontalArrangement = Arrangement.spacedBy(Spacing.Small),
             ) {
@@ -238,13 +242,17 @@ private fun CombinedSections(
                     label = stringResource(R.string.statistics_combined_subscriptions_label),
                     value = combined.estimatedSubscriptions.formatted(),
                     note = stringResource(R.string.statistics_combined_subscriptions_note),
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                 )
                 HeroStatTile(
                     label = stringResource(R.string.statistics_combined_obligations_label),
                     value = combined.paidObligations.formatted(),
                     note = stringResource(R.string.statistics_combined_obligations_note),
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                 )
             }
 

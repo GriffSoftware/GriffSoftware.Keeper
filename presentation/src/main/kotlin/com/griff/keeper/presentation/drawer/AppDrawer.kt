@@ -15,14 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.InsertChartOutlined
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.outlined.Info
@@ -63,6 +65,7 @@ import com.griff.keeper.presentation.common.currency.ExchangeRateDialog
 import com.griff.keeper.presentation.common.currency.displayNameRes
 import com.griff.keeper.presentation.common.locale.AppLanguage
 import com.griff.keeper.presentation.common.locale.LanguagePickerDialog
+import com.griff.keeper.presentation.common.rememberUrlOpener
 import com.griff.keeper.presentation.theme.GriffGradients
 import com.griff.keeper.presentation.theme.GriffShapes
 import com.griff.keeper.presentation.theme.GriffTheme
@@ -177,153 +180,176 @@ internal fun AppDrawerContent(
 
             val itemShape = GriffShapes.Container
 
-            Spacer(Modifier.height(Spacing.Small))
-
-            DrawerItem(
-                label = stringResource(R.string.drawer_subscriptions),
-                icon = Icons.AutoMirrored.Filled.ReceiptLong,
-                selected = selected == DrawerDestination.SUBSCRIPTIONS,
-                onClick = { onSelect(DrawerDestination.SUBSCRIPTIONS) },
-                shape = itemShape,
-            )
-            DrawerItem(
-                label = stringResource(R.string.drawer_obligations),
-                icon = Icons.Default.VerifiedUser,
-                selected = selected == DrawerDestination.OBLIGATIONS,
-                onClick = { onSelect(DrawerDestination.OBLIGATIONS) },
-                shape = itemShape,
-            )
-            DrawerItem(
-                label = stringResource(R.string.drawer_statistics),
-                icon = Icons.Default.InsertChartOutlined,
-                selected = selected == DrawerDestination.STATISTICS,
-                onClick = { onSelect(DrawerDestination.STATISTICS) },
-                shape = itemShape,
-            )
-            DrawerItem(
-                label = stringResource(R.string.drawer_reminders),
-                icon = Icons.Default.Notifications,
-                selected = selected == DrawerDestination.REMINDERS,
-                onClick = { onSelect(DrawerDestination.REMINDERS) },
-                shape = itemShape,
-                badgeCount = upcomingReminderCount,
-            )
-            DrawerItem(
-                label = stringResource(R.string.drawer_data_transfer),
-                icon = Icons.Default.ImportExport,
-                selected = selected == DrawerDestination.DATA_TRANSFER,
-                onClick = { onSelect(DrawerDestination.DATA_TRANSFER) },
-                shape = itemShape,
-            )
-            // Below the divider: settings and the app talking about itself, rather than the
-            // destinations the user actually works in.
-            HorizontalDivider(
-                modifier = Modifier.padding(
-                    horizontal = Spacing.ExtraLarge,
-                    vertical = Spacing.Small,
-                ),
-            )
-
-            val languageName = stringResource(language.displayNameRes)
-            val languageItemDescription = stringResource(
-                R.string.language_item_description,
-                stringResource(R.string.drawer_language),
-                languageName,
-            )
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.drawer_language)) },
-                icon = { Icon(Icons.Default.Language, contentDescription = null) },
-                // The current language sits in the badge slot, so the drawer answers "which language
-                // am I in" without the user opening anything.
-                badge = {
-                    Text(
-                        text = languageName,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                },
-                selected = false,
-                onClick = { isPickingLanguage = true },
+            // Scrollable so a small screen (or a long list of destinations) never pushes the footer
+            // below the visible drawer - the footer stays pinned, and only this middle section yields.
+            Column(
                 modifier = Modifier
-                    .padding(NavigationDrawerItemDefaults.ItemPadding)
-                    // One label and one value read as one control; without this the label and the
-                    // badge are announced as two unrelated pieces of text.
-                    .clearAndSetSemantics {
-                        contentDescription = languageItemDescription
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                Spacer(Modifier.height(Spacing.Small))
+
+                DrawerItem(
+                    label = stringResource(R.string.drawer_subscriptions),
+                    icon = Icons.AutoMirrored.Filled.ReceiptLong,
+                    selected = selected == DrawerDestination.SUBSCRIPTIONS,
+                    onClick = { onSelect(DrawerDestination.SUBSCRIPTIONS) },
+                    shape = itemShape,
+                )
+                DrawerItem(
+                    label = stringResource(R.string.drawer_obligations),
+                    icon = Icons.Default.VerifiedUser,
+                    selected = selected == DrawerDestination.OBLIGATIONS,
+                    onClick = { onSelect(DrawerDestination.OBLIGATIONS) },
+                    shape = itemShape,
+                )
+                DrawerItem(
+                    label = stringResource(R.string.drawer_statistics),
+                    icon = Icons.Default.InsertChartOutlined,
+                    selected = selected == DrawerDestination.STATISTICS,
+                    onClick = { onSelect(DrawerDestination.STATISTICS) },
+                    shape = itemShape,
+                )
+                DrawerItem(
+                    label = stringResource(R.string.drawer_reminders),
+                    icon = Icons.Default.Notifications,
+                    selected = selected == DrawerDestination.REMINDERS,
+                    onClick = { onSelect(DrawerDestination.REMINDERS) },
+                    shape = itemShape,
+                    badgeCount = upcomingReminderCount,
+                )
+                DrawerItem(
+                    label = stringResource(R.string.drawer_data_transfer),
+                    icon = Icons.Default.ImportExport,
+                    selected = selected == DrawerDestination.DATA_TRANSFER,
+                    onClick = { onSelect(DrawerDestination.DATA_TRANSFER) },
+                    shape = itemShape,
+                )
+                // Below the divider: settings and the app talking about itself, rather than the
+                // destinations the user actually works in.
+                HorizontalDivider(
+                    modifier = Modifier.padding(
+                        horizontal = Spacing.ExtraLarge,
+                        vertical = Spacing.Small,
+                    ),
+                )
+
+                val languageName = stringResource(language.displayNameRes)
+                val languageItemDescription = stringResource(
+                    R.string.language_item_description,
+                    stringResource(R.string.drawer_language),
+                    languageName,
+                )
+                NavigationDrawerItem(
+                    label = { Text(stringResource(R.string.drawer_language)) },
+                    icon = { Icon(Icons.Default.Language, contentDescription = null) },
+                    // The current language sits in the badge slot, so the drawer answers "which language
+                    // am I in" without the user opening anything.
+                    badge = {
+                        Text(
+                            text = languageName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     },
-                shape = itemShape,
-            )
+                    selected = false,
+                    onClick = { isPickingLanguage = true },
+                    modifier = Modifier
+                        .padding(NavigationDrawerItemDefaults.ItemPadding)
+                        // One label and one value read as one control; without this the label and the
+                        // badge are announced as two unrelated pieces of text.
+                        .clearAndSetSemantics {
+                            contentDescription = languageItemDescription
+                        },
+                    shape = itemShape,
+                )
 
-            val currencyItemDescription = stringResource(
-                R.string.currency_item_description,
-                stringResource(R.string.drawer_currency),
-                currency.code,
-            )
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.drawer_currency)) },
-                icon = { Icon(Icons.Default.CurrencyExchange, contentDescription = null) },
-                // The code, not the display name, sits in the badge: "PLN" and "EUR" are what the
-                // rest of the app shows next to an amount, so the drawer answers the same question the
-                // same way.
-                badge = {
-                    Text(
-                        text = currency.code,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                },
-                selected = false,
-                onClick = { isPickingCurrency = true },
-                modifier = Modifier
-                    .padding(NavigationDrawerItemDefaults.ItemPadding)
-                    .clearAndSetSemantics {
-                        contentDescription = currencyItemDescription
+                val currencyItemDescription = stringResource(
+                    R.string.currency_item_description,
+                    stringResource(R.string.drawer_currency),
+                    currency.code,
+                )
+                NavigationDrawerItem(
+                    label = { Text(stringResource(R.string.drawer_currency)) },
+                    icon = { Icon(Icons.Default.CurrencyExchange, contentDescription = null) },
+                    // The code, not the display name, sits in the badge: "PLN" and "EUR" are what the
+                    // rest of the app shows next to an amount, so the drawer answers the same question the
+                    // same way.
+                    badge = {
+                        Text(
+                            text = currency.code,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     },
-                shape = itemShape,
-            )
+                    selected = false,
+                    onClick = { isPickingCurrency = true },
+                    modifier = Modifier
+                        .padding(NavigationDrawerItemDefaults.ItemPadding)
+                        .clearAndSetSemantics {
+                            contentDescription = currencyItemDescription
+                        },
+                    shape = itemShape,
+                )
 
-            // Last in the list: not a place the user works, but where the app explains itself.
-            DrawerItem(
-                label = stringResource(R.string.drawer_about),
-                icon = Icons.Outlined.Info,
-                selected = selected == DrawerDestination.ABOUT,
-                onClick = { onSelect(DrawerDestination.ABOUT) },
-                shape = itemShape,
-            )
-
-            Spacer(Modifier.weight(1f))
+                // Last in the list: not a place the user works, but where the app explains itself.
+                DrawerItem(
+                    label = stringResource(R.string.drawer_about),
+                    icon = Icons.Outlined.Info,
+                    selected = selected == DrawerDestination.ABOUT,
+                    onClick = { onSelect(DrawerDestination.ABOUT) },
+                    shape = itemShape,
+                )
+            }
 
             HorizontalDivider()
+
+            val openUrl = rememberUrlOpener()
+            val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Spacing.ExtraLarge, vertical = Spacing.Large),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall)) {
                     Text(
-                        text = stringResource(R.string.drawer_version, appVersion?.name ?: ""),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        text = stringResource(R.string.app_display_name),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
-                        text = stringResource(R.string.drawer_build, appVersion?.code ?: 0L),
-                        style = MaterialTheme.typography.bodySmall,
+                        text = stringResource(
+                            R.string.drawer_version_build,
+                            appVersion?.name ?: "",
+                            appVersion?.code ?: 0L,
+                        ),
+                        style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall),
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = GriffTheme.colors.success,
-                        modifier = Modifier.size(LocalDataIconSize),
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Spacing.ExtraSmall / 2),
+                        modifier = Modifier.clickable { openUrl(privacyPolicyUrl) },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.drawer_privacy_policy),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(FooterLinkIconSize),
+                        )
+                    }
                     Text(
                         text = stringResource(R.string.drawer_local_data),
                         style = MaterialTheme.typography.labelMedium,
@@ -490,7 +516,7 @@ private val DrawerItemHeight = 56.dp
  */
 private val HeaderEmblemHeight = 52.dp
 private val HeaderTileCorner = 9.dp
-private val LocalDataIconSize = 15.dp
+private val FooterLinkIconSize = 15.dp
 
 @ThemePreviews
 @Composable
